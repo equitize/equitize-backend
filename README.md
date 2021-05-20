@@ -5,6 +5,7 @@ We will be using google cloud sql as of discussion on 19/5.
 | ER diagram to create schema for database | done      |
 | CRUD operations for database             | done      |
 | Integration with javascript              |           |
+| CloudSQL integration                     |           |
 
 
 
@@ -34,11 +35,21 @@ https://stackoverflow.com/questions/7296846/how-to-implement-one-to-one-one-to-m
 
 ![localmysql ss](src/localmysql.png)
 
+visualisation of schema via SQL
+
+![sql schema](src/sqlschema.png)
+
+**Setting up CloudSQL**
+https://cloud.google.com/sql/docs/mysql/quickstart
+
 **Helpful Links**
 
 http://jcsites.juniata.edu/faculty/rhodes/dbms/ermodel.htm
 
 https://stackoverflow.com/questions/5618357/sql-server-null-vs-empty-string
+
+https://superuser.com/questions/360838/mysql-workbench-visualization-for-schema
+
 
 
 
