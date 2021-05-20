@@ -32,6 +32,8 @@ https://stackoverflow.com/questions/7296846/how-to-implement-one-to-one-one-to-m
 - Go to database> connect to database
 - Write sql query, then execute using the lightning symbol
 
+![localmysql ss](src/localmysql.png)
+
 **Helpful Links**
 
 http://jcsites.juniata.edu/faculty/rhodes/dbms/ermodel.htm
