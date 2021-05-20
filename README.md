@@ -11,6 +11,7 @@ We will be using google cloud sql as of discussion on 19/5.
 **ER diagram**
 
 ![ER diagram](src/er.png)
+
 Legend: 
 - Underline is UNIQUE.
 - Orange highlight means blob data. In SQL, we will store link to cloud storage.
