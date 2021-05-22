@@ -137,3 +137,21 @@ exports.deleteAll = (req, res) => {
         });
 };
 
+///////
+exports.findViaCompanyName = (req, res) => {
+  const company_name = req.query.company_name;
+  // console.log(req.query)
+  var condition = company_name ? { company_name: { [Op.like]: `${company_name}` } } : null;
+
+  Campaign.findAll({ where: condition })
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while retrieving Startups."
+      });
+    });
+
+};

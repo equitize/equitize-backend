@@ -20,6 +20,11 @@ module.exports = app => {
   
     // Delete all Startup
     router.delete("/", retailInvestors.deleteAll);
+
+    // Retrieve Startup by email
+    router.get("/email/:email", retailInvestors.findViaEmail);
+    //http://localhost:8080/api/retailInvestors/email/erm?email=kenny@mail.xyz
+
   
     app.use('/api/retailInvestors', router);
   };

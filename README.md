@@ -55,16 +55,26 @@ Test with Postman
 
 Test Api Routes
 
-| Api Routes   | Startup | Retail Investors | Campaign | Junction Table |
-| ------------ | ------- | ---------------- | -------- | -------------- |
-| Insert       | done    | done             | done     | done           |
-| Get all      | done    | done             | done     | done           |
-| Get by id    | done    | done             | done     | done           |
-| Update by id | done    | done             | done     | done           |
-| Delete by id | done    | done             | done     | done           |
-| Delete all   | done    | done             | done     | done           |
+| Api Routes               | Startup | Retail Investors | Campaign | Junction Table |
+| ------------------------ | ------- | ---------------- | -------- | -------------- |
+| Insert                   | done    | done             | done     | done           |
+| Get all                  | done    | done             | done     | done           |
+| Get by id                | done    | done             | done     | done           |
+| Update by id             | done    | done             | done     | done           |
+| Delete by id             | done    | done             | done     | done           |
+| Delete all               | done    | done             | done     | done           |
+| Retrieve by company name | done    | NA               | done     | done           |
+| Retrieve by email        | done    | done             | NA       | done           | 
 
+Things to check for:
+- table schema
+- check if all required sql functions for front end are implemented
+- constraints for SQL
+- naming conventions for router
 
+https://expressjs.com/en/guide/routing.html
+
+Instead of implementing the sum of total amount crowdfunded for campaign in sql, I think it should be done on front end instead because of latency to access sql.
 
 **Setting up CloudSQL**
 
@@ -89,4 +99,7 @@ https://bezkoder.com/node-js-rest-api-express-mysql/
 
 https://stackoverflow.com/questions/22348705/best-way-to-store-db-config-in-node-js-express-app
 
+should have used swagger at the start of the project for creating api 
+
+https://medium.com/swlh/the-easiest-way-to-start-using-swagger-in-node-js-54326864e74f
 

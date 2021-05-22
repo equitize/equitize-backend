@@ -140,4 +140,19 @@ exports.deleteAll = (req, res) => {
           });
         });
 };
+///////////////////
+exports.findViaEmail= (req, res) => {
+  const email = req.query.email;
+  var condition = email ? { email_address: { [Op.like]: `${email}` } } : null;
 
+  RetailInvestors.findAll({ where: condition })
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while retrieving RetailInvestors."
+      });
+    });
+  };

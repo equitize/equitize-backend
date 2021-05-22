@@ -20,6 +20,15 @@ module.exports = app => {
   
     // Delete all Startup
     router.delete("/", campaign.deleteAll);
-  
+
+    ////////////////
+    //custom routes
+    ///////////////
+
+    // Retrieve campaign by startup name
+    router.get("/company_name/:company_name", campaign.findViaCompanyName);
+    //http://localhost:8080/api/campaign/company_name/erm?company_name=kleenex
+    
     app.use('/api/campaign', router);
+
   };

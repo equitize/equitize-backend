@@ -142,3 +142,43 @@ exports.deleteAll = (req, res) => {
         });
 };
 
+/////////////
+//custom functions ////
+// Retrieve startup via name from the database.
+exports.findViaName = (req, res) => {
+  const company_name = req.query.company_name;
+  // console.log(req.query)
+  var condition = company_name ? { company_name: { [Op.like]: `${company_name}` } } : null;
+
+  Startup.findAll({ where: condition })
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while retrieving Startups."
+      });
+    });
+
+};
+
+exports.findViaEmail= (req, res) => {
+  const email = req.query.email;
+  var condition = email ? { email: { [Op.like]: `${email}` } } : null;
+
+  Startup.findAll({ where: condition })
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while retrieving Startup."
+      });
+    });
+  };
+
+
+
+
