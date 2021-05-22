@@ -1,13 +1,13 @@
 const db = require("../models");
-const Startup = db.startup;
+const RetailInvestors = db.retailInvestors;
 const Op = db.Sequelize.Op;
 
 // Create and Save a new startup
 exports.create = (req, res) => {
   // Validate request
-  if (!req.body.company_name && !req.body.email_address && !req.body.company_password) {
+  if (!req.body.email_address && !req.body.user_password) {
     res.status(400).send({
-      message: "company_name, email_address, company_password can not be empty!"
+      message: "email_address, user_password can not be empty!"
     });
     return;
   }
@@ -15,26 +15,25 @@ exports.create = (req, res) => {
   // Create a startup
   // use ternary operator to handle null values 
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_Operator
-  const startup = {
-    company_name: req.body.company_name,
+  const retailInvestors = {
     email_address: req.body.email_address,
-    company_password: req.body.company_password ,
-    profile_description: req.body.profile_description ? req.body.profile_description :"",
-    profile_photo: req.body.profile_photo ? req.body.profile_photo :"",
-    cap_table: req.body.cap_table ? req.body.cap_table :"",
-    acra_documents: req.body.acra_documents ? req.body.acra_document :"",
-    pitch_deck: req.body.pitch_deck ? req.body.pitch_deck :""
+    user_password: req.body.user_password,
+    first_name: req.body.first_name ? req.body.first_name :"",
+    last_name: req.body.last_name ? req.body.last_name :"",
+    singpass: req.body.singpass ? req.body.singpass :"",
+    income_statement: req.body.income_statement ? req.body.income_statement :"",
+    income_tax_return: req.body.income_tax_return ? req.body.income_tax_return :""
   };
 
   // Save Startup in the database
-  Startup.create(startup)
+  RetailInvestors.create(retailInvestors)
     .then(data => {
       res.send(data);
     })
     .catch(err => {
       res.status(500).send({
         message:
-          err.message || "Some error occurred while creating the Startup."
+          err.message || "Some error occurred while creating the RetailInvestors."
       });
     });
   
@@ -42,17 +41,17 @@ exports.create = (req, res) => {
 
 // Retrieve all Tutorials from the database.
 exports.findAll = (req, res) => {
-    const company_name = req.query.company_name;
-    var condition = company_name ? { company_name: { [Op.like]: `%${company_name}%` } } : null;
+    const email_address = req.query.email_address;
+    var condition = email_address ? { email_address: { [Op.like]: `%${email_address}%` } } : null;
   
-    Startup.findAll({ where: condition })
+    RetailInvestors.findAll({ where: condition })
       .then(data => {
         res.send(data);
       })
       .catch(err => {
         res.status(500).send({
           message:
-            err.message || "Some error occurred while retrieving Startups."
+            err.message || "Some error occurred while retrieving RetailInvestors."
         });
       });
   
@@ -62,13 +61,13 @@ exports.findAll = (req, res) => {
 exports.findOne = (req, res) => {
     const id = req.params.id;
 
-    Startup.findByPk(id)
+    RetailInvestors.findByPk(id)
       .then(data => {
         res.send(data);
       })
       .catch(err => {
         res.status(500).send({
-          message: "Error retrieving Tutorial with id=" + id
+          message: "Error retrieving RetailInvestors with id=" + id
         });
       });
   
@@ -78,23 +77,23 @@ exports.findOne = (req, res) => {
 exports.update = (req, res) => {
   const id = req.params.id;
 
-  Startup.update(req.body, {
+  RetailInvestors.update(req.body, {
     where: { id: id }
   })
     .then(num => {
       if (num == 1) {
         res.send({
-          message: "Startup was updated successfully."
+          message: "RetailInvestors was updated successfully."
         });
       } else {
         res.send({
-          message: `Cannot update Startup with id=${id}. Maybe Startup was not found or req.body is empty!`
+          message: `Cannot update RetailInvestors with id=${id}. Maybe RetailInvestors was not found or req.body is empty!`
         });
       }
     })
     .catch(err => {
       res.status(500).send({
-        message: "Error updating Startup with id=" + id
+        message: "Error updating RetailInvestors with id=" + id
       });
     });
 };
@@ -103,23 +102,23 @@ exports.update = (req, res) => {
 exports.delete = (req, res) => {
     const id = req.params.id;
 
-    Startup.destroy({
+    RetailInvestors.destroy({
       where: { id: id }
     })
       .then(num => {
         if (num == 1) {
           res.send({
-            message: "Startup was deleted successfully!"
+            message: "RetailInvestors was deleted successfully!"
           });
         } else {
           res.send({
-            message: `Cannot delete Startup with id=${id}. Maybe Startup was not found!`
+            message: `Cannot delete RetailInvestors with id=${id}. Maybe RetailInvestors was not found!`
           });
         }
       })
       .catch(err => {
         res.status(500).send({
-          message: "Could not delete Startup with id=" + id
+          message: "Could not delete RetailInvestors with id=" + id
         });
       });
   
@@ -127,17 +126,17 @@ exports.delete = (req, res) => {
 
 // Delete all Tutorials from the database.
 exports.deleteAll = (req, res) => {
-    Startup.destroy({
+  RetailInvestors.destroy({
         where: {},
         truncate: false
       })
         .then(nums => {
-          res.send({ message: `${nums} Startup were deleted successfully!` });
+          res.send({ message: `${nums} RetailInvestors were deleted successfully!` });
         })
         .catch(err => {
           res.status(500).send({
             message:
-              err.message || "Some error occurred while removing all Startup."
+              err.message || "Some error occurred while removing all RetailInvestors."
           });
         });
 };

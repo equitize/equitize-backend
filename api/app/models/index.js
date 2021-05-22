@@ -23,5 +23,6 @@ db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
 db.startup = require("./startup.model.js")(sequelize, Sequelize);
+db.retailInvestors = require("./retailInvestors.model.js")(sequelize, Sequelize);
 
 module.exports = db;

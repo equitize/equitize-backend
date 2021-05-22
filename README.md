@@ -41,10 +41,6 @@ visualisation of schema via SQL
 
 **API - nodejs express with mysql**
 
-https://blog.logrocket.com/node-js-express-js-mysql-rest-api-example/
-
-https://bezkoder.com/node-js-rest-api-express-mysql/
-
 https://bezkoder.com/node-js-express-sequelize-mysql/
 
 To start the backend server, ```cd api``` + ```node server.js```.
@@ -59,14 +55,14 @@ Test with Postman
 
 Test Api Routes
 
-| Api Routes           | Complete? |
-| -------------------- | --------- |
-| Insert startup       | done      |
-| Get all startup      | done      |
-| Get startup by id    | done      |
-| Update startup by id | done      |
-| Delete startup by id | done      |
-| Delete all startup   | done      |
+| Api Routes   | Startup | Retail Investors |
+| ------------ | ------- | ---------------- |
+| Insert       | done    | done             |
+| Get all      | done    | done             |
+| Get by id    | done    | done             |
+| Update by id | done    | done             |
+| Delete by id | done    | done             |
+| Delete all   | done    | done             |
 
 
 
@@ -86,6 +82,10 @@ https://superuser.com/questions/360838/mysql-workbench-visualization-for-schema
 https://www.guru99.com/mvc-tutorial.html
 
 https://stackoverflow.com/questions/27178077/how-to-change-user-in-mysql-workbench/49203236
+
+https://blog.logrocket.com/node-js-express-js-mysql-rest-api-example/
+
+https://bezkoder.com/node-js-rest-api-express-mysql/
 
 https://stackoverflow.com/questions/22348705/best-way-to-store-db-config-in-node-js-express-app
 
