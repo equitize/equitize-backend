@@ -55,14 +55,14 @@ Test with Postman
 
 Test Api Routes
 
-| Api Routes   | Startup | Retail Investors |
-| ------------ | ------- | ---------------- |
-| Insert       | done    | done             |
-| Get all      | done    | done             |
-| Get by id    | done    | done             |
-| Update by id | done    | done             |
-| Delete by id | done    | done             |
-| Delete all   | done    | done             |
+| Api Routes   | Startup | Retail Investors | Campaign | Junction Table |
+| ------------ | ------- | ---------------- | -------- | -------------- |
+| Insert       | done    | done             | done     | done           |
+| Get all      | done    | done             | done     | done           |
+| Get by id    | done    | done             | done     | done           |
+| Update by id | done    | done             | done     | done           |
+| Delete by id | done    | done             | done     | done           |
+| Delete all   | done    | done             | done     | done           |
 
 
 
