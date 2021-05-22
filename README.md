@@ -1,17 +1,17 @@
 We will be using google cloud sql as of discussion on 19/5.
 
-| Progress                                 | Complete? |
-| ---------------------------------------- | --------- |
-| ER diagram to create schema for database | done      |
-| CRUD operations for database             | done      |
-| Integration with javascript              |           |
-| CloudSQL integration                     |           |
-
+| Progress                                             | Complete? |
+| ---------------------------------------------------- | --------- |
+| ER diagram to create schema for database             | done      |
+| CRUD operations for database                         | done      |
+| Integration of mysql with nodejs, express, sequelize |           |
+| CloudSQL integration                                 |           |
+| proper config with prod/ dev + .gitignore            |           |
 
 
 **ER diagram**
 
-![ER diagram](src/er.png)
+![ER diagram](res/er.png)
 
 Legend: 
 - Underline is UNIQUE.
@@ -33,14 +33,47 @@ https://stackoverflow.com/questions/7296846/how-to-implement-one-to-one-one-to-m
 - Go to database> connect to database
 - Write sql query, then execute using the lightning symbol
 
-![localmysql ss](src/localmysql.png)
+![localmysql ss](res/localmysql.png)
 
 visualisation of schema via SQL
 
-![sql schema](src/sqlschema.png)
+![sql schema](res/sqlschema.png)
+
+**API - nodejs express with mysql**
+
+https://blog.logrocket.com/node-js-express-js-mysql-rest-api-example/
+
+https://bezkoder.com/node-js-rest-api-express-mysql/
+
+https://bezkoder.com/node-js-express-sequelize-mysql/
+
+To start the backend server, ```cd api``` + ```node server.js```.
+
+in order for it to work with local db, please take note of user, password, db (must be created beforehand) in ```config>db.config.js```
+
+Setup success command line
+![setup success](res/apisuccess.png)
+
+Test with Postman
+![postman api](res/postmanapi.png)
+
+Test Api Routes
+
+| Api Routes           | Complete? |
+| -------------------- | --------- |
+| Insert startup       | done      |
+| Get all startup      | done      |
+| Get startup by id    | done      |
+| Update startup by id | done      |
+| Delete startup by id | done      |
+| Delete all startup   | done      |
+
+
 
 **Setting up CloudSQL**
+
 https://cloud.google.com/sql/docs/mysql/quickstart
+
 
 **Helpful Links**
 
@@ -50,6 +83,10 @@ https://stackoverflow.com/questions/5618357/sql-server-null-vs-empty-string
 
 https://superuser.com/questions/360838/mysql-workbench-visualization-for-schema
 
+https://www.guru99.com/mvc-tutorial.html
 
+https://stackoverflow.com/questions/27178077/how-to-change-user-in-mysql-workbench/49203236
+
+https://stackoverflow.com/questions/22348705/best-way-to-store-db-config-in-node-js-express-app
 
 
