@@ -76,6 +76,10 @@ https://expressjs.com/en/guide/routing.html
 
 Instead of implementing the sum of total amount crowdfunded for campaign in sql, I think it should be done on front end instead because of latency to access sql.
 
+constraints for sql in sequelize (done)
+
+https://sequelize.org/master/manual/validations-and-constraints.html
+
 **Setting up CloudSQL**
 
 https://cloud.google.com/sql/docs/mysql/quickstart

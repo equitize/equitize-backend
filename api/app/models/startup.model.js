@@ -1,13 +1,18 @@
 module.exports = (sequelize, Sequelize) => {
     const Startup = sequelize.define("startup", {
       company_name: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false,  // set constraints for company_name
+        unique: true
       },
       email_address: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false,
+        unique: true
       },
       company_password: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       profile_description: {
         type: Sequelize.STRING
