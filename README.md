@@ -53,6 +53,8 @@ Setup success command line
 Test with Postman
 ![postman api](res/postmanapi.png)
 
+Instead of implementing the sum of total amount crowdfunded for campaign in sql, I think it should be done on front end instead because of latency to access sql.
+
 Test Api Routes
 
 | Api Routes               | Startup | Retail Investors | Campaign | Junction Table |
@@ -67,16 +69,22 @@ Test Api Routes
 | Retrieve by email        | done    | done             | NA       | done           | 
 
 Things to check for:
-- table schema
-- check if all required sql functions for front end are implemented
-- constraints for SQL
-- naming conventions for router
+- table schema (done)
+- check if all required sql functions for front end are implemented (done)
+- constraints for SQL (done)
+- naming conventions for router (done)
+
+routing naming convention used : 
+
+```http://localhost:8080:/api/{table_name}/{query_key}/{query_value}```
+
+i.e. In order to retrieve entries with company_name == bloo in campaign table, in Postman you can ```GET http://localhost:8080/api/campaign/company_name/bloo```
+
 
 https://expressjs.com/en/guide/routing.html
 
-Instead of implementing the sum of total amount crowdfunded for campaign in sql, I think it should be done on front end instead because of latency to access sql.
 
-constraints for sql in sequelize (done)
+constraints for sql in sequelize 
 
 https://sequelize.org/master/manual/validations-and-constraints.html
 
