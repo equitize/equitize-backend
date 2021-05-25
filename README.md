@@ -115,3 +115,5 @@ should have used swagger at the start of the project for creating api
 
 https://medium.com/swlh/the-easiest-way-to-start-using-swagger-in-node-js-54326864e74f
 
+https://sherryhsu.medium.com/managing-configurations-in-node-js-apps-with-dotenv-and-convict-d74070d37373
+

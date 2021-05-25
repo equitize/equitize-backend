@@ -1,5 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+
 const cors = require("cors");
 
 const app = express();
@@ -15,6 +16,21 @@ app.use(bodyParser.json());
 
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
+
+
+/** Error Handlers */
+// 404
+// app.use((req, res, next) => {
+//   next(createHttpError.NotFound());
+// });
+// // other errors
+app.use((error, req, res, next) => {     
+  console.log(error)
+  error.status = error.status || 500
+  res.status(error.status); 
+  res.send(error);
+});
+
 
 //db
 const db = require("./app/models");
