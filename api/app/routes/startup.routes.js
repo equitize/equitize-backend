@@ -21,12 +21,12 @@ module.exports = app => {
 
     // Retrieve Startup by name
     router.get("/company_name/:company_name", startup.findViaName);
-    //gg need to read up on conventions of naming but for now,
-    //http://localhost:8080/api/startup/company_name/erm?company_name=equitize
+    // router.get("/company_name/:company_name", startup.findViaName);
+    //http://localhost:8080/api/startup/company_name/equitize
 
     // Retrieve Startup by email
     router.get("/email/:email", startup.findViaEmail);
-    //http://localhost:8080/api/startup/email/erm?=banana@mail.xyz
+    //http://localhost:8080/api/startup/company_name/equitize
 
     ///////////////////
     // Retrieve a single Startup with id

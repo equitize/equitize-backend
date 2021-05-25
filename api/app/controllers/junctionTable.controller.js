@@ -142,7 +142,8 @@ exports.deleteAll = (req, res) => {
 /////////////
 
 exports.findViaCompanyName = (req, res) => {
-  const company_name = req.query.company_name;
+  const company_name = req.params.company_name;
+  // const company_name = req.query.company_name;
   // console.log(req.query)
   var condition = company_name ? { company_name: { [Op.like]: `${company_name}` } } : null;
 
@@ -161,7 +162,8 @@ exports.findViaCompanyName = (req, res) => {
 
 
 exports.findViaRetailInvestor = (req, res) => {
-    const retail_investor_email = req.query.retail_investor_email;
+    const retail_investor_email = req.params.retail_investor_email;
+    // const retail_investor_email = req.query.retail_investor_email;
     var condition = retail_investor_email ? { retail_investor_email: { [Op.like]: `${retail_investor_email}` } } : null;
 
     JunctionTable.findAll({ where: condition })

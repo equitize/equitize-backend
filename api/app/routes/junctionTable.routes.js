@@ -26,11 +26,11 @@ module.exports = app => {
 
     // Retrieve all investment entries belonging to startup 
     router.get("/company_name/:company_name", junctionTable.findViaCompanyName);
-    //http://localhost:8080/api/junctionTable/company_name/erm?=ven
+    //http://localhost:8080/api/junctionTable/company_name/equitize
 
     // Retrieve all investment entries belonging to retail investor
     router.get("/retail_investor_email/:retail_investor_email", junctionTable.findViaRetailInvestor);
-    //http://localhost:8080/api/junctionTable/retail_investor_email/erm?retail_investor_email=jiale@gmail.com
+    //http://localhost:8080/api/junctionTable/retail_investor_email/jiale@gmail.com
     
     ///////////////////////
     // Retrieve all Startup

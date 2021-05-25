@@ -139,7 +139,8 @@ exports.deleteAll = (req, res) => {
 
 ///////
 exports.findViaCompanyName = (req, res) => {
-  const company_name = req.query.company_name;
+  // const company_name = req.query.company_name;
+  const company_name = req.params.company_name;
   // console.log(req.query)
   var condition = company_name ? { company_name: { [Op.like]: `${company_name}` } } : null;
 

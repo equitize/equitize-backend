@@ -23,7 +23,7 @@ module.exports = app => {
 
     // Retrieve Startup by email
     router.get("/email/:email", retailInvestors.findViaEmail);
-    //http://localhost:8080/api/retailInvestors/email/erm?email=kenny@mail.xyz
+    //http://localhost:8080/api/retailInvestors/email/kenny@mail.xyz
 
   
     app.use('/api/retailInvestors', router);

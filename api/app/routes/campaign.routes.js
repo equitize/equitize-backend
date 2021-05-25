@@ -27,7 +27,7 @@ module.exports = app => {
 
     // Retrieve campaign by startup name
     router.get("/company_name/:company_name", campaign.findViaCompanyName);
-    //http://localhost:8080/api/campaign/company_name/erm?company_name=kleenex
+    //http://localhost:8080/api/campaign/company_name/bloo
     
     app.use('/api/campaign', router);
 

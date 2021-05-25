@@ -146,7 +146,8 @@ exports.deleteAll = (req, res) => {
 //custom functions ////
 // Retrieve startup via name from the database.
 exports.findViaName = (req, res) => {
-  const company_name = req.query.company_name;
+  // const company_name = req.query.company_name;
+  const company_name = req.params.company_name;
   // console.log(req.query)
   var condition = company_name ? { company_name: { [Op.like]: `${company_name}` } } : null;
 
@@ -164,8 +165,9 @@ exports.findViaName = (req, res) => {
 };
 
 exports.findViaEmail= (req, res) => {
-  const email = req.query.email;
-  var condition = email ? { email: { [Op.like]: `${email}` } } : null;
+  const email_address = req.params.email_address;
+  // const email = req.query.email;
+  var condition = email_address ? { email_address: { [Op.like]: `${email_address}` } } : null;
 
   Startup.findAll({ where: condition })
     .then(data => {

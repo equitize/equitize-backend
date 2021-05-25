@@ -142,7 +142,8 @@ exports.deleteAll = (req, res) => {
 };
 ///////////////////
 exports.findViaEmail= (req, res) => {
-  const email = req.query.email;
+  // const email = req.query.email;
+  const email = req.params.email;
   var condition = email ? { email_address: { [Op.like]: `${email}` } } : null;
 
   RetailInvestors.findAll({ where: condition })
