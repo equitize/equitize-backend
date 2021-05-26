@@ -16,7 +16,7 @@ module.exports = {
 
             const headers = {
                 "Content-Type": "application/json",
-                "authorization": `Bearer ${process.env.AUTHO_MGT_TOKEN_PRODUCTION}`
+                "authorization": `Bearer ${process.env.AUTHO_MGT_TOKEN_TESTING}`
             };
             axios.post(`https://${process.env.AUTH0_DOMAIN}/api/v2/users/${user_id}/roles`, data, { headers : headers } )
             .then(function (response) {
@@ -41,7 +41,7 @@ module.exports = {
             };
             const headers = {
                 "Content-Type": "application/json",
-                "authorization": `Bearer ${process.env.AUTHO_MGT_TOKEN_PRODUCTION}`
+                "authorization": `Bearer ${process.env.AUTHO_MGT_TOKEN_TESTING}`
             };
             axios.post(`https://${process.env.AUTH0_DOMAIN}/api/v2/users/${user_id}/roles`, data, { headers : headers } )
             .then(function (response) {
@@ -56,7 +56,8 @@ module.exports = {
     },
     createAccount: function (req, res, next) {
         console.log('[DEV] : createAcc API Reached');
-        process.env.AUTHO_MGT_TOKEN_PRODUCTION=req.MGT_ACCESS_TOKEN
+        // Uncomment when using production ready MGT Token from auth0
+        // process.env.AUTHO_MGT_TOKEN_PRODUCTION=req.MGT_ACCESS_TOKEN
         try {
             const data = {
                 "connection": "Username-Password-Authentication",
@@ -65,7 +66,7 @@ module.exports = {
             };
             const headers = {
                 "Content-Type": "application/json",
-                "authorization": `Bearer ${process.env.AUTHO_MGT_TOKEN_PRODUCTION}`
+                "authorization": `Bearer ${process.env.AUTHO_MGT_TOKEN_TESTING}`
             };
             axios.post(`https://${process.env.AUTH0_DOMAIN}/api/v2/users`, data , { headers : headers } )
             .then(function (response) {

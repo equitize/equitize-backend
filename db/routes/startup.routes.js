@@ -5,7 +5,7 @@ const router = require("express").Router();
 
 // Create a new Startup
 router.post("/", 
-    auth0Controller.getMgtToken, 
+    // auth0Controller.getMgtToken,
     auth0RegController.createAccount, 
     auth0RegController.startup,
     startup.create
