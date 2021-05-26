@@ -7,7 +7,7 @@ const router = require("express").Router();
 router.post("/", 
     auth0Controller.getMgtToken, 
     auth0RegController.createAccount, 
-    auth0RegController.startup, 
+    auth0RegController.startup,
     startup.create
 );
 

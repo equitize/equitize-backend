@@ -9,18 +9,18 @@ module.exports = {
         try {
             const user_id = encodeURIComponent(req.user_id);
             console.log(user_id);
-            
+
             const data = {
                 "roles": [ roles.startup ]
             };
-    
+
             const headers = {
                 "Content-Type": "application/json",
                 "authorization": `Bearer ${process.env.AUTHO_MGT_TOKEN_PRODUCTION}`
             };
             axios.post(`https://${process.env.AUTH0_DOMAIN}/api/v2/users/${user_id}/roles`, data, { headers : headers } )
             .then(function (response) {
-                console.log('register startup response reached')  
+                console.log('register startup response reached')
                 console.log(response.status)
                 next();
             })
@@ -44,7 +44,7 @@ module.exports = {
                 "authorization": `Bearer ${process.env.AUTHO_MGT_TOKEN_PRODUCTION}`
             };
             axios.post(`https://${process.env.AUTH0_DOMAIN}/api/v2/users/${user_id}/roles`, data, { headers : headers } )
-            .then(function (response) {   
+            .then(function (response) {
                 console.log(response.status)
             })
             .catch(function (error) {
@@ -60,8 +60,8 @@ module.exports = {
         try {
             const data = {
                 "connection": "Username-Password-Authentication",
-                "email": "tinkitStartup@gmail.com",
-                "password": "Happymon10!"
+                "email": `${req.body.email_address}`,
+                "password": `${req.body.company_password}`
             };
             const headers = {
                 "Content-Type": "application/json",
@@ -71,7 +71,7 @@ module.exports = {
             .then(function (response) {
                 req.user_id = response.data.user_id;
                 next();
-            })  
+            })
             .catch(function (error) {
                 console.log(error);
             });
@@ -79,5 +79,5 @@ module.exports = {
             next(error)
         };
     },
-    
+
 }
