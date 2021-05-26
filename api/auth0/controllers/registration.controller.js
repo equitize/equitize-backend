@@ -60,7 +60,7 @@ module.exports = {
         try {
             const data = {
                 "connection": "Username-Password-Authentication",
-                "email": "davidstartup@gmail.com",
+                "email": "tinkitStartup@gmail.com",
                 "password": "Happymon10!"
             };
             const headers = {
