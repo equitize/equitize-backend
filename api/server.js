@@ -1,28 +1,43 @@
 const express = require("express");
-const bodyParser = require("body-parser");
+const createHttpError = require("http-errors");
 
 const cors = require("cors");
-
 const app = express();
+require('dotenv').config();
+
 
 var corsOptions = {
   origin: "http://localhost:8081"
 };
 
 app.use(cors(corsOptions));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// parse requests of content-type - application/json
-app.use(bodyParser.json());
+// for public routes
+// TODO: implement view engine for admin dashboard if there is time
+app.use('/', require('./routes/index.route'));
 
-// parse requests of content-type - application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: true }));
+
+
+// db
+const db = require("./db/models");
+db.sequelize.sync({ force: true }).then(() => {
+  console.log("Drop and re-sync db.");
+});
+
+
+app.use('/api/db/startup', require('./db/routes/startup.routes'));
+app.use('/api/db/retailInvestors', require('./db/routes/retailInvestors.routes'));
+app.use('/api/db/campaign', require('./db/routes/campaign.routes'));
+app.use('/api/db/junctionTable', require('./db/routes/junctionTable.routes'));
 
 
 /** Error Handlers */
 // 404
-// app.use((req, res, next) => {
-//   next(createHttpError.NotFound());
-// });
+app.use((error, req, res, next) => {
+  next(createHttpError.NotFound());
+});
 // // other errors
 app.use((error, req, res, next) => {     
   console.log(error)
@@ -31,23 +46,6 @@ app.use((error, req, res, next) => {
   res.send(error);
 });
 
-
-//db
-const db = require("./app/models");
-db.sequelize.sync({ force: true }).then(() => {
-  console.log("Drop and re-sync db.");
-});
-
-// simple route
-app.get("/", (req, res) => {
-  res.json({ message: "Welcome to bezkoder application." });
-});
-
-// require("./app/routes/retailInvestors.routes")(app);
-require("./app/routes/startup.routes")(app);
-require("./app/routes/retailInvestors.routes")(app);
-require("./app/routes/campaign.routes")(app);
-require("./app/routes/junctionTable.routes")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;
