@@ -2,10 +2,10 @@ const db = require("../models");
 const RetailInvestors = db.retailInvestors;
 const Op = db.Sequelize.Op;
 
-// Create and Save a new startup
+// Create and Save a new retailInvestor
 exports.create = (req, res) => {
   // Validate request
-  if (!req.body.email_address && !req.body.user_password) {
+  if (!req.body.email_address || !req.body.user_password) {
     res.status(400).send({
       message: "email_address, user_password can not be empty!"
     });
@@ -25,7 +25,7 @@ exports.create = (req, res) => {
     income_tax_return: req.body.income_tax_return ? req.body.income_tax_return :""
   };
 
-  // Save Startup in the database
+  // Save retailInvestor in the database
   RetailInvestors.create(retailInvestors)
     .then(data => {
       res.send(data);
@@ -39,7 +39,7 @@ exports.create = (req, res) => {
   
 };
 
-// Retrieve all Tutorials from the database.
+// Retrieve all retailInvestors from the database.
 exports.findAll = (req, res) => {
     const email_address = req.query.email_address;
     var condition = email_address ? { email_address: { [Op.like]: `%${email_address}%` } } : null;
@@ -57,13 +57,19 @@ exports.findAll = (req, res) => {
   
 };
 
-// Find a single Tutorial with an id
+// Find a single retailInvestor with an id
 exports.findOne = (req, res) => {
     const id = req.params.id;
 
     RetailInvestors.findByPk(id)
       .then(data => {
-        res.send(data);
+        if (data == null){
+          res.status(500).send({
+            message: "RetailInvestors with id=" + id + " not found"
+          });
+        } else {
+          res.send(data);
+        }
       })
       .catch(err => {
         res.status(500).send({
@@ -73,7 +79,7 @@ exports.findOne = (req, res) => {
   
 };
 
-// Update a Tutorial by the id in the request
+// Update a retailInvestor by the id in the request
 exports.update = (req, res) => {
   const id = req.params.id;
 
@@ -86,7 +92,7 @@ exports.update = (req, res) => {
           message: "RetailInvestors was updated successfully."
         });
       } else {
-        res.send({
+        res.status(500).send({
           message: `Cannot update RetailInvestors with id=${id}. Maybe RetailInvestors was not found or req.body is empty!`
         });
       }
@@ -98,7 +104,7 @@ exports.update = (req, res) => {
     });
 };
 
-// Delete a Tutorial with the specified id in the request
+// Delete a retailInvestor with the specified id in the request
 exports.delete = (req, res) => {
     const id = req.params.id;
 
@@ -111,7 +117,7 @@ exports.delete = (req, res) => {
             message: "RetailInvestors was deleted successfully!"
           });
         } else {
-          res.send({
+          res.status(500).send({
             message: `Cannot delete RetailInvestors with id=${id}. Maybe RetailInvestors was not found!`
           });
         }
@@ -124,7 +130,7 @@ exports.delete = (req, res) => {
   
 };
 
-// Delete all Tutorials from the database.
+// Delete all retailInvestors from the database.
 exports.deleteAll = (req, res) => {
   RetailInvestors.destroy({
         where: {},

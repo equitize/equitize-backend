@@ -5,7 +5,7 @@ const Op = db.Sequelize.Op;
 // Create and Save a new Campaign
 exports.create = (req, res) => {
   // Validate request
-  if (!req.body.company_name && !req.body.goal && !req.body.end_date) {
+  if (!req.body.company_name || !req.body.goal || !req.body.end_date) {
     res.status(400).send({
       message: "company_name, goal, end_date can not be empty!"
     });
@@ -59,14 +59,19 @@ exports.findOne = (req, res) => {
 
     Campaign.findByPk(id)
       .then(data => {
-        res.send(data);
+        if (data === null){
+          res.status(500).send({
+            message: "Campaign with id=" + id + " not found"
+          })
+        } else {
+          res.send(data);
+        }
       })
       .catch(err => {
         res.status(500).send({
           message: "Error retrieving Campaign with id=" + id
         });
       });
-  
 };
 
 // Update a Campaign by the id in the request
@@ -82,7 +87,7 @@ exports.update = (req, res) => {
           message: "Campaign was updated successfully."
         });
       } else {
-        res.send({
+        res.status(500).send({
           message: `Cannot update Campaign with id=${id}. Maybe Campaign was not found or req.body is empty!`
         });
       }
@@ -95,6 +100,8 @@ exports.update = (req, res) => {
 };
 
 // Delete a Campaign with the specified id in the request
+// TODO: discuss whether a Campaign can be deleted with unresolved investments
+// TODO: what is this relationship with the blockchain
 exports.delete = (req, res) => {
     const id = req.params.id;
 
@@ -107,7 +114,7 @@ exports.delete = (req, res) => {
             message: "Campaign was deleted successfully!"
           });
         } else {
-          res.send({
+          res.status(500).send({
             message: `Cannot delete Campaign with id=${id}. Maybe Startup was not found!`
           });
         }
