@@ -5,7 +5,7 @@ const Op = db.Sequelize.Op;
 // Create and Save a new Campaign
 exports.create = (req, res) => {
   // Validate request
-  if (!req.body.company_name || !req.body.goal || !req.body.end_date) {
+  if (!req.body.company_id || !req.body.goal || !req.body.end_date) {
     res.status(400).send({
       message: "company_name, goal, end_date can not be empty!"
     });
@@ -16,7 +16,7 @@ exports.create = (req, res) => {
   // use ternary operator to handle null values 
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_Operator
   const campaign = {
-    company_name: req.body.company_name,
+    company_id: req.body.company_id,
     goal: req.body.goal,
     end_date: req.body.end_date
   };
@@ -144,7 +144,7 @@ exports.deleteAll = (req, res) => {
         });
 };
 
-///////
+/////// // TODO: not implemented because we are attempting to switch to id
 exports.findViaCompanyName = (req, res) => {
   // const company_name = req.query.company_name;
   const company_name = req.params.company_name;

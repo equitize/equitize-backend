@@ -5,7 +5,7 @@ const Op = db.Sequelize.Op;
 // Create and Save a new junctionTable
 exports.create = (req, res) => {
   // Validate request
-  if (!req.body.retail_investor_email || !req.body.company_name || !req.body.amount) {
+  if (!req.body.retail_investor_id || !req.body.company_id || !req.body.amount) {
     res.status(400).send({
       message: "retail_investor_email, company_name, amount can not be empty!"
     });
@@ -16,8 +16,8 @@ exports.create = (req, res) => {
   // use ternary operator to handle null values 
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_Operator
   const junctionTable = {
-    retail_investor_email: req.body.retail_investor_email,
-    company_name: req.body.company_name,
+    retail_investor_id: req.body.retail_investor_id,
+    company_id: req.body.company_id,  // TODO: discuss whether this should be the campaign instead
     amount: req.body.amount,
   };
 
