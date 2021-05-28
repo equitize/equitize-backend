@@ -21,9 +21,17 @@ app.use('/', require('./routes/index.route'));
 
 
 // db
+
+// const initializeDatabase = async () => {
+//   
+//   await db.sequelize.sync({ force: true })
+// }
+// initializeDatabase()
 const db = require("./db/models");
 db.sequelize.sync({ force: true }).then(() => {
   console.log("Drop and re-sync db.");
+}).catch( function (error) {
+  throw(error)
 });
 
 
@@ -32,6 +40,9 @@ app.use('/api/db/retailInvestors', require('./db/routes/retailInvestors.routes')
 app.use('/api/db/campaign', require('./db/routes/campaign.routes'));
 app.use('/api/db/junctionTable', require('./db/routes/junctionTable.routes'));
 
+app.get('/test', async (req, res) => {
+  res.json({message: 'pass!'})
+})
 
 /** Error Handlers */
 // 404
