@@ -5,13 +5,14 @@ const Op = db.Sequelize.Op;
 // Create and Save a new startup
 exports.create = (req, res) => {
   // Validate request
+
   if (!req.body.company_name || !req.body.email_address || !req.body.company_password) {
     res.status(400).send({
       message: "company_name, email_address, company_password can not be empty!"
     });
     return;
   }
-
+  
   // Create a startup
   // use ternary operator to handle null values 
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_Operator
@@ -26,7 +27,6 @@ exports.create = (req, res) => {
     pitch_deck: req.body.pitch_deck ? req.body.pitch_deck :""
   };
 
-  // Save startup in the database
   Startup.create(startup)
     .then(data => {
       res.send(data);
