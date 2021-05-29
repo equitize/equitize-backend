@@ -3,9 +3,8 @@ const Startup = db.startup;
 const Op = db.Sequelize.Op;
 
 // Create and Save a new startup
-exports.create = (req, res) => {
+exports.create = (error, req, res) => {
   // Validate request
-
   if (!req.body.company_name || !req.body.email_address || !req.body.company_password) {
     res.status(400).send({
       message: "company_name, email_address, company_password can not be empty!"

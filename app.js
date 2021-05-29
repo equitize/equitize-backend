@@ -21,12 +21,6 @@ app.use('/', require('./routes/index.route'));
 
 
 // db
-
-// const initializeDatabase = async () => {
-//   
-//   await db.sequelize.sync({ force: true })
-// }
-// initializeDatabase()
 const db = require("./db/models");
 db.sequelize.sync({ force: true ,  logging: false }).then(() => {
   console.log("Drop and re-sync db.");
@@ -47,7 +41,6 @@ app.use((error, req, res, next) => {
 });
 // // other errors
 app.use((error, req, res, next) => {     
-  console.log(error)
   error.status = error.status || 500
   res.status(error.status); 
   res.send(error);
