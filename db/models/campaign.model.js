@@ -1,7 +1,7 @@
 module.exports = (sequelize, Sequelize) => {
     const Campaign = sequelize.define("campaign", {
-      company_name: {
-        type: Sequelize.STRING,
+      company_id: {
+        type: Sequelize.INTEGER,
         allowNull: false
       },
       goal: {
