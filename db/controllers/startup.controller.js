@@ -3,39 +3,42 @@ const Startup = db.startup;
 const Op = db.Sequelize.Op;
 
 // Create and Save a new startup
-exports.create = (error, req, res) => {
-  // Validate request
-  if (!req.body.company_name || !req.body.email_address || !req.body.company_password) {
-    res.status(400).send({
-      message: "company_name, email_address, company_password can not be empty!"
-    });
-    return;
-  }
-  
-  // Create a startup
-  // use ternary operator to handle null values 
-  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_Operator
-  const startup = {
-    company_name: req.body.company_name,
-    email_address: req.body.email_address,
-    company_password: req.body.company_password,
-    profile_description: req.body.profile_description ? req.body.profile_description :"",
-    profile_photo: req.body.profile_photo ? req.body.profile_photo :"",
-    cap_table: req.body.cap_table ? req.body.cap_table :"",
-    acra_documents: req.body.acra_documents ? req.body.acra_document :"",
-    pitch_deck: req.body.pitch_deck ? req.body.pitch_deck :""
-  };
-
-  Startup.create(startup)
-    .then(data => {
-      res.send(data);
-    })
-    .catch(err => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while creating the Startup."
+exports.create = (req, res) => {
+  try {
+    // Validate request
+    if (!req.body.company_name || !req.body.email_address || !req.body.company_password) {
+      res.status(400).send({    
+        message: "company_name, email_address, company_password can not be empty!"
       });
-    });
+      return;
+    }
+    // Create a startup
+    // use ternary operator to handle null values 
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_Operator
+    const startup = {
+      company_name: req.body.company_name,
+      email_address: req.body.email_address,
+      company_password: req.body.company_password,
+      profile_description: req.body.profile_description ? req.body.profile_description :"",
+      profile_photo: req.body.profile_photo ? req.body.profile_photo :"",
+      cap_table: req.body.cap_table ? req.body.cap_table :"",
+      acra_documents: req.body.acra_documents ? req.body.acra_document :"",
+      pitch_deck: req.body.pitch_deck ? req.body.pitch_deck :""
+    };
+    
+    Startup.create(startup)
+      .then(data => {
+        res.send(data);
+      })
+      .catch(err => {
+        res.status(500).send({
+          message:
+            err.message || "Some error occurred while creating the Startup."
+        });
+      });
+  } catch (error) {
+    next(error)
+  }
   
 };
 
