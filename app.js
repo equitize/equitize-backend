@@ -22,7 +22,7 @@ app.use('/', require('./routes/index.route'));
 
 // db
 const db = require("./db/models");
-db.sequelize.sync({ force: true ,  logging: false }).then(() => {
+db.sequelize.sync({ force: true, logging:false }).then(() => {
   console.log("Drop and re-sync db.");
 }).catch( function (error) {
   throw(error)
@@ -46,9 +46,9 @@ app.use((error, req, res, next) => {
   res.send(error);
 });
 
-// module.exports = app;
+module.exports = app;
 // set port, listen for requests
-const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}.`);
-});
+// const PORT = process.env.PORT || 8080;
+// app.listen(PORT, () => {
+//   console.log(`Server is running on port ${PORT}.`);
+// });

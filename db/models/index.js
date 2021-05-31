@@ -26,5 +26,7 @@ db.startup = require("./startup.model.js")(sequelize, Sequelize);
 db.retailInvestors = require("./retailInvestors.model.js")(sequelize, Sequelize);
 db.campaign = require("./campaign.model.js")(sequelize, Sequelize);
 db.junctionTable = require("./junctionTable.model.js")(sequelize, Sequelize);
+db.commercialChampion = require("./commercialChampion.model.js")(sequelize, Sequelize);
+db.milestone = require("./milestone.model.js")(sequelize, Sequelize);
 
 module.exports = db;

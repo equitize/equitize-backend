@@ -23,7 +23,12 @@ exports.create = (req, res) => {
       profile_photo: req.body.profile_photo ? req.body.profile_photo :"",
       cap_table: req.body.cap_table ? req.body.cap_table :"",
       acra_documents: req.body.acra_documents ? req.body.acra_document :"",
-      pitch_deck: req.body.pitch_deck ? req.body.pitch_deck :""
+      pitch_deck: req.body.pitch_deck ? req.body.pitch_deck :"",
+      video: req.body.video ? req.body.video :"",
+      zoom_datetime: req.body.zoom_datetime ? req.body.zoom_datetime :"",
+      commerical_champion: req.body.commerical_champion ? req.body.commerical_champion :"",
+      designsprint_datetime: req.body.designsprint_datetime ? req.body.designsprint_datetime :"",
+      bank_info:req.body.bank_info ? req.body.bank_info :"",
     };
     
     Startup.create(startup)

@@ -163,3 +163,22 @@ exports.findViaCompanyName = (req, res) => {
     });
 
 };
+
+exports.findViaCompanyId = (req, res) => {
+  // const company_name = req.query.company_name;
+  const company_id= req.params.company_id;
+  // console.log(req.query)
+  var condition = company_id ? { company_id: { [Op.like]: `${company_id}` } } : null;
+
+  Campaign.findAll({ where: condition })
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while retrieving Campaign."
+      });
+    });
+
+};
