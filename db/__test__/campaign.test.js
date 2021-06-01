@@ -28,11 +28,6 @@ describe('Testing [/api/db/campaign]', () => {
   const goal = 123456
   const goal_new = 987654
   const end_date = "datestring"
-
-  const company_name_alt = 'tesla_motors'
-  const email_address_alt = `company-${company_name_alt}@email.com`
-  const company_password_alt = 'password'
-  const company_name_new = 'tesla_motors2'
   
   const invalid_string = 'sample_invalid_string'
   const invalid_id = 1000000007
@@ -93,6 +88,7 @@ describe('Testing [/api/db/campaign]', () => {
     expect(res.statusCode).toBe(400)
   });
 
+  // currently allowing startup to create multiple campaign at the same time
   it('create campaign with duplicate info', async() => {
     let requestBody = {
       company_id:company_id,
@@ -118,7 +114,7 @@ describe('Testing [/api/db/campaign]', () => {
   it('get a campaign by id but invalid', async() => {
     requestBody = {}
     res = await supertest(app)
-                          .get(`/api/db/campaign/${invalid_string}`)
+                          .get(`/api/db/campaign/${invalid_id}`)
                           .send(requestBody)
     expect(res.statusCode).toBe(500)
   });
@@ -172,7 +168,7 @@ describe('Testing [/api/db/campaign]', () => {
   it('delete campaign by id but invalid id', async() => {
     requestBody = {}
     res = await supertest(app)
-                          .delete(`/api/db/campaign/${invalid_string}`)
+                          .delete(`/api/db/campaign/${invalid_id}`)
                           .send(requestBody)
     expect(res.statusCode).toBe(500)
   });
@@ -180,7 +176,7 @@ describe('Testing [/api/db/campaign]', () => {
   it('delete campaign by id', async() => {
     requestBody = {}
     res = await supertest(app)
-                          .delete(`/api/db/campaign/${company_id}`)
+                          .delete(`/api/db/campaign/${campaign_id}`)
                           .send(requestBody)
     expect(res.statusCode).toBe(200)
   });
@@ -188,7 +184,7 @@ describe('Testing [/api/db/campaign]', () => {
   it('delete campaign by id but already deleted', async() => {
     requestBody = {}
     res = await supertest(app)
-                          .delete(`/api/db/campaign/${company_id}`)
+                          .delete(`/api/db/campaign/${campaign_id}`)
                           .send(requestBody)
     expect(res.statusCode).toBe(500)
   });

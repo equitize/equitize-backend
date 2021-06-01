@@ -20,11 +20,16 @@ describe('Testing [/api/db/retailInvestors]', () => {
   const retailInvestor_name = 'kenny'
   const email_address = `${retailInvestor_name}@email.com`
   const user_password = 'password'
+
   const retailInvestor_name_alt = 'francisco'
   const email_address_alt = `investor-${retailInvestor_name_alt}@email.com`
   const user_password_alt = 'password'
+  
   const email_address_new = `investor2-${retailInvestor_name_alt}@email.com`
+
   const invalid_string = 'sample_invalid_string'
+  const invalid_id = 1000000007
+
   let retailInvestor_id
 
   it('create retailInvestor', async() => {
@@ -88,7 +93,7 @@ describe('Testing [/api/db/retailInvestors]', () => {
   it('get a retailInvestor by id but invalid', async() => {
     requestBody = {}
     res = await supertest(app)
-                          .get(`/api/db/retailInvestors/${invalid_string}`)
+                          .get(`/api/db/retailInvestors/${invalid_id}`)
                           .send(requestBody)
     expect(res.statusCode).toBe(500)
   });
@@ -152,7 +157,7 @@ describe('Testing [/api/db/retailInvestors]', () => {
   it('delete retailInvestor by id but invalid', async() => {
     requestBody = {}
     res = await supertest(app)
-                          .delete(`/api/db/retailInvestors/${invalid_string}`)
+                          .delete(`/api/db/retailInvestors/${invalid_id}`)
                           .send(requestBody)
     expect(res.statusCode).toBe(500)
   });

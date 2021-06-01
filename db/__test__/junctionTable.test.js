@@ -29,17 +29,16 @@ describe('Testing [/api/db/campaign]', () => {
   const goal_new = 987654
   const end_date = "datestring"
 
-  const company_name_alt = 'tesla_motors'
-  const email_address_alt = `company-${company_name_alt}@email.com`
-  const company_password_alt = 'password'
-  const company_name_new = 'tesla_motors2'
+  const investment_amount = 1234
+  const investment_amount_new = 2345
   
   const invalid_string = 'sample_invalid_string'
   const invalid_id = 1000000007
-
+  
   let company_id
   let retailInvestor_id
   let campaign_id
+  let junction_table_id
 
   it('create company', async() => {
     let requestBody = {
@@ -79,124 +78,83 @@ describe('Testing [/api/db/campaign]', () => {
     expect(res.statusCode).toBe(200)
     campaign_id = res.body.id    
   });
-  // maybe should test creating campaign without valid company_id 
 
-  it('create campaign but missing info', async() => {
+  // TODO: note that the investment is made on company_id, not campaign_id, not sure if intended
+  // TODO: does not validate if the investment amount has been reached
+  it('create junctionTable', async() => {
     let requestBody = {
+      retail_investor_id:retailInvestor_id,
       company_id:company_id,
-      goal:goal,
-      // end_date:end_date  // info missed out
+      amount:investment_amount
     }
     let res = await supertest(app)
-                          .post("/api/db/campaign")
+                          .post("/api/db/junctionTable")
                           .send(requestBody)
-    expect(res.statusCode).toBe(400)
+    expect(res.statusCode).toBe(200)
+    junctionTable_id = res.body.id    
   });
 
-  it('create campaign with duplicate info', async() => {
-    let requestBody = {
-      company_id:company_id,
-      goal:goal,
-      end_date:end_date
-    }
-    let res = await supertest(app)
-                          .post("/api/db/campaign")
-                          .send(requestBody)
-    expect(res.statusCode).toBe(200)  // currently allowed
-    retailInvestor_id = res.body.id    
-  });
+  // negative cases of above
 
-  it('get a campaign by id', async() => {
+  it('get a junctionTable by id', async() => {
     requestBody = {}
     res = await supertest(app)
-                          .get(`/api/db/campaign/${campaign_id}`)
+                          .get(`/api/db/junctionTable/${junctionTable_id}`)
                           .send(requestBody)
     expect(res.body.id).toBe(company_id)
     expect(res.statusCode).toBe(200)
   });
 
-  it('get a campaign by id but invalid', async() => {
+  it('get all junctionTables', async() => {
     requestBody = {}
     res = await supertest(app)
-                          .get(`/api/db/campaign/${invalid_string}`)
+                          .get(`/api/db/junctionTable/`)
                           .send(requestBody)
-    expect(res.statusCode).toBe(500)
-  });
-
-  it('get all campaigns', async() => {
-    requestBody = {}
-    res = await supertest(app)
-                          .get("/api/db/campaign")
-                          .send(requestBody)
-    expect(res.body.length).toBe(2)
+    expect(res.body.length).toBe(1)
     expect(res.statusCode).toBe(200)
   });
 
-  it('get by company id', async() => {
-    requestBody = {}
-    res = await supertest(app)
-                          .get(`/api/db/campaign/company_id/${company_id}`)
-                          .send(requestBody)
-    expect(res.body.length).toBe(2)  // including duplicate
-    expect(res.statusCode).toBe(200)
-  });
-
-  it('get by company name but invalid', async() => {
-    requestBody = {}
-    res = await supertest(app)
-                          .get(`/api/db/campaign/company_id/${invalid_string}`)
-                          .send(requestBody)
-    // expect(res.statusCode).toBe(500)
-  });
-
-  it('update campaign details', async() => {
+  // TODO: does not validate if the investment amount has been reached
+  it('update junctionTable details', async() => {
     requestBody = {
-      goal:goal_new,
+      amount:investment_amount_new
     }
     res = await supertest(app)
-                          .put(`/api/db/campaign/${company_id}`)
+                          .put(`/api/db/junctionTable/${junctionTable_id}`)
                           .send(requestBody)
     expect(res.statusCode).toBe(200)
   });
 
-  it('update campaign details but invalid id', async() => {
-    requestBody = {
-      goal:goal_new,
-    }
+  // negative example of above
+
+  it('delete junctionTable by id but invalid id', async() => {
+    requestBody = {}
     res = await supertest(app)
-                          .put(`/api/db/campaign/${invalid_string}`)
+                          .delete(`/api/db/junctionTable/${invalid_id}`)
                           .send(requestBody)
     expect(res.statusCode).toBe(500)
   });
 
-  it('delete campaign by id but invalid id', async() => {
+  it('delete junctionTable by id', async() => {
     requestBody = {}
     res = await supertest(app)
-                          .delete(`/api/db/campaign/${invalid_string}`)
-                          .send(requestBody)
-    expect(res.statusCode).toBe(500)
-  });
-
-  it('delete campaign by id', async() => {
-    requestBody = {}
-    res = await supertest(app)
-                          .delete(`/api/db/campaign/${company_id}`)
+                          .delete(`/api/db/junctionTable/${junctionTable_id}`)
                           .send(requestBody)
     expect(res.statusCode).toBe(200)
   });
 
-  it('delete campaign by id but already deleted', async() => {
+  it('delete junctionTable by id but already deleted', async() => {
     requestBody = {}
     res = await supertest(app)
-                          .delete(`/api/db/campaign/${company_id}`)
+                          .delete(`/api/db/junctionTable/${junctionTable_id}`)
                           .send(requestBody)
     expect(res.statusCode).toBe(500)
   });
 
-  it('delete all campaigns', async() => {
+  it('delete all junctionTables', async() => {
     requestBody = {}
     res = await supertest(app)
-                          .delete(`/api/db/campaign/`)
+                          .delete(`/api/db/junctionTable/`)
                           .send(requestBody)
     expect(res.statusCode).toBe(200)
   });

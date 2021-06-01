@@ -20,11 +20,16 @@ describe('Testing [/api/db/startup]', () => {
   const company_name = 'equitize'
   const email_address = `company-${company_name}@email.com`
   const company_password = 'password'
+
   const company_name_alt = 'tesla_motors'
   const email_address_alt = `company-${company_name_alt}@email.com`
   const company_password_alt = 'password'
+
   const company_name_new = 'tesla_motors2'
+
   const invalid_string = 'sample_invalid_string'
+  const invalid_id = 1000000007
+
   let company_id
 
   it('create company', async() => {
@@ -88,7 +93,7 @@ describe('Testing [/api/db/startup]', () => {
   it('get a company by id but invalid', async() => {
     requestBody = {}
     res = await supertest(app)
-                          .get(`/api/db/startup/${invalid_string}`)
+                          .get(`/api/db/startup/${invalid_id}`)
                           .send(requestBody)
     expect(res.statusCode).toBe(500)
   });
@@ -161,7 +166,7 @@ describe('Testing [/api/db/startup]', () => {
       company_name:company_name,
     }
     res = await supertest(app)
-                          .put(`/api/db/startup/${invalid_string}`)
+                          .put(`/api/db/startup/${invalid_id}`)
                           .send(requestBody)
     expect(res.statusCode).toBe(500)
   });
@@ -169,7 +174,7 @@ describe('Testing [/api/db/startup]', () => {
   it('delete company by id but invalid id', async() => {
     requestBody = {}
     res = await supertest(app)
-                          .delete(`/api/db/startup/${invalid_string}`)
+                          .delete(`/api/db/startup/${invalid_id}`)
                           .send(requestBody)
     expect(res.statusCode).toBe(500)
   });
