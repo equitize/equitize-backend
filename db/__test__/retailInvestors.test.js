@@ -10,7 +10,7 @@ it('Testing to see if Jest works', () => {
 })
 
 // this is an eg. of one test suite. 
-describe('Testing [/api/db/startup]', () => {
+describe('Testing [/api/db/retailInvestors]', () => {
   let thisDb = db
   
   beforeAll(async () => {
@@ -24,8 +24,8 @@ describe('Testing [/api/db/startup]', () => {
   const email_address_alt = `investor-${retailInvestor_name_alt}@email.com`
   const user_password_alt = 'password'
   const email_address_new = `investor2-${retailInvestor_name_alt}@email.com`
+  const invalid_string = 'sample_invalid_string'
   let retailInvestor_id
-  let invalid_string = 'sample_invalid_string'
 
   it('create retailInvestor', async() => {
     let requestBody = {
@@ -40,7 +40,7 @@ describe('Testing [/api/db/startup]', () => {
     retailInvestor_id = res.body.id    
   });
 
-  it('create retailInvestor with missing info', async() => {
+  it('create retailInvestor but missing info', async() => {
     let requestBody = {
       first_name:retailInvestor_name_alt,
       email_address:email_address_alt,
@@ -52,7 +52,7 @@ describe('Testing [/api/db/startup]', () => {
     expect(res.statusCode).toBe(400)
   });
 
-  it('create retailInvestor with duplicate info', async() => {
+  it('create retailInvestor but duplicate info', async() => {
     let requestBody ={
       first_name:retailInvestor_name,  // duplicate_info
       email_address:email_address,  // duplicate_info
@@ -119,7 +119,7 @@ describe('Testing [/api/db/startup]', () => {
     // expect(res.statusCode).toBe(500)
   });
 
-  it('update details', async() => {
+  it('update retailInvestor details', async() => {
     requestBody = {
       email_address:email_address_new,
     }
@@ -129,7 +129,7 @@ describe('Testing [/api/db/startup]', () => {
     expect(res.statusCode).toBe(200)
   });
 
-  it('update details to duplicate', async() => {
+  it('update retailInvestor details to duplicate', async() => {
     requestBody = {
       email_address:email_address_alt,
     }
@@ -139,7 +139,7 @@ describe('Testing [/api/db/startup]', () => {
     expect(res.statusCode).toBe(500)
   });
 
-  it('update details but invalid id', async() => {
+  it('update retailInvestor details but invalid id', async() => {
     requestBody = {
       email_address:email_address,
     }
@@ -149,7 +149,15 @@ describe('Testing [/api/db/startup]', () => {
     expect(res.statusCode).toBe(500)
   });
 
-  it('delete by id', async() => {
+  it('delete retailInvestor by id but invalid', async() => {
+    requestBody = {}
+    res = await supertest(app)
+                          .delete(`/api/db/retailInvestors/${invalid_string}`)
+                          .send(requestBody)
+    expect(res.statusCode).toBe(500)
+  });
+
+  it('delete retailInvestor by id', async() => {
     requestBody = {}
     res = await supertest(app)
                           .delete(`/api/db/retailInvestors/${retailInvestor_id}`)
@@ -157,7 +165,7 @@ describe('Testing [/api/db/startup]', () => {
     expect(res.statusCode).toBe(200)
   });
 
-  it('delete by id but already deleted', async() => {
+  it('delete retailInvestor by id but already deleted', async() => {
     requestBody = {}
     res = await supertest(app)
                           .delete(`/api/db/retailInvestors/${retailInvestor_id}`)
@@ -165,7 +173,7 @@ describe('Testing [/api/db/startup]', () => {
     expect(res.statusCode).toBe(500)
   });
 
-  it('delete all', async() => {
+  it('delete all retailInvestors', async() => {
     requestBody = {}
     res = await supertest(app)
                           .delete(`/api/db/retailInvestors/`)

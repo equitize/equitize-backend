@@ -24,8 +24,8 @@ describe('Testing [/api/db/startup]', () => {
   const email_address_alt = `company-${company_name_alt}@email.com`
   const company_password_alt = 'password'
   const company_name_new = 'tesla_motors2'
+  const invalid_string = 'sample_invalid_string'
   let company_id
-  let invalid_string = 'sample_invalid_string'
 
   it('create company', async() => {
     let requestBody = {
@@ -40,7 +40,7 @@ describe('Testing [/api/db/startup]', () => {
     company_id = res.body.id    
   });
 
-  it('create company with missing info', async() => {
+  it('create company but missing info', async() => {
     let requestBody = {
       company_name:company_name_alt,
       email_address:email_address_alt,
@@ -52,7 +52,7 @@ describe('Testing [/api/db/startup]', () => {
     expect(res.statusCode).toBe(400)
   });
 
-  it('create company with duplicate info', async() => {
+  it('create company but duplicate info', async() => {
     let requestBody ={
       company_name:company_name,  // duplicate info
       email_address:email_address,  // duplicate info
@@ -136,7 +136,7 @@ describe('Testing [/api/db/startup]', () => {
     // expect(res.statusCode).toBe(500)
   });
 
-  it('update details', async() => {
+  it('update company details', async() => {
     requestBody = {
       company_name:company_name_new,
     }
@@ -146,7 +146,7 @@ describe('Testing [/api/db/startup]', () => {
     expect(res.statusCode).toBe(200)
   });
 
-  it('update details to duplicate', async() => {
+  it('update company details to duplicate', async() => {
     requestBody = {
       company_name:company_name_alt,
     }
@@ -156,7 +156,7 @@ describe('Testing [/api/db/startup]', () => {
     expect(res.statusCode).toBe(500)
   });
 
-  it('update details but invalid id', async() => {
+  it('update company details but invalid id', async() => {
     requestBody = {
       company_name:company_name,
     }
@@ -166,15 +166,7 @@ describe('Testing [/api/db/startup]', () => {
     expect(res.statusCode).toBe(500)
   });
 
-  it('delete by id', async() => {
-    requestBody = {}
-    res = await supertest(app)
-                          .delete(`/api/db/startup/${company_id}`)
-                          .send(requestBody)
-    expect(res.statusCode).toBe(200)
-  });
-
-  it('delete by id but already deleted', async() => {
+  it('delete company by id but invalid id', async() => {
     requestBody = {}
     res = await supertest(app)
                           .delete(`/api/db/startup/${invalid_string}`)
@@ -182,7 +174,23 @@ describe('Testing [/api/db/startup]', () => {
     expect(res.statusCode).toBe(500)
   });
 
-  it('delete all', async() => {
+  it('delete company by id', async() => {
+    requestBody = {}
+    res = await supertest(app)
+                          .delete(`/api/db/startup/${company_id}`)
+                          .send(requestBody)
+    expect(res.statusCode).toBe(200)
+  });
+
+  it('delete company by id but already deleted', async() => {
+    requestBody = {}
+    res = await supertest(app)
+                          .delete(`/api/db/startup/${invalid_string}`)
+                          .send(requestBody)
+    expect(res.statusCode).toBe(500)
+  });
+
+  it('delete all companies', async() => {
     requestBody = {}
     res = await supertest(app)
                           .delete(`/api/db/startup/`)
