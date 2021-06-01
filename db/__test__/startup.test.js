@@ -10,8 +10,9 @@ it('Testing to see if Jest works', () => {
 })
 
 // this is an eg. of one test suite. 
-describe('Startup Creation', () => {
+describe('Testing [/api/db/startup]', () => {
   let thisDb = db
+  
   beforeAll(async () => {
     await thisDb.sequelize.sync({ force: true })
   });
@@ -22,8 +23,11 @@ describe('Startup Creation', () => {
   const company_name_alt = 'tesla_motors'
   const email_address_alt = `company-${company_name_alt}@email.com`
   const company_password_alt = 'password'
+  const company_name_new = 'tesla_motors2'
+  let company_id
+  let invalid_string = 'sample_invalid_string'
 
-  it('Testing startup creation API [/api/db/startup]', async() => {
+  it('create company', async() => {
     let requestBody = {
       company_name:company_name,
       email_address:email_address,
@@ -33,10 +37,10 @@ describe('Startup Creation', () => {
                           .post("/api/db/startup")
                           .send(requestBody)
     expect(res.statusCode).toBe(200)
-    const company_id = res.body.id    
+    company_id = res.body.id    
   });
 
-  it('Testing startup creation API [/api/db/startup] with missing info', async() => {
+  it('create company with missing info', async() => {
     let requestBody = {
       company_name:company_name,
       email_address:email_address,
@@ -48,7 +52,7 @@ describe('Startup Creation', () => {
     expect(res.statusCode).toBe(400)
   });
 
-  it('Testing startup creation API [/api/db/startup] with duplicate info', async() => {
+  it('create company with duplicate info', async() => {
     let requestBody ={
       company_name:company_name,  // duplicate info
       email_address:email_address,  // duplicate info
@@ -60,7 +64,7 @@ describe('Startup Creation', () => {
     expect(res.statusCode).toBe(500)
   });
 
-  it('Testing startup creation API [/api/db/startup] with different info', async() => {
+  it('create startup with different info', async() => {
     let requestBody = {
       company_name:company_name_alt,
       email_address:email_address_alt,
@@ -72,7 +76,24 @@ describe('Startup Creation', () => {
     expect(res.statusCode).toBe(200)
   });
 
-  it('Testing get all', async() => {
+  it('get a company by id', async() => {
+    requestBody = {}
+    res = await supertest(app)
+                          .get(`/api/db/startup/${company_id}`)
+                          .send(requestBody)
+    expect(res.body.id).toBe(company_id)
+    expect(res.statusCode).toBe(200)
+  });
+
+  it('get a company by id but invalid', async() => {
+    requestBody = {}
+    res = await supertest(app)
+                          .get(`/api/db/startup/${invalid_string}`)
+                          .send(requestBody)
+    expect(res.statusCode).toBe(500)
+  });
+
+  it('get all companies', async() => {
     requestBody = {}
     res = await supertest(app)
                           .get("/api/db/startup")
@@ -81,26 +102,95 @@ describe('Startup Creation', () => {
     expect(res.statusCode).toBe(200)
   });
 
+  it('get by company name', async() => {
+    requestBody = {}
+    res = await supertest(app)
+                          .get(`/api/db/startup/company_name/${company_name}`)
+                          .send(requestBody)
+    expect(res.body.length).toBe(1)
+    expect(res.statusCode).toBe(200)
+  });
+
+  it('get by company name but invalid', async() => {
+    requestBody = {}
+    res = await supertest(app)
+                          .get(`/api/db/startup/company_name/${invalid_string}`)
+                          .send(requestBody)
+    // expect(res.statusCode).toBe(500)
+  });
+
+  it('get by company email', async() => {
+    requestBody = {}
+    res = await supertest(app)
+                          .get(`/api/db/startup/email/${email_address}`)
+                          .send(requestBody)
+    // expect(res.body.length).toBe(1)
+    expect(res.statusCode).toBe(200)
+  });
+
+  it('get by company email but invalid', async() => {
+    requestBody = {}
+    res = await supertest(app)
+                          .get(`/api/db/startup/email/${invalid_string}`)
+                          .send(requestBody)
+    // expect(res.statusCode).toBe(500)
+  });
+
+  it('update details', async() => {
+    requestBody = {
+      company_name:company_name_new,
+    }
+    res = await supertest(app)
+                          .put(`/api/db/startup/${company_id}`)
+                          .send(requestBody)
+    expect(res.statusCode).toBe(200)
+  });
+
+  it('update details to duplicate', async() => {
+    requestBody = {
+      company_name:company_name_alt,
+    }
+    res = await supertest(app)
+                          .put(`/api/db/startup/${company_id}`)
+                          .send(requestBody)
+    expect(res.statusCode).toBe(500)
+  });
+
+  it('update details but invalid id', async() => {
+    requestBody = {
+      company_name:company_name_alt,
+    }
+    res = await supertest(app)
+                          .put(`/api/db/startup/${company_id}`)
+                          .send(requestBody)
+    expect(res.statusCode).toBe(500)
+  });
+
+  it('delete by id', async() => {
+    requestBody = {}
+    res = await supertest(app)
+                          .delete(`/api/db/startup/${company_id}`)
+                          .send(requestBody)
+    expect(res.statusCode).toBe(200)
+  });
+
+  it('delete by id but already deleted', async() => {
+    requestBody = {}
+    res = await supertest(app)
+                          .delete(`/api/db/startup/${invalid_string}`)
+                          .send(requestBody)
+    expect(res.statusCode).toBe(500)
+  });
+
+  it('delete all', async() => {
+    requestBody = {}
+    res = await supertest(app)
+                          .delete(`/api/db/startup/`)
+                          .send(requestBody)
+    expect(res.statusCode).toBe(200)
+  });
+
   afterAll(async () => {
     await thisDb.sequelize.close()
   })
 })
-
-// describe("test create startup with db", () => {
-//   // Set the db object to a variable which can be accessed throughout the whole test file
-//   let thisDb = db
-
-//   // Before any tests run, clear the DB and run migrations with Sequelize sync()
-//   beforeAll(async () => {
-//     await thisDb.sequelize.sync({ force: true })
-//   })
-
-//   it("Description of test", async () => {
-//     // add yr test here
-//   })
-
-//   // After all tersts have finished, close the DB connection
-//   afterAll(async () => {
-//     await thisDb.sequelize.close()
-//   });
-// })
