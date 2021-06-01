@@ -42,9 +42,9 @@ describe('Testing [/api/db/startup]', () => {
 
   it('create company with missing info', async() => {
     let requestBody = {
-      company_name:company_name,
-      email_address:email_address,
-      // company_password:company_password  // info missed
+      company_name:company_name_alt,
+      email_address:email_address_alt,
+      // company_password:company_password_alt  // info missed
     }
     let res = await supertest(app)
                           .post("/api/db/startup")
@@ -158,10 +158,10 @@ describe('Testing [/api/db/startup]', () => {
 
   it('update details but invalid id', async() => {
     requestBody = {
-      company_name:company_name_alt,
+      company_name:company_name,
     }
     res = await supertest(app)
-                          .put(`/api/db/startup/${company_id}`)
+                          .put(`/api/db/startup/${invalid_string}`)
                           .send(requestBody)
     expect(res.statusCode).toBe(500)
   });
