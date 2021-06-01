@@ -1,10 +1,10 @@
 module.exports = (sequelize, Sequelize) => {
-    const Campaign = sequelize.define("campaign", {
+    const Milestone = sequelize.define("milestone", {
       company_id: {
         type: Sequelize.INTEGER,
         allowNull: false
       },
-      goal: {
+      milestone_part: {
         type: Sequelize.INTEGER,
         allowNull: false
       },
@@ -12,7 +12,14 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.STRING,
         allowNull: false
       },
+      description: {
+        type: Sequelize.STRING,
+      },
+      amount:{
+        type: Sequelize.INTEGER,
+        allowNull: false
+      }
     });
   
-    return Campaign;
+    return Milestone;
   };

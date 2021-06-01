@@ -74,10 +74,12 @@ module.exports = {
                 next();
             })
             .catch(function (error) {
-                console.log(error);
+                // console.log(error);
+                console.log('alskdjfhalsdkjfhas')
+                next(error);
             });
-        } catch (erorr) {
-            next(error)
+        } catch (error) {
+            next(error);
         };
     },
 

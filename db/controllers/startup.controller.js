@@ -4,43 +4,50 @@ const Op = db.Sequelize.Op;
 
 // Create and Save a new startup
 exports.create = (req, res) => {
-  // Validate request
-  if (!req.body.company_name && !req.body.email_address && !req.body.company_password) {
-    res.status(400).send({
-      message: "company_name, email_address, company_password can not be empty!"
-    });
-    return;
-  }
-
-  // Create a startup
-  // use ternary operator to handle null values 
-  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_Operator
-  const startup = {
-    company_name: req.body.company_name,
-    email_address: req.body.email_address,
-    company_password: req.body.company_password ,
-    profile_description: req.body.profile_description ? req.body.profile_description :"",
-    profile_photo: req.body.profile_photo ? req.body.profile_photo :"",
-    cap_table: req.body.cap_table ? req.body.cap_table :"",
-    acra_documents: req.body.acra_documents ? req.body.acra_document :"",
-    pitch_deck: req.body.pitch_deck ? req.body.pitch_deck :""
-  };
-
-  // Save Startup in the database
-  Startup.create(startup)
-    .then(data => {
-      res.send(data);
-    })
-    .catch(err => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while creating the Startup."
+  try {
+    // Validate request
+    if (!req.body.company_name || !req.body.email_address || !req.body.company_password) {
+      res.status(400).send({    
+        message: "company_name, email_address, company_password can not be empty!"
       });
-    });
+      return;
+    }
+    // Create a startup
+    // use ternary operator to handle null values 
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_Operator
+    const startup = {
+      company_name: req.body.company_name,
+      email_address: req.body.email_address,
+      company_password: req.body.company_password,
+      profile_description: req.body.profile_description ? req.body.profile_description :"",
+      profile_photo: req.body.profile_photo ? req.body.profile_photo :"",
+      cap_table: req.body.cap_table ? req.body.cap_table :"",
+      acra_documents: req.body.acra_documents ? req.body.acra_document :"",
+      pitch_deck: req.body.pitch_deck ? req.body.pitch_deck :"",
+      video: req.body.video ? req.body.video :"",
+      zoom_datetime: req.body.zoom_datetime ? req.body.zoom_datetime :"",
+      commerical_champion: req.body.commerical_champion ? req.body.commerical_champion :"",
+      designsprint_datetime: req.body.designsprint_datetime ? req.body.designsprint_datetime :"",
+      bank_info:req.body.bank_info ? req.body.bank_info :"",
+    };
+    
+    Startup.create(startup)
+      .then(data => {
+        res.send(data);
+      })
+      .catch(err => {
+        res.status(500).send({
+          message:
+            err.message || "Some error occurred while creating the Startup."
+        });
+      });
+  } catch (error) {
+    next(error)
+  }
   
 };
 
-// Retrieve all Tutorials from the database.
+// Retrieve all startups from the database.
 exports.findAll = (req, res) => {
     const company_name = req.query.company_name;
     var condition = company_name ? { company_name: { [Op.like]: `%${company_name}%` } } : null;
@@ -58,23 +65,29 @@ exports.findAll = (req, res) => {
   
 };
 
-// Find a single Tutorial with an id
+// Find a single startup with an id
 exports.findOne = (req, res) => {
     const id = req.params.id;
 
     Startup.findByPk(id)
       .then(data => {
+        if (data == null){
+          res.status(500).send({
+            message: "Startup with id=" + id
+          })
+        } else {
         res.send(data);
+        }
       })
       .catch(err => {
         res.status(500).send({
-          message: "Error retrieving Tutorial with id=" + id
+          message: "Error retrieving Startup with id=" + id
         });
       });
   
 };
 
-// Update a Tutorial by the id in the request
+// Update a startup by the id in the request
 exports.update = (req, res) => {
   const id = req.params.id;
 
@@ -87,7 +100,7 @@ exports.update = (req, res) => {
           message: "Startup was updated successfully."
         });
       } else {
-        res.send({
+        res.status(500).send({
           message: `Cannot update Startup with id=${id}. Maybe Startup was not found or req.body is empty!`
         });
       }
@@ -99,7 +112,7 @@ exports.update = (req, res) => {
     });
 };
 
-// Delete a Tutorial with the specified id in the request
+// Delete a startup with the specified id in the request
 exports.delete = (req, res) => {
     const id = req.params.id;
 
@@ -112,7 +125,7 @@ exports.delete = (req, res) => {
             message: "Startup was deleted successfully!"
           });
         } else {
-          res.send({
+          res.status(500).send({
             message: `Cannot delete Startup with id=${id}. Maybe Startup was not found!`
           });
         }
@@ -125,7 +138,7 @@ exports.delete = (req, res) => {
   
 };
 
-// Delete all Tutorials from the database.
+// Delete all startups from the database.
 exports.deleteAll = (req, res) => {
     Startup.destroy({
         where: {},

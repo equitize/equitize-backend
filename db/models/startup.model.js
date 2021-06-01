@@ -29,7 +29,21 @@ module.exports = (sequelize, Sequelize) => {
       pitch_deck: {
         type: Sequelize.STRING
       },
+      video:{
+        type: Sequelize.STRING
+      },
+      zoom_datetime: {
+        type: Sequelize.STRING
+      },
+      commerical_champion: {
+        type: Sequelize.STRING
+      },
+      designsprint_datetime: {
+        type: Sequelize.STRING
+      },
+      bank_info: {
+        type: Sequelize.STRING
+      },
     });
-  
     return Startup;
   };

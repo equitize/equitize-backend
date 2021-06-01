@@ -2,10 +2,10 @@ const db = require("../models");
 const JunctionTable = db.junctionTable;
 const Op = db.Sequelize.Op;
 
-// Create and Save a new JunctionTable
+// Create and Save a new junctionTable
 exports.create = (req, res) => {
   // Validate request
-  if (!req.body.retail_investor_email && !req.body.company_name && !req.body.amount) {
+  if (!req.body.retail_investor_id || !req.body.company_id || !req.body.amount) {
     res.status(400).send({
       message: "retail_investor_email, company_name, amount can not be empty!"
     });
@@ -16,9 +16,9 @@ exports.create = (req, res) => {
   // use ternary operator to handle null values 
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_Operator
   const junctionTable = {
-    retail_investor_email: req.body.retail_investor_email,
-    company_name: req.body.company_name,
-    amount: req.body.amount ,
+    retail_investor_id: req.body.retail_investor_id,
+    company_id: req.body.company_id,  // TODO: discuss whether this should be the campaign instead
+    amount: req.body.amount,
   };
 
   // Save JunctionTable in the database
@@ -59,7 +59,13 @@ exports.findOne = (req, res) => {
 
     JunctionTable.findByPk(id)
       .then(data => {
-        res.send(data);
+        if (data == null){
+          res.status(500).send({
+            message: "JunctionTable with id=" + id + " not found"
+          });
+        } else {
+          res.send(data);
+        }
       })
       .catch(err => {
         res.status(500).send({
@@ -82,7 +88,7 @@ exports.update = (req, res) => {
           message: "JunctionTable was updated successfully."
         });
       } else {
-        res.send({
+        res.status(500).send({
           message: `Cannot update JunctionTable with id=${id}. Maybe JunctionTable was not found or req.body is empty!`
         });
       }
@@ -107,7 +113,7 @@ exports.delete = (req, res) => {
             message: "JunctionTable was deleted successfully!"
           });
         } else {
-          res.send({
+          res.status(500).send({
             message: `Cannot delete JunctionTable with id=${id}. Maybe JunctionTable was not found!`
           });
         }
