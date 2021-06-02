@@ -4,6 +4,9 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.INTEGER,
         allowNull: false
       },
+      title: {
+        type: Sequelize.STRING,
+      },
       milestone_part: {
         type: Sequelize.INTEGER,
         allowNull: false

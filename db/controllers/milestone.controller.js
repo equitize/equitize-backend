@@ -1,6 +1,5 @@
-const db = require("../models");
-const Milestone = db.milestone;
-const Op = db.Sequelize.Op;
+
+const milestoneService = require("../services/milestone.service");
 
 // Create and Save a new startup
 exports.create = (req, res) => {
@@ -12,28 +11,44 @@ exports.create = (req, res) => {
       });
       return;
     }
+    
     // Create a milestone
     // use ternary operator to handle null values 
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_Operator
     const milestone = {
       company_id: req.body.company_id,
+      title: req.body.title,
       milestone_part: req.body.milestone_part,
       end_date: req.body.end_date,
       description: req.body.description ? req.body.description :"",
-      amount: req.body.amount ,
+      amount: req.body.amount,
     };
-    
-    Milestone.create(milestone)
-      .then(data => {
-        res.send(data);
-      })
-      .catch(err => {
-        res.status(500).send({
-          message:
-            err.message || "Some error occurred while creating the Milestone."
-        });
+    console.log(milestoneService)    
+    // TK's implementation of service layer 
+    milestoneService.create(milestone)
+    .then(data => {
+      
+      res.send(data);
+    })
+    .catch(err => {
+      
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while creating the Milestone."
       });
+    });
+    // Milestone.create(milestone)
+    //   .then(data => {
+    //     res.send(data);
+    //   })
+    //   .catch(err => {
+    //     res.status(500).send({
+    //       message:
+    //         err.message || "Some error occurred while creating the Milestone."
+    //     });
+    //   });
   } catch (error) {
+    console.log(error)
     next(error)
   }
   
@@ -42,109 +57,182 @@ exports.create = (req, res) => {
 // Retrieve all Milestone from the database.
 exports.findAll = (req, res) => {
     const company_id = req.query.company_id;
-    var condition = company_id ? { company_id: { [Op.like]: `%${company_id}%` } } : null;
-  
-    Milestone.findAll({ where: condition })
-      .then(data => {
-        res.send(data);
-      })
-      .catch(err => {
-        res.status(500).send({
-          message:
-            err.message || "Some error occurred while retrieving Milestone."
-        });
+    // var condition = company_id ? { company_id: { [Op.like]: `%${company_id}%` } } : null;
+    
+    // Tk's implementation of service layer
+    milestoneService.findAll(company_id)
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while retrieving Milestone."
       });
+    });
+    // Milestone.findAll({ where: condition })
+    //   .then(data => {
+    //     res.send(data);
+    //   })
+    //   .catch(err => {
+    //     res.status(500).send({
+    //       message:
+    //         err.message || "Some error occurred while retrieving Milestone."
+    //     });
+    //   });
   
 };
 
 // Find a single startup with an id
 exports.findOne = (req, res) => {
     const id = req.params.id;
-
-    Milestone.findByPk(id)
-      .then(data => {
-        if (data == null){
-          res.status(500).send({
-            message: "Startup with id=" + id
-          })
-        } else {
-        res.send(data);
-        }
-      })
-      .catch(err => {
+    // Tk's implementation of service layer
+    milestoneService.findByPk(id)
+    .then(data => {
+      if (data == null){
         res.status(500).send({
-          message: "Error retrieving Milestone with id=" + id
-        });
+          message: "Milestone with id=" + id
+        })
+      } else {
+      res.send(data);
+      }
+    })
+    .catch(err => {
+      res.status(500).send({
+        message: "Error retrieving Milestone with id=" + id
       });
+    });
+
+    // Milestone.findByPk(id)
+    //   .then(data => {
+    //     if (data == null){
+    //       res.status(500).send({
+    //         message: "Startup with id=" + id
+    //       })
+    //     } else {
+    //     res.send(data);
+    //     }
+    //   })
+    //   .catch(err => {
+    //     res.status(500).send({
+    //       message: "Error retrieving Milestone with id=" + id
+    //     });
+    //   });
   
 };
 
 // Update a Milestone by the id in the request
 exports.update = (req, res) => {
   const id = req.params.id;
-
-  Milestone.update(req.body, {
-    where: { id: id }
-  })
-    .then(num => {
-      if (num == 1) {
-        res.send({
-          message: "Milestone was updated successfully."
-        });
-      } else {
-        res.status(500).send({
-          message: `Cannot update Milestone with id=${id}. Maybe Milestone was not found or req.body is empty!`
-        });
-      }
-    })
-    .catch(err => {
-      res.status(500).send({
-        message: "Error updating Milestone with id=" + id
+  // Tk's implementation of service layer 
+  milestoneService.update(req.bod, id)
+  .then(num => {
+    if (num == 1) {
+      res.send({
+        message: "Milestone was updated successfully."
       });
+    } else {
+      res.status(500).send({
+        message: `Cannot update Milestone with id=${id}. Maybe Milestone was not found or req.body is empty!`
+      });
+    }
+  })
+  .catch(err => {
+    res.status(500).send({
+      message: "Error updating Milestone with id=" + id
     });
+  });
+
+  // Milestone.update(req.body, {
+  //   where: { id: id }
+  // })
+  //   .then(num => {
+  //     if (num == 1) {
+  //       res.send({
+  //         message: "Milestone was updated successfully."
+  //       });
+  //     } else {
+  //       res.status(500).send({
+  //         message: `Cannot update Milestone with id=${id}. Maybe Milestone was not found or req.body is empty!`
+  //       });
+  //     }
+  //   })
+  //   .catch(err => {
+  //     res.status(500).send({
+  //       message: "Error updating Milestone with id=" + id
+  //     });
+  //   });
 };
 
 // Delete a Milestone with the specified id in the request
 exports.delete = (req, res) => {
     const id = req.params.id;
-
-    Milestone.destroy({
-      where: { id: id }
-    })
-      .then(num => {
-        if (num == 1) {
-          res.send({
-            message: "CommerciaMilestonelChampion was deleted successfully!"
-          });
-        } else {
-          res.status(500).send({
-            message: `Cannot delete Milestone with id=${id}. Maybe Milestone was not found!`
-          });
-        }
-      })
-      .catch(err => {
-        res.status(500).send({
-          message: "Could not delete Milestone with id=" + id
+    // Tk's implmentation of service layer
+    milestoneService.delete(id)
+    .then(num => {
+      if (num == 1) {
+        res.send({
+          message: "CommerciaMilestonelChampion was deleted successfully!"
         });
+      } else {
+        res.status(500).send({
+          message: `Cannot delete Milestone with id=${id}. Maybe Milestone was not found!`
+        });
+      }
+    })
+    .catch(err => {
+      res.status(500).send({
+        message: "Could not delete Milestone with id=" + id
       });
-  
+    });
+
+    // Milestone.destroy({
+    //   where: { id: id }
+    // })
+    //   .then(num => {
+    //     if (num == 1) {
+    //       res.send({
+    //         message: "CommerciaMilestonelChampion was deleted successfully!"
+    //       });
+    //     } else {
+    //       res.status(500).send({
+    //         message: `Cannot delete Milestone with id=${id}. Maybe Milestone was not found!`
+    //       });
+    //     }
+    //   })
+    //   .catch(err => {
+    //     res.status(500).send({
+    //       message: "Could not delete Milestone with id=" + id
+    //     });
+    //   });
 };
 
 // Delete all Milestone from the database.
 exports.deleteAll = (req, res) => {
-  Milestone.destroy({
-        where: {},
-        truncate: false
-      })
-        .then(nums => {
-          res.send({ message: `${nums} Milestone were deleted successfully!` });
-        })
-        .catch(err => {
-          res.status(500).send({
-            message:
-              err.message || "Some error occurred while removing all CommercialChampion."
-          });
-        });
+  // Tk's implementation of service layer
+  milestone.deleteAll()
+  .then(nums => {
+    res.send({ message: `${nums} Milestone were deleted successfully!` });
+  })
+  .catch(err => {
+    res.status(500).send({
+      message:
+        err.message || "Some error occurred while removing all CommercialChampion."
+    });
+  });
+  // Milestone.destroy({
+  //       where: {},
+  //       truncate: false
+  //     })
+  //       .then(nums => {
+  //         res.send({ message: `${nums} Milestone were deleted successfully!` });
+  //       })
+  //       .catch(err => {
+  //         res.status(500).send({
+  //           message:
+  //             err.message || "Some error occurred while removing all CommercialChampion."
+  //         });
+  //       });
 };
 
 /////////////
@@ -154,18 +242,29 @@ exports.findViaName = (req, res) => {
   // const company_name = req.query.company_name;
   const name = req.params.name;
   // console.log(req.query)
-  var condition = name ? { name: { [Op.like]: `${name}` } } : null;
+  // var condition = name ? { name: { [Op.like]: `${name}` } } : null;
 
-  Milestone.findAll({ where: condition })
-    .then(data => {
-      res.send(data);
-    })
-    .catch(err => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while retrieving Milestone."
-      });
+  // Tk's implmentation of service layer
+  milestoneService.findViaName(name)
+  .then(data => {
+    res.send(data);
+  })
+  .catch(err => {
+    res.status(500).send({
+      message:
+        err.message || "Some error occurred while retrieving Milestone."
     });
+  });
+  // Milestone.findAll({ where: condition })
+  //   .then(data => {
+  //     res.send(data);
+  //   })
+  //   .catch(err => {
+  //     res.status(500).send({
+  //       message:
+  //         err.message || "Some error occurred while retrieving Milestone."
+  //     });
+  //   });
 
 };
 
@@ -174,18 +273,37 @@ exports.findViaCompanyId = (req, res) => {
   // const company_name = req.query.company_name;
   const company_id = req.params.company_id;
   // console.log(req.query)
-  var condition = company_id ? { company_id: { [Op.like]: `${company_id}` } } : null;
-
-  Milestone.findAll({ where: condition })
-    .then(data => {
+  // var condition = company_id ? { company_id: { [Op.like]: `${company_id}` } } : null;
+  // Tk's implementation of service layer
+  
+  milestoneService.findViaCompanyId(company_id)
+  .then(data => {
+    if (data.length == 0) {
+      res.status(404).send({
+        message: `No Milestone with specifed company id: ${company_id}`
+      }) 
+    }
+    else {
       res.send(data);
-    })
-    .catch(err => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while retrieving Milestone."
-      });
+    }
+  })
+  .catch(err => {
+    
+    res.status(500).send({
+      message:
+        err.message || "Some error occurred while retrieving Milestone."
     });
+  });
+  // Milestone.findAll({ where: condition })
+  //   .then(data => {
+  //     res.send(data);
+  //   })
+  //   .catch(err => {
+  //     res.status(500).send({
+  //       message:
+  //         err.message || "Some error occurred while retrieving Milestone."
+  //     });
+  //   });
 
 };
 

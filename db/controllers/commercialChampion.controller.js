@@ -1,6 +1,7 @@
 const db = require("../models");
 const CommercialChampion = db.commercialChampion;
 const Op = db.Sequelize.Op;
+const commercialChampionService = require("../services/commercialChampion.service");
 
 // Create and Save a new startup
 exports.create = (req, res) => {
@@ -23,16 +24,27 @@ exports.create = (req, res) => {
       fields_of_interest: req.body.fields_of_interest ? req.body.fields_of_interest :"",
     };
     
-    CommercialChampion.create(commercialChampion)
-      .then(data => {
-        res.send(data);
-      })
-      .catch(err => {
-        res.status(500).send({
-          message:
-            err.message || "Some error occurred while creating the CommercialChampion."
-        });
+    // Tk's implementation of service layer 
+    commercialChampionService.create(commercialChampion)
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while creating the CommercialChampion."
       });
+    });
+    // CommercialChampion.create(commercialChampion)
+    //   .then(data => {
+    //     res.send(data);
+    //   })
+    //   .catch(err => {
+    //     res.status(500).send({
+    //       message:
+    //         err.message || "Some error occurred while creating the CommercialChampion."
+    //     });
+    //   });
   } catch (error) {
     next(error)
   }
@@ -42,40 +54,67 @@ exports.create = (req, res) => {
 // Retrieve all startups from the database.
 exports.findAll = (req, res) => {
     const name = req.query.name;
-    var condition = name ? { name: { [Op.like]: `%${name}%` } } : null;
-  
-    CommercialChampion.findAll({ where: condition })
-      .then(data => {
-        res.send(data);
-      })
-      .catch(err => {
-        res.status(500).send({
-          message:
-            err.message || "Some error occurred while retrieving CommercialChampion."
-        });
+    // var condition = name ? { name: { [Op.like]: `%${name}%` } } : null;
+
+    // tk's implementation of service layer
+    commercialChampionService.findAll(name)
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while retrieving CommercialChampion."
       });
-  
+    });
+
+    // CommercialChampion.findAll({ where: condition })
+    //   .then(data => {
+    //     res.send(data);
+    //   })
+    //   .catch(err => {
+    //     res.status(500).send({
+    //       message:
+    //         err.message || "Some error occurred while retrieving CommercialChampion."
+    //     });
+    //   });
 };
 
 // Find a single startup with an id
 exports.findOne = (req, res) => {
-    const id = req.params.id;
+  const id = req.params.id;
 
-    CommercialChampion.findByPk(id)
-      .then(data => {
-        if (data == null){
-          res.status(500).send({
-            message: "Startup with id=" + id
-          })
-        } else {
-        res.send(data);
-        }
+  // tk's implementation of service layer
+  commercialChampionService.findOne(id)
+  .then(data => {
+    if (data == null){
+      res.status(500).send({
+        message: "CommercialChampion with id=" + id
       })
-      .catch(err => {
-        res.status(500).send({
-          message: "Error retrieving CommercialChampion with id=" + id
-        });
-      });
+    } else {
+    res.send(data);
+    }
+  })
+  .catch(err => {
+    res.status(500).send({
+      message: "Error retrieving CommercialChampion with id=" + id
+    });
+  });
+  // CommercialChampion.findByPk(id)
+  //   .then(data => {
+  //     if (data == null){
+  //       res.status(500).send({
+  //         message: "Startup with id=" + id
+  //       })
+  //     } else {
+  //     res.send(data);
+  //     }
+  //   })
+  //   .catch(err => {
+  //     res.status(500).send({
+  //       message: "Error retrieving CommercialChampion with id=" + id
+  //     });
+  //   });
   
 };
 
@@ -83,68 +122,117 @@ exports.findOne = (req, res) => {
 exports.update = (req, res) => {
   const id = req.params.id;
 
-  CommercialChampion.update(req.body, {
-    where: { id: id }
-  })
-    .then(num => {
-      if (num == 1) {
-        res.send({
-          message: "CommercialChampion was updated successfully."
-        });
-      } else {
-        res.status(500).send({
-          message: `Cannot update CommercialChampion with id=${id}. Maybe CommercialChampion was not found or req.body is empty!`
-        });
-      }
-    })
-    .catch(err => {
-      res.status(500).send({
-        message: "Error updating Startup with id=" + id
+  // tk's implementation of service layer
+  commercialChampionService.update(req.body, id)
+  .then(num => {
+    if (num == 1) {
+      res.send({
+        message: "CommercialChampion was updated successfully."
       });
+    } else {
+      res.status(500).send({
+        message: `Cannot update CommercialChampion with id=${id}. Maybe CommercialChampion was not found or req.body is empty!`
+      });
+    }
+  })
+  .catch(err => {
+    res.status(500).send({
+      message: "Error updating Startup with id=" + id
     });
+  });
+
+  // CommercialChampion.update(req.body, {
+  //   where: { id: id }
+  // })
+  // .then(num => {
+  //   if (num == 1) {
+  //     res.send({
+  //       message: "CommercialChampion was updated successfully."
+  //     });
+  //   } else {
+  //     res.status(500).send({
+  //       message: `Cannot update CommercialChampion with id=${id}. Maybe CommercialChampion was not found or req.body is empty!`
+  //     });
+  //   }
+  // })
+  // .catch(err => {
+  //   res.status(500).send({
+  //     message: "Error updating Startup with id=" + id
+  //   });
+  // });
 };
 
 // Delete a startup with the specified id in the request
 exports.delete = (req, res) => {
-    const id = req.params.id;
+  const id = req.params.id;
 
-    CommercialChampion.destroy({
-      where: { id: id }
-    })
-      .then(num => {
-        if (num == 1) {
-          res.send({
-            message: "CommercialChampion was deleted successfully!"
-          });
-        } else {
-          res.status(500).send({
-            message: `Cannot delete CommercialChampion with id=${id}. Maybe CommercialChampion was not found!`
-          });
-        }
-      })
-      .catch(err => {
-        res.status(500).send({
-          message: "Could not delete CommercialChampion with id=" + id
-        });
+  // tk's implementation of service layer
+  commercialChampionService.delete(id)
+  .then(num => {
+    if (num == 1) {
+      res.send({
+        message: "CommercialChampion was deleted successfully!"
       });
+    } else {
+      res.status(500).send({
+        message: `Cannot delete CommercialChampion with id=${id}. Maybe CommercialChampion was not found!`
+      });
+    }
+  })
+  .catch(err => {
+    res.status(500).send({
+      message: "Could not delete CommercialChampion with id=" + id
+    });
+  });
   
+//   CommercialChampion.destroy({
+//     where: { id: id }
+//   })
+// .then(num => {
+//   if (num == 1) {
+//     res.send({
+//       message: "CommercialChampion was deleted successfully!"
+//     });
+//   } else {
+//     res.status(500).send({
+//       message: `Cannot delete CommercialChampion with id=${id}. Maybe CommercialChampion was not found!`
+//     });
+//   }
+// })
+// .catch(err => {
+//   res.status(500).send({
+//     message: "Could not delete CommercialChampion with id=" + id
+//   });
+// });
+
 };
 
 // Delete all startups from the database.
 exports.deleteAll = (req, res) => {
-  CommercialChampion.destroy({
-        where: {},
-        truncate: false
-      })
-        .then(nums => {
-          res.send({ message: `${nums} CommercialChampion were deleted successfully!` });
-        })
-        .catch(err => {
-          res.status(500).send({
-            message:
-              err.message || "Some error occurred while removing all CommercialChampion."
-          });
-        });
+  // tk's implementation of service layer
+  commercialChampionService.deleteAll()
+  .then(nums => {
+    res.send({ message: `${nums} CommercialChampion were deleted successfully!` });
+  })
+  .catch(err => {
+    res.status(500).send({
+      message:
+        err.message || "Some error occurred while removing all CommercialChampion."
+    });
+  });
+  // CommercialChampion.destroy({
+  //   where: {},
+  //   truncate: false
+  // })
+  //   .then(nums => {
+  //     res.send({ message: `${nums} CommercialChampion were deleted successfully!` });
+  //   })
+  //   .catch(err => {
+  //     res.status(500).send({
+  //       message:
+  //         err.message || "Some error occurred while removing all CommercialChampion."
+  //     });
+  // });
 };
 
 /////////////
@@ -154,18 +242,28 @@ exports.findViaName = (req, res) => {
   // const company_name = req.query.company_name;
   const name = req.params.name;
   // console.log(req.query)
-  var condition = name ? { name: { [Op.like]: `${name}` } } : null;
-
-  CommercialChampion.findAll({ where: condition })
-    .then(data => {
-      res.send(data);
-    })
-    .catch(err => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while retrieving CommercialChampion."
-      });
+  // var condition = name ? { name: { [Op.like]: `${name}` } } : null;
+  // tk's implementation of service layer
+  commercialChampionService.findViaName(name)
+  .then(data => {
+    res.send(data);
+  })
+  .catch(err => {
+    res.status(500).send({
+      message:
+        err.message || "Some error occurred while retrieving CommercialChampion."
     });
+  });
+  // CommercialChampion.findAll({ where: condition })
+  //   .then(data => {
+  //     res.send(data);
+  //   })
+  //   .catch(err => {
+  //     res.status(500).send({
+  //       message:
+  //         err.message || "Some error occurred while retrieving CommercialChampion."
+  //     });
+  //   });
 
 };
 // Retrieve via company_id
@@ -173,18 +271,36 @@ exports.findViaCompanyId = (req, res) => {
   // const company_name = req.query.company_name;
   const company_id = req.params.company_id;
   // console.log(req.query)
-  var condition = company_id ? { company_id: { [Op.like]: `${company_id}` } } : null;
-
-  CommercialChampion.findAll({ where: condition })
-    .then(data => {
+  // var condition = company_id ? { company_id: { [Op.like]: `${company_id}` } } : null;
+  
+  // tk's implementation of service layer
+  commercialChampionService.findViaCompanyId(company_id)
+  .then(data => {
+    if (data.length == 0) {
+      res.status(404).send({
+        message: `No Commercial Champion with specifed company id: ${company_id}`
+      }) 
+    }
+    else {
       res.send(data);
-    })
-    .catch(err => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while retrieving CommercialChampion."
-      });
+    }
+  })
+  .catch(err => {
+    res.status(500).send({
+      message:
+        err.message || "Some error occurred while retrieving CommercialChampion."
     });
+  });
+  // CommercialChampion.findAll({ where: condition })
+  //   .then(data => {
+  //     res.send(data);
+  //   })
+  //   .catch(err => {
+  //     res.status(500).send({
+  //       message:
+  //         err.message || "Some error occurred while retrieving CommercialChampion."
+  //     });
+  //   });
 
 };
 

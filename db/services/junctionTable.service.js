@@ -1,11 +1,11 @@
 const db = require("../models");
-const Startup = db.startup;
+const JunctionTable = db.junctionTable;
 const Op = db.Sequelize.Op;
 
 module.exports = {
-    create : function (startup) {
+    create : function (junctionTable) {
         try {
-            const result = Startup.create(startup)
+            const result = JunctionTable.create(junctionTable)
             .then(data => {
                 return data
             })
@@ -22,7 +22,7 @@ module.exports = {
         try {
             var condition = company_name ? { company_name: { [Op.like]: `%${company_name}%` } } : null;
 
-            const result = Startup.findAll({ where: condition })
+            const result = JunctionTable.findAll({ where: condition })
             .then(data => {
                 return data
             })
@@ -36,7 +36,7 @@ module.exports = {
     },
     findOne : function (id) {
         try {
-            const result = Startup.findByPk(id)
+            const result = JunctionTable.findByPk(id)
             .then(data => {
                 return data
             })
@@ -50,7 +50,7 @@ module.exports = {
     },
     update : function(updates, id) {
         try {
-            const result = Startup.update(updates, { 
+            const result = JunctionTable.update(updates, { 
                 where : { id : id }
             })
             .then(data => {
@@ -66,7 +66,7 @@ module.exports = {
     },
     delete : function(id) {
         try {
-            const result = Startup.destroy({ where: { id : id }})
+            const result = JunctionTable.destroy({ where: { id : id }})
             .then(data => {
                 return data
             })
@@ -80,7 +80,7 @@ module.exports = {
     },
     deleteAll : function() {
         try {
-            const result = Startup.destroy({
+            const result = JunctionTable.destroy({
                 where: {},
                 truncate: false
             })
@@ -94,12 +94,11 @@ module.exports = {
         } catch (error) {
             return error
         }
-    },
-    findViaName : function (company_name) {
+    }, 
+    findViaCompanyName : function (company_name) {
         try {
             var condition = company_name ? { company_name: { [Op.like]: `${company_name}` } } : null;
-
-            const result = Startup.findAll({ where: condition })
+            const result = JunctionTable.findAll({ where: condition })
             .then(data => {
                 return data
             })
@@ -111,11 +110,10 @@ module.exports = {
             return error
         }
     },
-    findViaEmail : function (email_address) {
+    findViaRetailInvestor : function (retail_investor_email) {
         try {
-            var condition = email_address ? { email_address: { [Op.like]: `${email_address}` } } : null;
-
-            const result = Startup.findAll({ where: condition })
+            var condition = retail_investor_email ? { retail_investor_email: { [Op.like]: `${retail_investor_email}` } } : null;
+            const result = JunctionTable.findAll({ where: condition })
             .then(data => {
                 return data
             })
@@ -127,5 +125,4 @@ module.exports = {
             return error
         }
     }
-
 }

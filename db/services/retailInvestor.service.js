@@ -1,11 +1,11 @@
 const db = require("../models");
-const Startup = db.startup;
+const RetailInvestors = db.retailInvestors;
 const Op = db.Sequelize.Op;
 
 module.exports = {
-    create : function (startup) {
+    create : function (retailInvestor) {
         try {
-            const result = Startup.create(startup)
+            const result = RetailInvestors.create(retailInvestor)
             .then(data => {
                 return data
             })
@@ -13,16 +13,14 @@ module.exports = {
                 throw err
             });
             return result
-
         } catch (error) {
             return (error)
         }
     },
-    findAll : function (company_name) {
+    findAll : function (email_address) {
         try {
-            var condition = company_name ? { company_name: { [Op.like]: `%${company_name}%` } } : null;
-
-            const result = Startup.findAll({ where: condition })
+            var condition = email_address ? { email_address: { [Op.like]: `%${email_address}%` } } : null;
+            const result = RetailInvestors.findAll({ where: condition })
             .then(data => {
                 return data
             })
@@ -36,51 +34,53 @@ module.exports = {
     },
     findOne : function (id) {
         try {
-            const result = Startup.findByPk(id)
+            const result = RetailInvestors.findByPk(id)
             .then(data => {
                 return data
             })
             .catch(err => {
-                throw err    
+                throw err
             });
             return result
         } catch (error) {
             return error
         }
     },
-    update : function(updates, id) {
+    update : function (updates, id) {
         try {
-            const result = Startup.update(updates, { 
-                where : { id : id }
-            })
+            const result = RetailInvestors.update(updates, {
+                where: { id: id }
+              })
             .then(data => {
                 return data
             })
             .catch(err => {
-                throw err    
+                throw err
             });
             return result
         } catch (error) {
             return error
         }
     },
-    delete : function(id) {
+    delete : function (id) {
         try {
-            const result = Startup.destroy({ where: { id : id }})
+            const result = RetailInvestors.destroy({
+                where: { id: id }
+            })
             .then(data => {
                 return data
             })
             .catch(err => {
-                throw err    
+                throw err
             });
             return result
-        } catch (error) {
+        } catch (erorr) {
             return error
         }
     },
-    deleteAll : function() {
+    deleteAll : function () {
         try {
-            const result = Startup.destroy({
+            const result = RetailInvestors.destroy({
                 where: {},
                 truncate: false
             })
@@ -88,44 +88,26 @@ module.exports = {
                 return data
             })
             .catch(err => {
-                throw err    
+                throw err
             });
-            return result
+            return result   
         } catch (error) {
             return error
         }
     },
-    findViaName : function (company_name) {
+    findViaEmail : function(email) {
         try {
-            var condition = company_name ? { company_name: { [Op.like]: `${company_name}` } } : null;
-
-            const result = Startup.findAll({ where: condition })
+            var condition = email ? { email_address: { [Op.like]: `${email}` } } : null;
+            const result = RetailInvestors.findAll({ where: condition })
             .then(data => {
                 return data
             })
             .catch(err => {
-                throw err    
+                throw err
             });
-            return result
-        } catch (error) {
-            return error
-        }
-    },
-    findViaEmail : function (email_address) {
-        try {
-            var condition = email_address ? { email_address: { [Op.like]: `${email_address}` } } : null;
-
-            const result = Startup.findAll({ where: condition })
-            .then(data => {
-                return data
-            })
-            .catch(err => {
-                throw err    
-            });
-            return result
+            return result  
         } catch (error) {
             return error
         }
     }
-
-}
+} 

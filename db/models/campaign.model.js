@@ -2,16 +2,26 @@ module.exports = (sequelize, Sequelize) => {
     const Campaign = sequelize.define("campaign", {
       company_id: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
+        // unique: true
       },
       goal: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        // allowNull: false
       },
       end_date: {
         type: Sequelize.STRING,
-        allowNull: false
+        // allowNull: false
       },
+      sharesAllocated: {
+        type: Sequelize.FLOAT,
+      },
+      campaign_description: {
+        type: Sequelize.STRING,
+      },
+      tokensMinted: {
+        type: Sequelize.INTEGER,
+      } 
     });
   
     return Campaign;

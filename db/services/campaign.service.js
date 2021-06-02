@@ -1,11 +1,11 @@
 const db = require("../models");
-const Startup = db.startup;
+const Campaign = db.campaign;
 const Op = db.Sequelize.Op;
 
 module.exports = {
-    create : function (startup) {
+    create : function (campaign) {
         try {
-            const result = Startup.create(startup)
+            const result = Campaign.create(campaign)
             .then(data => {
                 return data
             })
@@ -18,11 +18,11 @@ module.exports = {
             return (error)
         }
     },
-    findAll : function (company_name) {
+    findAll : function (company_id) {
         try {
-            var condition = company_name ? { company_name: { [Op.like]: `%${company_name}%` } } : null;
+            var condition = company_id ? { company_id: { [Op.like]: `%${company_id}%` } } : null;
 
-            const result = Startup.findAll({ where: condition })
+            const result = Campaign.findAll({ where: condition })
             .then(data => {
                 return data
             })
@@ -36,7 +36,7 @@ module.exports = {
     },
     findOne : function (id) {
         try {
-            const result = Startup.findByPk(id)
+            const result = Campaign.findByPk(id)
             .then(data => {
                 return data
             })
@@ -50,7 +50,7 @@ module.exports = {
     },
     update : function(updates, id) {
         try {
-            const result = Startup.update(updates, { 
+            const result = Campaign.update(updates, { 
                 where : { id : id }
             })
             .then(data => {
@@ -66,7 +66,7 @@ module.exports = {
     },
     delete : function(id) {
         try {
-            const result = Startup.destroy({ where: { id : id }})
+            const result = Campaign.destroy({ where: { id : id }})
             .then(data => {
                 return data
             })
@@ -80,7 +80,7 @@ module.exports = {
     },
     deleteAll : function() {
         try {
-            const result = Startup.destroy({
+            const result = Campaign.destroy({
                 where: {},
                 truncate: false
             })
@@ -95,11 +95,11 @@ module.exports = {
             return error
         }
     },
-    findViaName : function (company_name) {
+    findViaCompanyId : function (company_id) {
         try {
-            var condition = company_name ? { company_name: { [Op.like]: `${company_name}` } } : null;
+            var condition = company_id ? { company_id: { [Op.like]: `${company_id}` } } : null;
 
-            const result = Startup.findAll({ where: condition })
+            const result = Campaign.findAll({ where: condition })
             .then(data => {
                 return data
             })
@@ -111,21 +111,4 @@ module.exports = {
             return error
         }
     },
-    findViaEmail : function (email_address) {
-        try {
-            var condition = email_address ? { email_address: { [Op.like]: `${email_address}` } } : null;
-
-            const result = Startup.findAll({ where: condition })
-            .then(data => {
-                return data
-            })
-            .catch(err => {
-                throw err    
-            });
-            return result
-        } catch (error) {
-            return error
-        }
-    }
-
 }

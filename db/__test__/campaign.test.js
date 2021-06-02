@@ -78,9 +78,9 @@ describe('Testing [/api/db/campaign]', () => {
 
   it('create campaign but missing info', async() => {
     let requestBody = {
-      company_id:company_id,
-      goal:goal,
-      // end_date:end_date  // info missed out
+      // company_id:company_id, // info missed out
+      // goal:goal,
+      end_date:end_date 
     }
     let res = await supertest(app)
                           .post("/api/db/campaign")
@@ -149,8 +149,9 @@ describe('Testing [/api/db/campaign]', () => {
     requestBody = {
       goal:goal_new,
     }
+    // let company_id = 1
     res = await supertest(app)
-                          .put(`/api/db/campaign/${company_id}`)
+                          .put(`/api/db/campaign/1`)
                           .send(requestBody)
     expect(res.statusCode).toBe(200)
   });

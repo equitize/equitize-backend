@@ -1,5 +1,7 @@
 const campaign = require("../controllers/campaign.controller.js");
 const router = require("express").Router();
+// Maybe have this as admin utility since retail investors/startups have access to campaign services via their routes
+
 
 // Create a new Startup
 router.post("/", campaign.create);

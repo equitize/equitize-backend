@@ -1,11 +1,11 @@
 const db = require("../models");
-const Startup = db.startup;
+const CommercialChampion = db.commercialChampion;
 const Op = db.Sequelize.Op;
 
 module.exports = {
-    create : function (startup) {
+    create : function (commercialChampion) {
         try {
-            const result = Startup.create(startup)
+            const result = CommercialChampion.create(commercialChampion)
             .then(data => {
                 return data
             })
@@ -18,11 +18,11 @@ module.exports = {
             return (error)
         }
     },
-    findAll : function (company_name) {
+    findAll : function (name) {
         try {
-            var condition = company_name ? { company_name: { [Op.like]: `%${company_name}%` } } : null;
+            var condition = name ? { name: { [Op.like]: `%${name}%` } } : null;
 
-            const result = Startup.findAll({ where: condition })
+            const result = CommercialChampion.findAll({ where: condition })
             .then(data => {
                 return data
             })
@@ -36,7 +36,7 @@ module.exports = {
     },
     findOne : function (id) {
         try {
-            const result = Startup.findByPk(id)
+            const result = CommercialChampion.findByPk(id)
             .then(data => {
                 return data
             })
@@ -50,7 +50,7 @@ module.exports = {
     },
     update : function(updates, id) {
         try {
-            const result = Startup.update(updates, { 
+            const result = CommercialChampion.update(updates, { 
                 where : { id : id }
             })
             .then(data => {
@@ -66,7 +66,7 @@ module.exports = {
     },
     delete : function(id) {
         try {
-            const result = Startup.destroy({ where: { id : id }})
+            const result = CommercialChampion.destroy({ where: { id : id }})
             .then(data => {
                 return data
             })
@@ -80,7 +80,7 @@ module.exports = {
     },
     deleteAll : function() {
         try {
-            const result = Startup.destroy({
+            const result = CommercialChampion.destroy({
                 where: {},
                 truncate: false
             })
@@ -94,12 +94,11 @@ module.exports = {
         } catch (error) {
             return error
         }
-    },
-    findViaName : function (company_name) {
+    }, 
+    findViaName : function (name) {
         try {
-            var condition = company_name ? { company_name: { [Op.like]: `${company_name}` } } : null;
-
-            const result = Startup.findAll({ where: condition })
+            var condition = name ? { name: { [Op.like]: `${name}` } } : null;
+            const result = CommercialChampion.findAll({ where: condition })
             .then(data => {
                 return data
             })
@@ -111,11 +110,10 @@ module.exports = {
             return error
         }
     },
-    findViaEmail : function (email_address) {
+    findViaCompanyId : function (company_id) {
         try {
-            var condition = email_address ? { email_address: { [Op.like]: `${email_address}` } } : null;
-
-            const result = Startup.findAll({ where: condition })
+            var condition = company_id ? { company_id: { [Op.like]: `${company_id}` } } : null;
+            const result = CommercialChampion.findAll({ where: condition })
             .then(data => {
                 return data
             })
@@ -127,5 +125,4 @@ module.exports = {
             return error
         }
     }
-
 }
