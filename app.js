@@ -33,6 +33,7 @@ app.use('/api/db/startup', require('./db/routes/startup.routes'));
 app.use('/api/db/retailInvestors', require('./db/routes/retailInvestors.routes'));
 app.use('/api/db/campaign', require('./db/routes/campaign.routes'));
 app.use('/api/db/junctionTable', require('./db/routes/junctionTable.routes'));
+app.use('/api/db/general', require('./db/routes/general.routes'));
 
 /** Error Handlers */
 // 404

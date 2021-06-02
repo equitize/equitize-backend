@@ -1,9 +1,10 @@
 const db = require("../models");
 const Startup = db.startup;
 const Op = db.Sequelize.Op;
+const startupService = require("../services/startup.service");
 
 // Create and Save a new startup
-exports.create = (req, res) => {
+exports.create = async (req, res, next) => {
   try {
     // Validate request
     if (!req.body.company_name || !req.body.email_address || !req.body.company_password) {
@@ -31,16 +32,33 @@ exports.create = (req, res) => {
       bank_info:req.body.bank_info ? req.body.bank_info :"",
     };
     
-    Startup.create(startup)
-      .then(data => {
-        res.send(data);
-      })
-      .catch(err => {
-        res.status(500).send({
-          message:
-            err.message || "Some error occurred while creating the Startup."
-        });
+    // Startup.create(startup)
+    //   .then(data => {
+    //     res.send(data);
+    //   })
+    //   .catch(err => {
+    //     console.log(err)
+    //     console.log(err.message)
+    //     res.status(500).send({
+    //       message:
+    //         err.message || "Some error occurred while creating the Startup."
+    //     });
+    // });
+
+
+    // TK's implmentation of service layer
+    startupService.create(startup)
+    .then(function (response) {
+      console.log(response)
+      res.send(response)
+    })
+    .catch(function (err) {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while creating the Startup."
       });
+    })
+    
   } catch (error) {
     next(error)
   }
