@@ -26,19 +26,17 @@ describe('Testing [/api/db/campaign]', () => {
   const investor_password = 'password'
 
   const goal = 123456
-  const goal_new = 987654
   const end_date = "datestring"
 
   const investment_amount = 1234
   const investment_amount_new = 2345
   
-  const invalid_string = 'sample_invalid_string'
   const invalid_id = 1000000007
   
   let company_id
   let retailInvestor_id
   let campaign_id
-  let junction_table_id
+  let junctionTable_id
 
   it('create company', async() => {
     let requestBody = {
