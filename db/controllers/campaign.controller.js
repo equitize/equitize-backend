@@ -35,10 +35,10 @@ exports.create = (req, res) => {
   
 };
 
-// Retrieve all Campaign from the database.
+// Retrieve all Campaign from the database by company_id
 exports.findAll = (req, res) => {
-    const company_name = req.query.company_name;
-    var condition = company_name ? { company_name: { [Op.like]: `%${company_name}%` } } : null;
+    const company_id = req.query.company_id;
+    var condition = company_id ? { company_id: { [Op.like]: `%${company_id}%` } } : null;
   
     Campaign.findAll({ where: condition })
       .then(data => {
@@ -144,29 +144,29 @@ exports.deleteAll = (req, res) => {
         });
 };
 
-/////// // TODO: not implemented because we are attempting to switch to id
-exports.findViaCompanyName = (req, res) => {
-  // const company_name = req.query.company_name;
-  const company_name = req.params.company_name;
-  // console.log(req.query)
-  var condition = company_name ? { company_name: { [Op.like]: `${company_name}` } } : null;
+// // TODO: not implemented because we are attempting to switch to id
+// exports.findViaCompanyName = (req, res) => {
+//   // const company_name = req.query.company_name;
+//   const company_name = req.params.company_name;
+//   // console.log(req.query)
+//   var condition = company_name ? { company_name: { [Op.like]: `${company_name}` } } : null;
 
-  Campaign.findAll({ where: condition })
-    .then(data => {
-      res.send(data);
-    })
-    .catch(err => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while retrieving Startups."
-      });
-    });
+//   Campaign.findAll({ where: condition })
+//     .then(data => {
+//       res.send(data);
+//     })
+//     .catch(err => {
+//       res.status(500).send({
+//         message:
+//           err.message || "Some error occurred while retrieving Startups."
+//       });
+//     });
 
-};
+// };
 
 exports.findViaCompanyId = (req, res) => {
-  // const company_name = req.query.company_name;
-  const company_id= req.params.company_id;
+  // const company_id = req.query.company_id;
+  const company_id = req.params.company_id;
   // console.log(req.query)
   var condition = company_id ? { company_id: { [Op.like]: `${company_id}` } } : null;
 
