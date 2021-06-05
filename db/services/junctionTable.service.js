@@ -18,9 +18,9 @@ module.exports = {
             return (error)
         }
     },
-    findAll : function (company_name) {
+    findAll : function (companyName) {
         try {
-            var condition = company_name ? { company_name: { [Op.like]: `%${company_name}%` } } : null;
+            var condition = companyName ? { companyName: { [Op.like]: `%${companyName}%` } } : null;
 
             const result = JunctionTable.findAll({ where: condition })
             .then(data => {
@@ -95,9 +95,9 @@ module.exports = {
             return error
         }
     }, 
-    findViaCompanyName : function (company_name) {
+    findViaCompanyName : function (companyName) {
         try {
-            var condition = company_name ? { company_name: { [Op.like]: `${company_name}` } } : null;
+            var condition = companyName ? { companyName: { [Op.like]: `${companyName}` } } : null;
             const result = JunctionTable.findAll({ where: condition })
             .then(data => {
                 return data
@@ -110,9 +110,9 @@ module.exports = {
             return error
         }
     },
-    findViaRetailInvestor : function (retail_investor_email) {
+    findViaRetailInvestor : function (retailInvestorEmail) {
         try {
-            var condition = retail_investor_email ? { retail_investor_email: { [Op.like]: `${retail_investor_email}` } } : null;
+            var condition = retailInvestorEmail ? { retailInvestorEmail: { [Op.like]: `${retailInvestorEmail}` } } : null;
             const result = JunctionTable.findAll({ where: condition })
             .then(data => {
                 return data

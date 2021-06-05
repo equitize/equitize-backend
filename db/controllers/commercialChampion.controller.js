@@ -7,9 +7,9 @@ const commercialChampionService = require("../services/commercialChampion.servic
 exports.create = (req, res) => {
   try {
     // Validate request
-    if (!req.body.name || !req.body.email || !req.body.company_id ) {
+    if (!req.body.name || !req.body.email || !req.body.companyId ) {
       res.status(400).send({    
-        message: "name, email, company_id can not be empty!"
+        message: "name, email, companyId can not be empty!"
       });
       return;
     }
@@ -17,11 +17,11 @@ exports.create = (req, res) => {
     // use ternary operator to handle null values 
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_Operator
     const commercialChampion = {
-      company_id: req.body.company_id,
+      companyId: req.body.companyId,
       name: req.body.name,
       email: req.body.email,
       profession: req.body.profession ? req.body.profession :"",
-      fields_of_interest: req.body.fields_of_interest ? req.body.fields_of_interest :"",
+      fieldsOfInterest: req.body.fieldsOfInterest ? req.body.fieldsOfInterest :"",
     };
     
     // Tk's implementation of service layer 
@@ -269,16 +269,16 @@ exports.findViaName = (req, res) => {
 // Retrieve via company_id
 exports.findViaCompanyId = (req, res) => {
   // const company_name = req.query.company_name;
-  const company_id = req.params.company_id;
+  const companyId = req.params.companyId;
   // console.log(req.query)
   // var condition = company_id ? { company_id: { [Op.like]: `${company_id}` } } : null;
   
   // tk's implementation of service layer
-  commercialChampionService.findViaCompanyId(company_id)
+  commercialChampionService.findViaCompanyId(companyId)
   .then(data => {
     if (data.length == 0) {
       res.status(404).send({
-        message: `No Commercial Champion with specifed company id: ${company_id}`
+        message: `No Commercial Champion with specifed company id: ${companyId}`
       }) 
     }
     else {

@@ -6,9 +6,9 @@ const junctionTableService = require("../services/junctionTable.service");
 // Create and Save a new junctionTable
 exports.create = (req, res) => {
   // Validate request
-  if (!req.body.retail_investor_id || !req.body.company_id || !req.body.amount) {
+  if (!req.body.retailInvestorId || !req.body.companyId || !req.body.amount) {
     res.status(400).send({
-      message: "retail_investor_email, company_name, amount can not be empty!"
+      message: "retailInvestorId, companyId, amount can not be empty!"
     });
     return;
   }
@@ -17,8 +17,8 @@ exports.create = (req, res) => {
   // use ternary operator to handle null values 
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_Operator
   const junctionTable = {
-    retail_investor_id: req.body.retail_investor_id,
-    company_id: req.body.company_id,  // TODO: discuss whether this should be the campaign instead
+    retailInvestorId: req.body.retailInvestorId,
+    companyId: req.body.companyId,  // TODO: discuss whether this should be the campaign instead
     amount: req.body.amount,
   };
 
@@ -49,10 +49,10 @@ exports.create = (req, res) => {
 
 // Retrieve all JunctionTable from the database.
 exports.findAll = (req, res) => {
-    const company_name = req.query.company_name;
+    const companyName = req.query.companyName;
     // var condition = company_name ? { company_name: { [Op.like]: `%${company_name}%` } } : null;
     // Tk's implementation of service layer 
-    junctionTableService.findAll(company_name)
+    junctionTableService.findAll(companyName)
     .then(data => {
       res.send(data);
     })
@@ -229,13 +229,13 @@ exports.deleteAll = (req, res) => {
 /////////////
 
 exports.findViaCompanyName = (req, res) => {
-  const company_name = req.params.company_name;
+  const company_name = req.params.companyName;
   // const company_name = req.query.company_name;
   // console.log(req.query)
   // var condition = company_name ? { company_name: { [Op.like]: `${company_name}` } } : null;
 
   // Tk's implementation of service layer
-  junctionTableService.findViaCompanyName(company_name)
+  junctionTableService.findViaCompanyName(companyName)
   .then(data => {
     res.send(data);
   })
@@ -259,12 +259,12 @@ exports.findViaCompanyName = (req, res) => {
 
 
 exports.findViaRetailInvestor = (req, res) => {
-  const retail_investor_email = req.params.retail_investor_email;
+  const retailInvestorEmail = req.params.retailInvestorEmail;
   // const retail_investor_email = req.query.retail_investor_email;
   // var condition = retail_investor_email ? { retail_investor_email: { [Op.like]: `${retail_investor_email}` } } : null;
   
   // Tk's implementation of service layer
-  junctionTableService.findViaRetailInvestor(retail_investor_email)
+  junctionTableService.findViaRetailInvestor(retailInvestorEmail)
   .then(data => {
     res.send(data);
   })

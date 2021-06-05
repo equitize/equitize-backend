@@ -110,9 +110,9 @@ module.exports = {
             return error
         }
     },
-    findViaCompanyId : function (company_id) {
+    findViaCompanyId : function (companyId) {
         try {
-            var condition = company_id ? { company_id: { [Op.like]: `${company_id}` } } : null;
+            var condition = companyId ? { companyId: { [Op.like]: `${companyId}` } } : null;
             const result = CommercialChampion.findAll({ where: condition })
             .then(data => {
                 return data

@@ -1,6 +1,6 @@
 module.exports = (sequelize, Sequelize) => {
     const Campaign = sequelize.define("campaign", {
-      company_id: {
+      companyId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         // unique: true
@@ -9,14 +9,14 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.INTEGER,
         // allowNull: false
       },
-      end_date: {
+      endDate: {
         type: Sequelize.STRING,
         // allowNull: false
       },
       sharesAllocated: {
         type: Sequelize.FLOAT,
       },
-      campaign_description: {
+      campaignDescription: {
         type: Sequelize.STRING,
       },
       tokensMinted: {

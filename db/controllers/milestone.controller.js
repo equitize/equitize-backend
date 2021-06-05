@@ -5,9 +5,9 @@ const milestoneService = require("../services/milestone.service");
 exports.create = (req, res) => {
   try {
     // Validate request
-    if (!req.body.company_id || !req.body.milestone_part || !req.body.end_date || !req.body.amount ) {
+    if (!req.body.companyId || !req.body.milestonePart || !req.body.endDate || !req.body.amount ) {
       res.status(400).send({    
-        message: "company_id, milestone_part, end_date,amount can not be empty!"
+        message: "companyId, milestonePart, endDate, amount can not be empty!"
       });
       return;
     }
@@ -16,10 +16,10 @@ exports.create = (req, res) => {
     // use ternary operator to handle null values 
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_Operator
     const milestone = {
-      company_id: req.body.company_id,
+      companyId: req.body.companyId,
       title: req.body.title,
-      milestone_part: req.body.milestone_part,
-      end_date: req.body.end_date,
+      milestonePart: req.body.milestonePart,
+      endDate: req.body.endDate,
       description: req.body.description ? req.body.description :"",
       amount: req.body.amount,
     };
@@ -56,11 +56,11 @@ exports.create = (req, res) => {
 
 // Retrieve all Milestone from the database.
 exports.findAll = (req, res) => {
-    const company_id = req.query.company_id;
+    const companyId = req.query.companyId;
     // var condition = company_id ? { company_id: { [Op.like]: `%${company_id}%` } } : null;
     
     // Tk's implementation of service layer
-    milestoneService.findAll(company_id)
+    milestoneService.findAll(companyId)
     .then(data => {
       res.send(data);
     })
@@ -240,7 +240,7 @@ exports.deleteAll = (req, res) => {
 // Retrieve Milestone via name from the database.
 exports.findViaName = (req, res) => {
   // const company_name = req.query.company_name;
-  const name = req.params.name;
+  const name = req.params.companyName;
   // console.log(req.query)
   // var condition = name ? { name: { [Op.like]: `${name}` } } : null;
 
@@ -270,17 +270,16 @@ exports.findViaName = (req, res) => {
 
 // Retrieve Milestone via company_id from the database
 exports.findViaCompanyId = (req, res) => {
-  // const company_name = req.query.company_name;
-  const company_id = req.params.company_id;
+  const companyId = req.params.companyId;
   // console.log(req.query)
   // var condition = company_id ? { company_id: { [Op.like]: `${company_id}` } } : null;
   // Tk's implementation of service layer
   
-  milestoneService.findViaCompanyId(company_id)
+  milestoneService.findViaCompanyId(companyId)
   .then(data => {
     if (data.length == 0) {
       res.status(404).send({
-        message: `No Milestone with specifed company id: ${company_id}`
+        message: `No Milestone with specifed company id: ${companyId}`
       }) 
     }
     else {

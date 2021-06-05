@@ -17,9 +17,9 @@ module.exports = {
             return (error)
         }
     },
-    findAll : function (email_address) {
+    findAll : function (emailAddress) {
         try {
-            var condition = email_address ? { email_address: { [Op.like]: `%${email_address}%` } } : null;
+            var condition = emailAddress ? { emailAddress: { [Op.like]: `%${emailAddress}%` } } : null;
             const result = RetailInvestors.findAll({ where: condition })
             .then(data => {
                 return data
@@ -95,9 +95,9 @@ module.exports = {
             return error
         }
     },
-    findViaEmail : function(email) {
+    findViaEmail : function(emailAddress) {
         try {
-            var condition = email ? { email_address: { [Op.like]: `${email}` } } : null;
+            var condition = emailAddress ? { emailAddress: { [Op.like]: `${emailAddress}` } } : null;
             const result = RetailInvestors.findAll({ where: condition })
             .then(data => {
                 return data

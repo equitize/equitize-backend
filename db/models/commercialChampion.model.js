@@ -1,7 +1,7 @@
 module.exports = (sequelize, Sequelize) => {
   // name, email, profession, fields of interest
     const CommercialChampion = sequelize.define("commercialChampion", {
-      company_id:{
+      companyId:{
         type: Sequelize.INTEGER,
         allowNull: false
       },
@@ -16,7 +16,7 @@ module.exports = (sequelize, Sequelize) => {
       profession: {
         type: Sequelize.STRING,
       },
-      fields_of_interest: {
+      fieldsOfInterest: {
         type: Sequelize.STRING,
       },
     });

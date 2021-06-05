@@ -1,10 +1,10 @@
 module.exports = (sequelize, Sequelize) => {
     const JunctionTable = sequelize.define("junctionTable", {
-      retail_investor_id: {
+      retailInvestorId: {
         type: Sequelize.INTEGER,
         allowNull: false
       },
-      company_id: {
+      companyId: {
         type: Sequelize.INTEGER,
         allowNull: false
       },

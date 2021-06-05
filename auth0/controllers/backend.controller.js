@@ -16,7 +16,6 @@ module.exports = {
             axios.post(`https://${process.env.AUTH0_DOMAIN}/oauth/token`, data, { headers : headers } )
             .then(function (response) {
                 const MGT_ACCESS_TOKEN = response.data.access_token;
-                console.log('askldjhfaskldjfhalsdkj')
                 req.MGT_ACCESS_TOKEN = MGT_ACCESS_TOKEN;
                 next();
             })

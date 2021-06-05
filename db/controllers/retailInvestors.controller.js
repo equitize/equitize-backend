@@ -7,9 +7,9 @@ const retialInvestorService = require("../services/retailInvestor.service");
 // Create and Save a new retailInvestor
 exports.create = (req, res) => {
   // Validate request
-  if (!req.body.email_address || !req.body.user_password) {
+  if (!req.body.emailAddress || !req.body.userPassword) {
     res.status(400).send({
-      message: "email_address, user_password can not be empty!"
+      message: "emailAddress, userPassword can not be empty!"
     });
     return;
   }
@@ -18,13 +18,13 @@ exports.create = (req, res) => {
   // use ternary operator to handle null values 
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_Operator
   const retailInvestors = {
-    email_address: req.body.email_address,
-    user_password: req.body.user_password,
-    first_name: req.body.first_name ? req.body.first_name :"",
-    last_name: req.body.last_name ? req.body.last_name :"",
-    singpass: req.body.singpass ? req.body.singpass :"",
-    income_statement: req.body.income_statement ? req.body.income_statement :"",
-    income_tax_return: req.body.income_tax_return ? req.body.income_tax_return :""
+    emailAddress: req.body.emailAddress,
+    userPassword: req.body.userPassword,
+    firstName: req.body.firstName ? req.body.firstName :"",
+    lastName: req.body.lastName ? req.body.lastName :"",
+    singPass: req.body.singPass ? req.body.singPass :"",
+    incomeStatement: req.body.incomeStatement ? req.body.incomeStatement :"",
+    incomeTaxReturn: req.body.incomeTaxReturn ? req.body.incomeTaxReturn :""
   };
 
   // TK's implementation of service layer
@@ -35,7 +35,7 @@ exports.create = (req, res) => {
   .catch(function (err) {
     res.status(500).send({
       message:
-        err.message || "Some error occurred while creating the Startup."
+        err.message || "Some error occurred while creating the Retail Investor."
     });
   })
 
@@ -56,9 +56,9 @@ exports.create = (req, res) => {
 
 // Retrieve all retailInvestors from the database.
 exports.findAll = (req, res) => {
-    const email_address = req.query.email_address;
+    const emailAddress = req.query.emailAddress;
     // var condition = email_address ? { email_address: { [Op.like]: `%${email_address}%` } } : null;
-    retialInvestorService.findAll(email_address)
+    retialInvestorService.findAll(emailAddress)
     .then(function (response) {
       res.send(response)
     })
@@ -170,7 +170,7 @@ exports.delete = (req, res) => {
     .then(num => {
       if (num == 1) {
         res.send({
-          message: "Startup was deleted successfully!"
+          message: "Retail Investor was deleted successfully!"
         });
       } else {
         res.status(500).send({

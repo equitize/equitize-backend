@@ -18,9 +18,9 @@ module.exports = {
             return (error)
         }
     },
-    findAll : function (company_name) {
+    findAll : function (companyName) {
         try {
-            var condition = company_name ? { company_name: { [Op.like]: `%${company_name}%` } } : null;
+            var condition = companyName ? { companyName: { [Op.like]: `%${companyName}%` } } : null;
 
             const result = Startup.findAll({ where: condition })
             .then(data => {
@@ -95,9 +95,9 @@ module.exports = {
             return error
         }
     },
-    findViaName : function (company_name) {
+    findViaName : function (companyName) {
         try {
-            var condition = company_name ? { company_name: { [Op.like]: `${company_name}` } } : null;
+            var condition = companyName ? { companyName: { [Op.like]: `${companyName}` } } : null;
 
             const result = Startup.findAll({ where: condition })
             .then(data => {
@@ -111,9 +111,9 @@ module.exports = {
             return error
         }
     },
-    findViaEmail : function (email_address) {
+    findViaEmail : function (emailAddress) {
         try {
-            var condition = email_address ? { email_address: { [Op.like]: `${email_address}` } } : null;
+            var condition = emailAddress ? { emailAddress: { [Op.like]: `${emailAddress}` } } : null;
 
             const result = Startup.findAll({ where: condition })
             .then(data => {
@@ -126,6 +126,5 @@ module.exports = {
         } catch (error) {
             return error
         }
-    }
-
+    },
 }

@@ -18,9 +18,9 @@ module.exports = {
             return error
         }
     }, 
-    findAll : function (company_id) {
+    findAll : function (companyId) {
         try {
-            var condition = company_id ? { company_id: { [Op.like]: `%${company_id}%` } } : null;
+            var condition = companyId ? { companyId: { [Op.like]: `%${companyId}%` } } : null;
 
             const result = Milestone.findAll({ where: condition })
             .then(data => {
@@ -95,9 +95,9 @@ module.exports = {
             return error
         }
     },
-    findViaName : function (company_name) {
+    findViaName : function (companyName) {
         try {
-            var condition = company_name ? { name: { [Op.like]: `${company_name}` } } : null;
+            var condition = companyName ? { name: { [Op.like]: `${companyName}` } } : null;
 
             const result = Milestone.findAll({ where: condition })
             .then(data => {
@@ -111,9 +111,9 @@ module.exports = {
             return error
         }
     },
-    findViaCompanyId : function (company_id) {
+    findViaCompanyId : function (companyId) {
         try {
-            var condition = company_id ? { company_id: { [Op.like]: `${company_id}` } } : null;
+            var condition = companyId ? { companyId: { [Op.like]: `${companyId}` } } : null;
             const result = Milestone.findAll({ where: condition })
             .then(data => {
                 return data

@@ -7,9 +7,9 @@ const campaignService = require("../services/campaign.service");
 // Create and Save a new Campaign
 exports.create = (req, res) => {
   // Validate request
-  if (!req.body.company_id) {
+  if (!req.body.companyId) {
     res.status(400).send({
-      message: "company_id cannot be empty!"
+      message: "companyId cannot be empty!"
     });
     return;
   }
@@ -18,7 +18,7 @@ exports.create = (req, res) => {
   // use ternary operator to handle null values 
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_Operator
   const campaign = {
-    company_id: req.body.company_id,
+    companyId: req.body.companyId,
     // goal: req.body.goal,
     // end_date: req.body.end_date
   };
@@ -48,11 +48,11 @@ exports.create = (req, res) => {
 
 // Retrieve all Campaign from the database by company_id
 exports.findAll = (req, res) => {
-  const company_id = req.query.company_id;
+  const companyId = req.query.companyId;
   // var condition = company_id ? { company_id: { [Op.like]: `%${company_id}%` } } : null;
   
   // tk's implementation of service layer
-  campaignService.findAll(company_id)
+  campaignService.findAll(companyId)
   .then(data => {
     res.send(data);
   })
@@ -113,7 +113,7 @@ exports.findOne = (req, res) => {
 
 // Update a Campaign by the id in the request
 exports.update = (req, res) => {
-  const id = req.params.company_id;
+  const id = req.params.companyId;
   // tk's implementation of service layer
   campaignService.update(req.body, id)
   .then(num => {
@@ -250,17 +250,17 @@ exports.deleteAll = (req, res) => {
 
 exports.findViaCompanyId = (req, res) => {
   // const company_id = req.query.company_id;
-  const company_id = req.params.company_id;
+  const companyId = req.params.companyId;
   // console.log(req.query)
   // var condition = company_id ? { company_id: { [Op.like]: `${company_id}` } } : null;
 
   // tk's implementation of service layer
-  campaignService.findViaCompanyId(company_id)
+  campaignService.findViaCompanyId(companyId)
   .then(data => {
     console.log(data)
     if (data.length === 0){
       res.status(500).send({
-        message: "Campaign with id=" + company_id + " not found"
+        message: "Campaign with id=" + companyId + " not found"
       })
     } else {
       res.send(data);
@@ -287,14 +287,14 @@ exports.findViaCompanyId = (req, res) => {
 
 // middleware to check if campaign exists
 exports.checkExists = (req, res, next) => {
-  const company_id = req.params.company_id;
+  const companyId = req.params.companyId;
   // tk's implementation of service layer
-  campaignService.findViaCompanyId(company_id)
+  campaignService.findViaCompanyId(companyId)
   .then(data => {
     if (data.length === 0){
       // no campaigns found so we create one
       const campaign = {
-        company_id: company_id,
+        companyId: companyId,
       };
       campaignService.create(campaign)
       .then(data => {

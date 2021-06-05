@@ -5,6 +5,7 @@ const milestoneController = require("../controllers/milestone.controller.js");
 const auth0Controller = require("../../auth0/controllers/backend.controller");
 const auth0RegController = require("../../auth0/controllers/registration.controller");
 const { campaign } = require("../models");
+const CloudStorageController = require("../../cloudStorage/controllers/cloudStorage.controller");
 const router = require("express").Router();
 
 
@@ -26,9 +27,6 @@ router.delete("/:id", startupController.delete);
 // maybe move to admin
 router.delete("/", startupController.deleteAll);
 
-////////////////
-//custom routes
-///////////////
 
 // TO SET ALL OTHER PARAMS THEN THOSE IN CUSTOM, CHANGE THE PARAM OF BODY AND USE THE FOLLOWING PUT ROUTE TO UPDATE ALL OTHER PARAMS
 // Update a Startup with id
@@ -37,21 +35,26 @@ router.put("/:id", startupController.update);
 
 // Convert StartUp Video to live Link via CloudStorage
 // Update Startup's video field to to link in db. 
-router.put("/video/:id", startupController.uploadVideo, startupController.update);
+router.put("/video/:id", CloudStorageController.uploadVideo, startupController.update);
 
+// Get SignedURL for limited access on resource (video)
+router.get("/video/:id", startupController.getItemIdentifier, CloudStorageController.getSignedURL)
 
 // Convert Pitch Deck pdf to live Link via CloudStorage
 // Update Startup's pitch deck field to to link in db. 
-router.put("/pitchDeck/:id", startupController.uploadPitchDeck, startupController.update);
+router.put("/pitchDeck/:id", CloudStorageController.uploadPitchDeck, startupController.update);
+
+// Get SignedURL for limited access on resource (pitchDeck)
+router.get("/pitchDeck/:id", startupController.getItemIdentifier, CloudStorageController.getSignedURL)
 
 // Retrieve Startup by name
-router.get("/company_name/:company_name", startupController.findViaName);
-// router.get("/company_name/:company_name", startup.findViaName);
-//http://localhost:8080/api/db/startup/company_name/equitize
+router.get("/companyName/:companyName", startupController.findViaName);
+// router.get("/companyName/:companyName", startup.findViaName);
+//http://localhost:8080/api/db/startup/companyName/equitize
 
 // Retrieve Startup by email
 router.get("/email/:email", startupController.findViaEmail);
-//http://localhost:8080/api/db/startup/company_name/equitize
+//http://localhost:8080/api/db/startup/companyName/equitize
 
 // Set campaign with only companyID
 // maybe use for admin
@@ -59,7 +62,7 @@ router.post("/setCampaign/", campaignController.create);
 
 // Update Campaign Fields
 // middleware first creates exists if campaign doesn't already exists
-router.put("/campaign/update/:company_id", campaignController.checkExists, campaignController.update);
+router.put("/campaign/update/:companyId", campaignController.checkExists, campaignController.update);
 
 // Set commercialChampion
 router.post("/setCommercialChampion/", commercialChampionController.create);
@@ -68,13 +71,13 @@ router.post("/setCommercialChampion/", commercialChampionController.create);
 router.post("/setMilestone/", milestoneController.create);
 
 // Get campaign
-router.get("/getCampaign/:company_id", campaignController.findViaCompanyId);
+router.get("/getCampaign/:companyId", campaignController.findViaCompanyId);
 
 // Get commercialChampion
-router.get("/getCommercialChampion/:company_id", commercialChampionController.findViaCompanyId);
+router.get("/getCommercialChampion/:companyId", commercialChampionController.findViaCompanyId);
 
 // // Get milestone
-router.get("/getMilestone/:company_id", milestoneController.findViaCompanyId);
+router.get("/getMilestone/:companyId", milestoneController.findViaCompanyId);
 
 ///////////////////
 // Retrieve a single Startup with id
