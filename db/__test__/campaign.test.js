@@ -149,9 +149,8 @@ describe('Testing [/api/db/campaign]', () => {
     requestBody = {
       goal:goal_new,
     }
-    // let company_id = 1
     res = await supertest(app)
-                          .put(`/api/db/campaign/1`)
+                          .put(`/api/db/campaign/${campaign_id}`)
                           .send(requestBody)
     expect(res.statusCode).toBe(200)
   });

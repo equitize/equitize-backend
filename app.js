@@ -101,10 +101,13 @@ app.use((error, req, res, next) => {
   res.send(error);
 });
 
-// module.exports = app;
+
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;
-if (process.env.NODE_ENV !== 'test') {
+
+if (process.env.NODE_ENV == 'test') {
+  module.exports = app;
+} else {
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}.`);
   });

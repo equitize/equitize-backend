@@ -113,7 +113,7 @@ exports.findOne = (req, res) => {
 
 // Update a Campaign by the id in the request
 exports.update = (req, res) => {
-  const id = req.params.companyId;
+  const id = req.params.id;
   // tk's implementation of service layer
   campaignService.update(req.body, id)
   .then(num => {
