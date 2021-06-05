@@ -17,45 +17,45 @@ describe('Testing [/api/db/campaign]', () => {
     await thisDb.sequelize.sync({ force: true })
   });
 
-  const company_name = 'equitize'
-  const company_email_address = `company-${company_name}@email.com`
-  const company_password = 'password'
+  const companyName = 'equitize'
+  const company_emailAddress = `company-${companyName}@email.com`
+  const companyPassword = 'password'
 
   const investor_name = 'kenny'
-  const investor_email_address = `${investor_name}@email.com`
+  const investor_emailAddress = `${investor_name}@email.com`
   const investor_password = 'password'
 
   const goal = 123456
-  const end_date = "datestring"
+  const endDate = "datestring"
 
   const investment_amount = 1234
   const investment_amount_new = 2345
   
   const invalid_id = 1000000007
   
-  let company_id
+  let companyId
   let retailInvestor_id
   let campaign_id
   let junctionTable_id
 
   it('create company', async() => {
     let requestBody = {
-      company_name:company_name,
-      email_address:company_email_address,
-      company_password:company_password
+      companyName:companyName,
+      emailAddress:company_emailAddress,
+      companyPassword:companyPassword
     }
     let res = await supertest(app)
                           .post("/api/db/startup")
                           .send(requestBody)
     expect(res.statusCode).toBe(200)
-    company_id = res.body.id    
+    companyId = res.body.id    
   });
 
   it('create retailInvestor', async() => {
     let requestBody = {
-      first_name:investor_name,
-      email_address:investor_email_address,
-      user_password:investor_password
+      firstName:investor_name,
+      emailAddress:investor_emailAddress,
+      userPassword:investor_password
     }
     let res = await supertest(app)
                           .post("/api/db/retailInvestors")
@@ -66,9 +66,9 @@ describe('Testing [/api/db/campaign]', () => {
 
   it('create campaign', async() => {
     let requestBody = {
-      company_id:company_id,
+      companyId:companyId,
       goal:goal,
-      end_date:end_date
+      endDate:endDate
     }
     let res = await supertest(app)
                           .post("/api/db/campaign")
@@ -77,12 +77,12 @@ describe('Testing [/api/db/campaign]', () => {
     campaign_id = res.body.id    
   });
 
-  // TODO: note that the investment is made on company_id, not campaign_id, not sure if intended
+  // TODO: note that the investment is made on companyId, not campaign_id, not sure if intended
   // TODO: does not validate if the investment amount has been reached
   it('create junctionTable', async() => {
     let requestBody = {
-      retail_investor_id:retailInvestor_id,
-      company_id:company_id,
+      retailInvestorId:retailInvestor_id,
+      companyId:companyId,
       amount:investment_amount
     }
     let res = await supertest(app)
@@ -99,7 +99,7 @@ describe('Testing [/api/db/campaign]', () => {
     res = await supertest(app)
                           .get(`/api/db/junctionTable/${junctionTable_id}`)
                           .send(requestBody)
-    expect(res.body.id).toBe(company_id)
+    expect(res.body.id).toBe(companyId)
     expect(res.statusCode).toBe(200)
   });
 
