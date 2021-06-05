@@ -14,7 +14,15 @@ describe('Testing [/api/db/campaign]', () => {
   let thisDb = db
   
   beforeAll(async () => {
-    await thisDb.sequelize.sync({ force: true })
+    for (attemptCount in [...Array(5).keys()]){
+      try {
+        console.log("attempt at database sync", attemptCount)
+        await thisDb.sequelize.sync({force: false});
+      } catch {
+        continue
+      }
+      break
+    }
   });
 
   const companyName = 'equitize'

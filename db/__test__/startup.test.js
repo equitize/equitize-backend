@@ -14,7 +14,15 @@ describe('Testing [/api/db/startup]', () => {
   let thisDb = db
   
   beforeAll(async () => {
-    await thisDb.sequelize.sync();
+    for (attemptCount in [...Array(10).keys()]){
+      try {
+        console.log("attempt at database sync", attemptCount)
+        await thisDb.sequelize.sync({force: false});
+      } catch {
+        continue
+      }
+      break
+    }
   });
 
   const companyName = 'equitize'
