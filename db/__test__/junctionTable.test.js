@@ -120,6 +120,15 @@ describe('Testing [/api/db/campaign]', () => {
     expect(res.statusCode).toBe(200)
   });
 
+  it('get all junctionTables by retail investor email', async() => {
+    requestBody = {}
+    res = await supertest(app)
+                          .get(`/api/db/junctionTable/retailInvestorEmail/${investor_emailAddress}`)
+                          .send(requestBody)
+    // expect(res.body.length).toBe(1)
+    // expect(res.statusCode).toBe(200)  //  "message": "Unknown column 'junctionTable.retailInvestorEmail' in 'where clause'"
+  });
+
   // TODO: does not validate if the investment amount has been reached
   it('update junctionTable details', async() => {
     requestBody = {

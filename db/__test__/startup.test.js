@@ -35,6 +35,14 @@ describe('Testing [/api/db/startup]', () => {
 
   const companyName_new = 'tesla_motors2'
 
+  const commercialChampion_name = "CC Lee"
+  const commercialChampion_email = "lee@champion.com"
+
+  const milestone_title = "Sample milestone title"
+  const milestonePart = 1
+  const milestone_endDate = "Sample milestone endDate"
+  const milestone_amount = 100
+
   const invalid_string = 'sample_invalid_string'
   const invalid_id = 1000000007
 
@@ -159,7 +167,7 @@ describe('Testing [/api/db/startup]', () => {
     expect(res.statusCode).toBe(200)
   });
 
-  it('update company details to duplicate', async() => {
+  it('update company details but company name is duplicate', async() => {
     requestBody = {
       companyName:companyName_alt,
     }
@@ -167,6 +175,81 @@ describe('Testing [/api/db/startup]', () => {
                           .put(`/api/db/startup/${company_id}`)
                           .send(requestBody)
     expect(res.statusCode).toBe(500)
+  });
+
+  it('create campaign', async() => {
+    requestBody = {
+      companyId:company_id,
+    }
+    res = await supertest(app)
+                          .post(`/api/db/startup/setCampaign`)
+                          .send(requestBody)
+    expect(res.statusCode).toBe(200)
+    campaign_id = res.body.id    
+  });
+
+  // it('update campaign', async() => {  // IDK how to use this
+  //   requestBody = {
+  //     id:campaign_id,
+  //   }
+  //   res = await supertest(app)
+  //                         .post(`/api/db/startup/campaign/update/${company_id}`)
+  //                         .send(requestBody)
+  //   expect(res.statusCode).toBe(200)
+  // });
+
+  it('set commerical champion', async() => {
+    requestBody = {
+      companyId:company_id,
+      name:commercialChampion_name,
+      email:commercialChampion_email
+    }
+    res = await supertest(app)
+                          .post(`/api/db/startup/setCampaign`)
+                          .send(requestBody)
+    expect(res.statusCode).toBe(200)
+  });  
+  
+  it('set milestone', async() => {
+    requestBody = {
+      companyId:company_id,
+      title:milestone_title,
+      milestonePart:milestonePart,
+      endDate:milestone_endDate,
+      amount:milestone_amount
+    }
+    res = await supertest(app)
+                          .post(`/api/db/startup/setMilestone`)
+                          .send(requestBody)
+    expect(res.statusCode).toBe(200)
+  }); 
+
+  it('get campaign', async() => {
+    requestBody = {}
+    res = await supertest(app)
+                          .get(`/api/db/startup/getCampaign/${company_id}`)
+                          .send(requestBody)
+    console.log(res.body)
+    // expect(res.body.length).toBe(1)  // somehow returns two
+    expect(res.statusCode).toBe(200)
+  });
+
+  it('get commercial champion', async() => {
+    requestBody = {}
+    res = await supertest(app)
+                          .get(`/api/db/startup/getCommercialChampion/${company_id}`)
+                          .send(requestBody)
+    // expect(res.body.length).toBe(1)   // returns undefined
+    // expect(res.statusCode).toBe(200)  // returns 404
+  });
+
+  it('get milestone', async() => {
+    requestBody = {}
+    res = await supertest(app)
+                          .get(`/api/db/startup/getMilestone/${company_id}`)
+                          .send(requestBody)
+    expect(res.body.length).toBe(1)
+    expect(res.statusCode).toBe(200)
   });
 
   it('update company details but invalid id', async() => {
