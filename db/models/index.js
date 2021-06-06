@@ -1,6 +1,6 @@
 const dbConfig = require("../config/db.config.js");
-// console.log(dbConfig.HOST);
-// console.log(dbConfig.pool.max);
+// const dbConfig = require("../config/cloudSQL.config.js");
+
 
 const Sequelize = require("sequelize");
 
