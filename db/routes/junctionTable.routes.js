@@ -21,12 +21,12 @@ router.delete("/", junctionTable.deleteAll);
 ///////////////
 
 // Retrieve all investment entries belonging to startup 
-router.get("/company_name/:company_name", junctionTable.findViaCompanyName);
-//http://localhost:8080/api/db/junctionTable/company_name/equitize
+router.get("/companyName/:companyName", junctionTable.findViaCompanyName);
+//http://localhost:8080/api/db/junctionTable/companyName/equitize
 
 // Retrieve all investment entries belonging to retail investor
-router.get("/retail_investor_email/:retail_investor_email", junctionTable.findViaRetailInvestor);
-//http://localhost:8080/api/db/junctionTable/retail_investor_email/jiale@gmail.com
+router.get("/retailInvestorEmail/:retailInvestorEmail", junctionTable.findViaRetailInvestor);
+//http://localhost:8080/api/db/junctionTable/retailInvestorEmail/jiale@gmail.com
 
 ///////////////////////
 // Retrieve all Startup

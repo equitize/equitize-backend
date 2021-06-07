@@ -16,7 +16,7 @@ module.exports = {
 
             const headers = {
                 "Content-Type": "application/json",
-                "authorization": `Bearer ${process.env.AUTHO_MGT_TOKEN_TESTING}`
+                "authorization": `Bearer ${process.env.AUTH0_MGT_TOKEN_TESTING}`
             };
             axios.post(`https://${process.env.AUTH0_DOMAIN}/api/v2/users/${user_id}/roles`, data, { headers : headers } )
             .then(function (response) {
@@ -41,7 +41,7 @@ module.exports = {
             };
             const headers = {
                 "Content-Type": "application/json",
-                "authorization": `Bearer ${process.env.AUTHO_MGT_TOKEN_TESTING}`
+                "authorization": `Bearer ${process.env.AUTH0_MGT_TOKEN_TESTING}`
             };
             axios.post(`https://${process.env.AUTH0_DOMAIN}/api/v2/users/${user_id}/roles`, data, { headers : headers } )
             .then(function (response) {
@@ -66,7 +66,7 @@ module.exports = {
             };
             const headers = {
                 "Content-Type": "application/json",
-                "authorization": `Bearer ${process.env.AUTHO_MGT_TOKEN_TESTING}`
+                "authorization": `Bearer ${process.env.AUTH0_MGT_TOKEN_TESTING}`
             };
             axios.post(`https://${process.env.AUTH0_DOMAIN}/api/v2/users`, data , { headers : headers } )
             .then(function (response) {

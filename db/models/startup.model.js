@@ -1,47 +1,47 @@
 module.exports = (sequelize, Sequelize) => {
     const Startup = sequelize.define("startup", {
-      company_name: {
+      companyName: {
         type: Sequelize.STRING,
         allowNull: false,  // set constraints for company_name
         unique: true
       },
-      email_address: {
+      emailAddress: {
         type: Sequelize.STRING,
         allowNull: false,
         unique: true
       },
-      company_password: {
+      companyPassword: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      profile_description: {
+      profileDescription: {
         type: Sequelize.STRING
       },
-      profile_photo: {
+      profilePhoto: {
         type: Sequelize.STRING
       },
-      cap_table: {
+      capTable: {
         type: Sequelize.STRING
       },
-      acra_documents: {
+      acraDocuments: {
         type: Sequelize.STRING
       },
-      pitch_deck: {
+      pitchDeck: {
         type: Sequelize.STRING
       },
       video:{
         type: Sequelize.STRING
       },
-      zoom_datetime: {
+      zoomDatetime: {
         type: Sequelize.STRING
       },
-      commerical_champion: {
+      commericalChampion: {
         type: Sequelize.STRING
       },
-      designsprint_datetime: {
+      designSprintDatetime: {
         type: Sequelize.STRING
       },
-      bank_info: {
+      bankInfo: {
         type: Sequelize.STRING
       },
     });

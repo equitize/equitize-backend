@@ -1,4 +1,33 @@
-We will be using google cloud sql as of discussion on 19/5.
+# QuickStart
+---
+`yarn dev`
+
+# Testing
+---
+`yarn test`
+
+# TODO
+---
+1. Test New Routes [HK]
+2. Integrate CloudSQL with ExpressJS 
+3. Integrate Authorisation Flows with Protected Roles based on Roles and Permission
+4. Integrate BlockChain 
+5. ...
+
+# Completed
+---
+1. Barebones Express Server
+2. Integration with MySQL (local)
+3. APIs for startup registration
+4. Integration of CloudStorage for blob data (Pitch Deck, Video)
+5. Integration of authorisation and authentication with Auth0
+6. We will use Postman Documentation
+
+
+# DB
+---
+
+
 
 | Progress                                             | Complete? |
 | ---------------------------------------------------- | --------- |

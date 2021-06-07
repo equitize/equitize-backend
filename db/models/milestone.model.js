@@ -1,14 +1,17 @@
 module.exports = (sequelize, Sequelize) => {
     const Milestone = sequelize.define("milestone", {
-      company_id: {
+      companyId: {
         type: Sequelize.INTEGER,
         allowNull: false
       },
-      milestone_part: {
+      title: {
+        type: Sequelize.STRING,
+      },
+      milestonePart: {
         type: Sequelize.INTEGER,
         allowNull: false
       },
-      end_date: {
+      endDate: {
         type: Sequelize.STRING,
         allowNull: false
       },

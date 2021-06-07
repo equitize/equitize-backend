@@ -26,7 +26,7 @@ router.delete("/:id", retailInvestors.delete);
 router.delete("/", retailInvestors.deleteAll);
 
 // Retrieve Startup by email
-router.get("/email/:email", retailInvestors.findViaEmail);
+router.get("/email/:emailAddress", retailInvestors.findViaEmail);
 //http://localhost:8080/api/db/retailInvestors/email/kenny@mail.xyz
 
 module.exports = router;

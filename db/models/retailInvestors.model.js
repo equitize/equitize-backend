@@ -1,27 +1,27 @@
 module.exports = (sequelize, Sequelize) => {
     const RetailInvestors = sequelize.define("retailInvestors", {
-      email_address: {
+      emailAddress: {
         type: Sequelize.STRING,
         allowNull: false,
         unique: true
       },
-      user_password: {
+      userPassword: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      first_name: {
+      firstName: {
         type: Sequelize.STRING
       },
-      last_name: {
+      lastName: {
         type: Sequelize.STRING
       },
-      singpass: {
+      singPass: {
         type: Sequelize.STRING
       },
-      income_statement: {
+      incomeStatement: {
         type: Sequelize.STRING
       },
-      income_tax_return: {
+      incomeTaxReturn: {
         type: Sequelize.STRING
       },
     });

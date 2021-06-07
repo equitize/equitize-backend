@@ -1,5 +1,7 @@
 const campaign = require("../controllers/campaign.controller.js");
 const router = require("express").Router();
+// Maybe have this as admin utility since retail investors/startups have access to campaign services via their routes
+
 
 // Create a new Startup
 router.post("/", campaign.create);
@@ -24,7 +26,7 @@ router.delete("/", campaign.deleteAll);
 ///////////////
 
 // Retrieve campaign by startup name
-router.get("/company_name/:company_name", campaign.findViaCompanyName);
+router.get("/campaign/:companyId", campaign.findViaCompanyId);
 //http://localhost:8080/api/db/campaign/company_name/bloo
 
 module.exports = router;
