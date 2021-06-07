@@ -44,6 +44,9 @@ module.exports = (sequelize, Sequelize) => {
       bankInfo: {
         type: Sequelize.STRING
       },
+    },{
+      tableName: 'startup',
+      freezeTableName: true
     });
     return Startup;
   };

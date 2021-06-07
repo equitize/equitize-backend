@@ -27,7 +27,7 @@ router.delete("/", campaign.deleteAll);
 
 // Retrieve campaign by startup name
 router.get("/campaign/:companyId", campaign.findViaCompanyId);
-//http://localhost:8080/api/db/campaign/company_name/bloo
+//http://localhost:8080/api/db/campaign/campaign/1
 
 module.exports = router;
 

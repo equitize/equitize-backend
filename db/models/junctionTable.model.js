@@ -12,6 +12,9 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.INTEGER,
         allowNull: false
       },
+    },{
+      tableName: 'junctionTable',
+      freezeTableName: true
     });
   
     return JunctionTable;
