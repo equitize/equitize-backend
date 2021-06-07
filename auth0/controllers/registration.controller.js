@@ -74,8 +74,8 @@ module.exports = {
                 next();
             })
             .catch(function (error) {
-                // console.log(error);
-                console.log('alskdjfhalsdkjfhas')
+                console.log(error);
+                // console.log('alskdjfhalsdkjfhas')
                 next(error);
             });
         } catch (error) {
