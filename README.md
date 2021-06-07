@@ -1,6 +1,16 @@
+# Setup
+--- 
+Install MySQL https://dev.mysql.com/downloads/mysql/
+Install MySQL WorkBench https://www.mysql.com/products/workbench/
+Use MySQL WorkBench to connect to MySQL locally.
+Create a databse named testdb
+Update PASSWORD field in ~/db/config/db.config.js
+
 # QuickStart
 ---
 `yarn dev`
+
+Notes: For now, we will develop using local MySQL with CloudStorage Integration.
 
 # Testing
 ---
@@ -9,10 +19,9 @@
 # TODO
 ---
 1. Test New Routes [HK]
-2. Integrate CloudSQL with ExpressJS 
-3. Integrate Authorisation Flows with Protected Roles based on Roles and Permission
-4. Integrate BlockChain 
-5. ...
+2. Integrate Authorisation Flows with Protected Roles based on Roles and Permission
+3. Integrate BlockChain 
+4. ...
 
 # Completed
 ---
@@ -22,6 +31,7 @@
 4. Integration of CloudStorage for blob data (Pitch Deck, Video)
 5. Integration of authorisation and authentication with Auth0
 6. We will use Postman Documentation
+7. Integration with CloudSQL
 
 
 # DB
