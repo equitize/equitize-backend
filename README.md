@@ -1,16 +1,20 @@
 # Setup
 --- 
-Install MySQL https://dev.mysql.com/downloads/mysql/
+Install MySQL https://dev.mysql.com/downloads/mysql/ 
+
 Install MySQL WorkBench https://www.mysql.com/products/workbench/
+
 Use MySQL WorkBench to connect to MySQL locally.
+
 Create a databse named testdb
+
 Update PASSWORD field in ~/db/config/db.config.js
 
 # QuickStart
 ---
 `yarn dev`
 
-Notes: For now, we will develop using local MySQL with CloudStorage Integration.
+Notes: For now, we will develop using local MySQL with CloudStorage Integration. 
 
 # Testing
 ---
