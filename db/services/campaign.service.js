@@ -48,10 +48,10 @@ module.exports = {
             return error
         }
     },
-    update : function(updates, id) {
+    update : function(updates, companyId) {
         try {
             const result = Campaign.update(updates, { 
-                where : { id : id }
+                where : { companyId : companyId }
             })
             .then(data => {
                 return data
