@@ -113,9 +113,9 @@ exports.findOne = (req, res) => {
 
 // Update a Campaign by the id in the request
 exports.update = (req, res) => {
-  const id = req.params.id;
+  const companyId = req.params.companyId;
   // tk's implementation of service layer
-  campaignService.update(req.body, id)
+  campaignService.update(req.body, companyId)
   .then(num => {
     if (num == 1) {
       res.send({
@@ -123,14 +123,14 @@ exports.update = (req, res) => {
       });
     } else {
       res.status(500).send({
-        message: `Cannot update Campaign with id=${id}. Maybe Campaign was not found or req.body is empty!`
+        message: `Cannot update Campaign with id=${companyId}. Maybe Campaign was not found or req.body is empty!`
       });
     }
   })
   .catch(err => {
     console.log(err)
     res.status(500).send({
-      message: "Error updating Campaign with id=" + id
+      message: "Error updating Campaign with id=" + companyId
     });
   });
   // Campaign.update(req.body, {
@@ -289,8 +289,12 @@ exports.findViaCompanyId = (req, res) => {
 exports.checkExists = (req, res, next) => {
   const companyId = req.params.companyId;
   // tk's implementation of service layer
+  console.log(req.params)
+  console.log("check")
   campaignService.findViaCompanyId(companyId)
   .then(data => {
+    console.log(data)
+    console.log("check")
     if (data.length === 0){
       // no campaigns found so we create one
       const campaign = {

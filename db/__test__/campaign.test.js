@@ -14,46 +14,53 @@ describe('Testing [/api/db/campaign]', () => {
   let thisDb = db
   
   beforeAll(async () => {
-    await thisDb.sequelize.sync({ force: true })
+    for (attemptCount in [...Array(10).keys()]){
+      try {
+        console.log("attempt at database sync", attemptCount)
+        await thisDb.sequelize.sync({force: false});
+      } catch {
+        continue
+      }
+      break
+    }
   });
 
-  const company_name = 'equitize'
-  const company_email_address = `company-${company_name}@email.com`
-  const company_password = 'password'
+  const companyName = 'equitize'
+  const company_emailAddress = `company-${companyName}@email.com`
+  const companyPassword = 'password'
 
   const investor_name = 'kenny'
-  const investor_email_address = `${investor_name}@email.com`
+  const investor_emailAddress = `${investor_name}@email.com`
   const investor_password = 'password'
 
   const goal = 123456
   const goal_new = 987654
-  const end_date = "datestring"
+  const endDate = "datestring"
   
-  const invalid_string = 'sample_invalid_string'
   const invalid_id = 1000000007
 
-  let company_id
+  let companyId
   let retailInvestor_id
   let campaign_id
 
   it('create company', async() => {
     let requestBody = {
-      company_name:company_name,
-      email_address:company_email_address,
-      company_password:company_password
+      companyName:companyName,
+      emailAddress:company_emailAddress,
+      companyPassword:companyPassword
     }
     let res = await supertest(app)
                           .post("/api/db/startup")
                           .send(requestBody)
     expect(res.statusCode).toBe(200)
-    company_id = res.body.id    
+    companyId = res.body.id    
   });
 
   it('create retailInvestor', async() => {
     let requestBody = {
-      first_name:investor_name,
-      email_address:investor_email_address,
-      user_password:investor_password
+      firstName:investor_name,
+      emailAddress:investor_emailAddress,
+      userPassword:investor_password
     }
     let res = await supertest(app)
                           .post("/api/db/retailInvestors")
@@ -64,9 +71,9 @@ describe('Testing [/api/db/campaign]', () => {
 
   it('create campaign', async() => {
     let requestBody = {
-      company_id:company_id,
+      companyId:companyId,
       goal:goal,
-      end_date:end_date
+      endDate:endDate
     }
     let res = await supertest(app)
                           .post("/api/db/campaign")
@@ -74,13 +81,13 @@ describe('Testing [/api/db/campaign]', () => {
     expect(res.statusCode).toBe(200)
     campaign_id = res.body.id    
   });
-  // maybe should test creating campaign without valid company_id 
+  // maybe should test creating campaign without valid companyId 
 
   it('create campaign but missing info', async() => {
     let requestBody = {
-      // company_id:company_id, // info missed out
+      // companyId:companyId, // info missed out
       // goal:goal,
-      end_date:end_date 
+      endDate:endDate 
     }
     let res = await supertest(app)
                           .post("/api/db/campaign")
@@ -91,9 +98,9 @@ describe('Testing [/api/db/campaign]', () => {
   // currently allowing startup to create multiple campaign at the same time
   it('create campaign with duplicate info', async() => {
     let requestBody = {
-      company_id:company_id,
+      companyId:companyId,
       goal:goal,
-      end_date:end_date
+      endDate:endDate
     }
     let res = await supertest(app)
                           .post("/api/db/campaign")
@@ -107,7 +114,7 @@ describe('Testing [/api/db/campaign]', () => {
     res = await supertest(app)
                           .get(`/api/db/campaign/${campaign_id}`)
                           .send(requestBody)
-    expect(res.body.id).toBe(company_id)
+    expect(res.body.id).toBe(companyId)
     expect(res.statusCode).toBe(200)
   });
 
@@ -131,7 +138,7 @@ describe('Testing [/api/db/campaign]', () => {
   it('get by company id', async() => {
     requestBody = {}
     res = await supertest(app)
-                          .get(`/api/db/campaign/company_id/${company_id}`)
+                          .get(`/api/db/campaign/campaign/${companyId}`)
                           .send(requestBody)
     expect(res.body.length).toBe(2)  // including duplicate
     expect(res.statusCode).toBe(200)
@@ -140,7 +147,7 @@ describe('Testing [/api/db/campaign]', () => {
   it('get by company name but invalid', async() => {
     requestBody = {}
     res = await supertest(app)
-                          .get(`/api/db/campaign/company_id/${invalid_string}`)
+                          .get(`/api/db/campaign/campaign/${invalid_id}`)
                           .send(requestBody)
     // expect(res.statusCode).toBe(500)
   });
@@ -160,7 +167,7 @@ describe('Testing [/api/db/campaign]', () => {
       goal:goal_new,
     }
     res = await supertest(app)
-                          .put(`/api/db/campaign/${invalid_string}`)
+                          .put(`/api/db/campaign/${invalid_id}`)
                           .send(requestBody)
     expect(res.statusCode).toBe(500)
   });

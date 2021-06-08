@@ -22,6 +22,9 @@ module.exports = (sequelize, Sequelize) => {
       tokensMinted: {
         type: Sequelize.INTEGER,
       } 
+    },{
+      tableName: 'campaign',
+      freezeTableName: true
     });
   
     return Campaign;

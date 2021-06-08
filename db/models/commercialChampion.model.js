@@ -19,6 +19,9 @@ module.exports = (sequelize, Sequelize) => {
       fieldsOfInterest: {
         type: Sequelize.STRING,
       },
+    },{
+      tableName: 'commercialChampion',
+      freezeTableName: true
     });
   
     return CommercialChampion;

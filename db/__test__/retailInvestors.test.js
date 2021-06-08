@@ -14,18 +14,26 @@ describe('Testing [/api/db/retailInvestors]', () => {
   let thisDb = db
   
   beforeAll(async () => {
-    await thisDb.sequelize.sync({ force: true })
+    for (attemptCount in [...Array(10).keys()]){
+      try {
+        console.log("attempt at database sync", attemptCount)
+        await thisDb.sequelize.sync({force: false});
+      } catch {
+        continue
+      }
+      break
+    }
   });
 
   const retailInvestor_name = 'kenny'
-  const email_address = `${retailInvestor_name}@email.com`
-  const user_password = 'password'
+  const emailAddress = `${retailInvestor_name}@email.com`
+  const userPassword = 'password'
 
   const retailInvestor_name_alt = 'francisco'
-  const email_address_alt = `investor-${retailInvestor_name_alt}@email.com`
-  const user_password_alt = 'password'
+  const emailAddress_alt = `investor-${retailInvestor_name_alt}@email.com`
+  const userPassword_alt = 'password'
   
-  const email_address_new = `investor2-${retailInvestor_name_alt}@email.com`
+  const emailAddress_new = `investor2-${retailInvestor_name_alt}@email.com`
 
   const invalid_string = 'sample_invalid_string'
   const invalid_id = 1000000007
@@ -34,9 +42,9 @@ describe('Testing [/api/db/retailInvestors]', () => {
 
   it('create retailInvestor', async() => {
     let requestBody = {
-      first_name:retailInvestor_name,
-      email_address:email_address,
-      user_password:user_password
+      firstName:retailInvestor_name,
+      emailAddress:emailAddress,
+      userPassword:userPassword
     }
     let res = await supertest(app)
                           .post("/api/db/retailInvestors")
@@ -47,9 +55,9 @@ describe('Testing [/api/db/retailInvestors]', () => {
 
   it('create retailInvestor but missing info', async() => {
     let requestBody = {
-      first_name:retailInvestor_name_alt,
-      email_address:email_address_alt,
-      // user_password:user_password_alt
+      firstName:retailInvestor_name_alt,
+      emailAddress:emailAddress_alt,
+      // userPassword:userPassword_alt
     }
     let res = await supertest(app)
                           .post("/api/db/retailInvestors")
@@ -59,9 +67,9 @@ describe('Testing [/api/db/retailInvestors]', () => {
 
   it('create retailInvestor but duplicate info', async() => {
     let requestBody ={
-      first_name:retailInvestor_name,  // duplicate_info
-      email_address:email_address,  // duplicate_info
-      user_password:user_password
+      firstName:retailInvestor_name,  // duplicate_info
+      emailAddress:emailAddress,  // duplicate_info
+      userPassword:userPassword
     }
     let res = await supertest(app)
                           .post("/api/db/retailInvestors")
@@ -71,9 +79,9 @@ describe('Testing [/api/db/retailInvestors]', () => {
 
   it('create retailInvestor with different info', async() => {
     let requestBody = {
-      first_name:retailInvestor_name_alt,
-      email_address:email_address_alt,
-      user_password:user_password_alt
+      firstName:retailInvestor_name_alt,
+      emailAddress:emailAddress_alt,
+      userPassword:userPassword_alt
     }
     let res = await supertest(app)
                           .post("/api/db/retailInvestors")
@@ -110,7 +118,7 @@ describe('Testing [/api/db/retailInvestors]', () => {
   it('get by retailInvestor email', async() => {
     requestBody = {}
     res = await supertest(app)
-                          .get(`/api/db/retailInvestors/email/${email_address}`)
+                          .get(`/api/db/retailInvestors/email/${emailAddress}`)
                           .send(requestBody)
     // expect(res.body.length).toBe(1)
     expect(res.statusCode).toBe(200)
@@ -126,7 +134,7 @@ describe('Testing [/api/db/retailInvestors]', () => {
 
   it('update retailInvestor details', async() => {
     requestBody = {
-      email_address:email_address_new,
+      emailAddress:emailAddress_new,
     }
     res = await supertest(app)
                           .put(`/api/db/retailInvestors/${retailInvestor_id}`)
@@ -136,7 +144,7 @@ describe('Testing [/api/db/retailInvestors]', () => {
 
   it('update retailInvestor details to duplicate', async() => {
     requestBody = {
-      email_address:email_address_alt,
+      emailAddress:emailAddress_alt,
     }
     res = await supertest(app)
                           .put(`/api/db/retailInvestors/${retailInvestor_id}`)
@@ -146,10 +154,10 @@ describe('Testing [/api/db/retailInvestors]', () => {
 
   it('update retailInvestor details but invalid id', async() => {
     requestBody = {
-      email_address:email_address,
+      emailAddress:emailAddress,
     }
     res = await supertest(app)
-                          .put(`/api/db/retailInvestors/${invalid_string}`)
+                          .put(`/api/db/retailInvestors/${invalid_id}`)
                           .send(requestBody)
     expect(res.statusCode).toBe(500)
   });
