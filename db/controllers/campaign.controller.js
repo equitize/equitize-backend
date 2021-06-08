@@ -288,12 +288,12 @@ exports.findViaCompanyId = (req, res) => {
 exports.checkExists = (req, res, next) => {
   const companyId = req.params.companyId;
   // tk's implementation of service layer
-  console.log(req.params)
-  console.log("check")
+  // console.log(req.params)
+  // console.log("check")
   campaignService.findViaCompanyId(companyId)
   .then(data => {
-    console.log(data)
-    console.log("check")
+    // console.log(data)
+    // console.log("check")
     if (data.length === 0){
       // no campaigns found so we create one
       const campaign = {

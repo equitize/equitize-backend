@@ -113,7 +113,7 @@ describe('Testing [/api/db/campaign]', () => {
   it('get a campaign by id', async() => {
     requestBody = {}
     res = await supertest(app)
-                          .get(`/api/db/campaign/${campaign_id}`)
+                          .get(`/api/db/campaign/${companyId}`)
                           .send(requestBody)
     expect(res.body.id).toBe(companyId)
     expect(res.statusCode).toBe(200)

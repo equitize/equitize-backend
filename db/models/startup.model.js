@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-    const Startup = sequelize.define("startup", {
+    const Startup = sequelize.define("startups", {
       companyName: {
         type: Sequelize.STRING,
         allowNull: false,  // set constraints for company_name
@@ -44,8 +44,11 @@ module.exports = (sequelize, Sequelize) => {
       bankInfo: {
         type: Sequelize.STRING
       },
+      idProof: {
+        type: Sequelize.STRING
+      },
     },{
-      tableName: 'startup',
+      tableName: "startups",
       freezeTableName: true
     });
     return Startup;

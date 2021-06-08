@@ -23,8 +23,8 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.INTEGER,
       } 
     },{
-      tableName: 'campaign',
-      freezeTableName: true
+      // tableName: 'campaign',
+      // freezeTableName: true
     });
   
     return Campaign;

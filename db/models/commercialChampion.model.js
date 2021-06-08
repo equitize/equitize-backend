@@ -20,8 +20,8 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.STRING,
       },
     },{
-      tableName: 'commercialChampion',
-      freezeTableName: true
+      // tableName: 'commercialChampion',
+      // freezeTableName: true
     });
   
     return CommercialChampion;
