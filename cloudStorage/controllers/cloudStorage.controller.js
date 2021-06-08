@@ -16,11 +16,61 @@ exports.uploadVideo = async (req, res, next) => {
 exports.uploadPitchDeck = async (req, res, next) => {
     const pitchDeck = req.file;
     const data = await CloudStorageService.uploadPitchDeck(pitchDeck);
-    console.log(data)
+    
     req.body = {
       "pitchDeck": data
     }
     next();
+};
+
+exports.uploadCapTable = async (req, res, next) => {
+    const capTable = req.file;
+    const data = await CloudStorageService.uploadCapTable(capTable);
+    
+    req.body = {
+      "capTable": data
+    }
+    next();
+};
+
+exports.uploadAcraDocuments = async (req, res, next) => {
+  const acraDocuments = req.file;
+  const data = await CloudStorageService.uploadAcraDocuments(acraDocuments);
+  
+  req.body = {
+    "acraDocuments": data
+  }
+  next();
+};
+
+exports.uploadBankInfo = async (req, res, next) => {
+  const bankInfo = req.file;
+  const data = await CloudStorageService.uploadBankInfo(bankInfo);
+  
+  req.body = {
+    "bankInfo": data
+  }
+  next();
+};
+
+exports.uploadIdProof = async (req, res, next) => {
+  const idProof = req.file;
+  const data = await CloudStorageService.uploadIdProof(idProof);
+  
+  req.body = {
+    "idProof": data
+  }
+  next();
+};
+
+exports.uploadProfilePhoto = async (req, res, next) => {
+  const profilePhoto = req.file;
+  const data = await CloudStorageService.uploadProfilePhoto(profilePhoto);
+  
+  req.body = {
+    "profilePhoto": data
+  }
+  next();
 };
 
 // gets signedURL of requested filetype

@@ -1,8 +1,8 @@
 const express = require("express");
 const createHttpError = require("http-errors");
 const multer = require("multer");
-const helpers = require("./cloudStorage/helpers/helpers");
-// const getSignedURL = require("./cloudStorage/helpers/helpers");
+// // const helpers = require("./cloudStorage/helpers/helpers");
+// // const getSignedURL = require("./cloudStorage/helpers/helpers");
 
 const cors = require("cors");
 const app = express();
@@ -18,8 +18,8 @@ var corsOptions = {
 app.use(cors(corsOptions));
 
 
-// for public routes
-// TODO: implement view engine for admin dashboard if there is time
+// // for public routes
+// // TODO: implement view engine for admin dashboard if there is time
 app.use('/', require('./routes/index.route'));
 
 
@@ -37,7 +37,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
-// db
+// // db
 const db = require("./db/models");
 db.sequelize.sync({ force: true, logging:false }).then((res) => {
   console.log("Drop and re-sync db.");
@@ -65,19 +65,19 @@ app.use((error, req, res, next) => {
 });
 
 
-// set port, listen for requests
+// // set port, listen for requests
 const DEV_PORT = process.env.DEV_PORT || 8080;
 
 if (process.env.NODE_ENV == 'test') {
   module.exports = app;
 } 
-if (process.env.NODE_ENV == 'production') {
+else if (process.env.NODE_ENV == 'prod') {
   app.listen(process.env.PORT, "0.0.0.0" , () => {
     console.log(`Server is running on port. ${process.env.PORT}`);
   });
 }
-else {
-  app.listen(PORT, () => {
+else if (process.env.NODE_ENV == 'dev') {
+  app.listen(DEV_PORT, () => {
     console.log(`Server is running on port ${DEV_PORT}.`);
   });
 }

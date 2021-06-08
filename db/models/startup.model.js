@@ -44,6 +44,9 @@ module.exports = (sequelize, Sequelize) => {
       bankInfo: {
         type: Sequelize.STRING
       },
+      idProof: {
+        type: Sequelize.STRING
+      },
     },{
       tableName: "startups",
       freezeTableName: true

@@ -1,8 +1,8 @@
 let dbConfig;
 
-if (process.env.NODE_ENV == "production") {
+if (process.env.NODE_ENV === "prod") {
   dbConfig = require("../config/cloudSQL.config.js");
-} else {
+} else if (process.env.NODE_ENV === "dev") {
   dbConfig = require("../config/db.config.js");
 }
 
