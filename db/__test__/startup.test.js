@@ -205,7 +205,7 @@ describe('Testing [/api/db/startup]', () => {
       email:commercialChampion_email
     }
     res = await supertest(app)
-                          .post(`/api/db/startup/setCampaign`)
+                          .post(`/api/db/startup/setCommercialChampion`)
                           .send(requestBody)
     expect(res.statusCode).toBe(200)
   });  
@@ -230,7 +230,7 @@ describe('Testing [/api/db/startup]', () => {
                           .get(`/api/db/startup/getCampaign/${company_id}`)
                           .send(requestBody)
     console.log(res.body)
-    // expect(res.body.length).toBe(1)  // somehow returns two
+    expect(res.body.length).toBe(1)
     expect(res.statusCode).toBe(200)
   });
 
@@ -239,8 +239,8 @@ describe('Testing [/api/db/startup]', () => {
     res = await supertest(app)
                           .get(`/api/db/startup/getCommercialChampion/${company_id}`)
                           .send(requestBody)
-    // expect(res.body.length).toBe(1)   // returns undefined
-    // expect(res.statusCode).toBe(200)  // returns 404
+    expect(res.body.length).toBe(1)
+    expect(res.statusCode).toBe(200)
   });
 
   it('get milestone', async() => {
