@@ -12,11 +12,10 @@ require('dotenv').config({
 
 
 var corsOptions = {
-  origin: "http://localhost:8081"
+  origin: "http://localhost:3000"
 };
 
 app.use(cors(corsOptions));
-
 
 // for public routes
 // TODO: implement view engine for admin dashboard if there is time
