@@ -1,7 +1,9 @@
 const express = require("express");
 const createHttpError = require("http-errors");
 const multer = require("multer");
-const { adminBro, adminRouter } = require("./admin/adminBro");
+const AdminBroOptions = require("./admin/adminBro");
+const AdminBroExpress = require('@admin-bro/express')
+const AdminBro = require('admin-bro')
 const cors = require("cors");
 const app = express();
 require('dotenv').config({
@@ -14,9 +16,27 @@ var corsOptions = {
 };
 
 app.use(cors(corsOptions));
+
+
+const ADMIN = {
+  email: 'test@example.com',
+  password: 'password',
+}
+
+const adminBro = new AdminBro(AdminBroOptions)
+const adminRouter = AdminBroExpress.buildAuthenticatedRouter(adminBro, {
+  cookieName: 'admin-user',
+  cookiePassword: 'admin-password',
+  authenticate: async (email, password) => {
+      if (email === ADMIN.email && password === ADMIN.password)
+      {
+          return ADMIN;
+      }
+      return null;
+  }
+});
+
 app.use(adminBro.options.rootPath, adminRouter)
-
-
 
 // // for public routes
 // // TODO: implement view engine for admin dashboard if there is time
@@ -37,7 +57,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
-// // db
+// db
 const db = require("./db/models");
 db.sequelize.sync({ force: true, logging:false }).then((res) => {
   console.log("Drop and re-sync db.");

@@ -1,16 +1,29 @@
 const AdminBro = require('admin-bro')
-const AdminBroExpress = require('@admin-bro/express')
+const AdminBroSequelize = require('@admin-bro/sequelize')
+const db = require('../db/models');
 
-const express = require('express')
+// const adminRouter = AdminBroExpress.buildRouter(adminBro)
+AdminBro.registerAdapter(AdminBroSequelize)
 
 
-const adminBro = new AdminBro({
-  databases: [],
-  rootPath: '/admin',
-})
-
-const adminRouter = AdminBroExpress.buildRouter(adminBro)
+const startupNav = {name: "startups", icon: "Enterprise"} 
+const retailInvestorsNav = {name: "retailInvestors", icon: "User"} 
+const campaignNav = {name: "campaign", icon: "Portfolio"} 
+const junctionTableNav = {name: "junctionTable", icon: "testicon"} 
+const commercialChampionNav = {name: "commercialChampion", icon: "Portfolio"} 
+const milestoneNav = {name: "milestone", icon: "TagTag"} 
 
 module.exports = {
-    adminBro, adminRouter
+  resources: [
+    { resource: db.sequelize.models.startups, options: { navigation: startupNav } },
+    { resource: db.sequelize.models.retailInvestors, options: { navigation: retailInvestorsNav } },
+    { resource: db.sequelize.models.campaign, options: { navigation: campaignNav } },
+    { resource: db.sequelize.models.junctionTable, options: { navigation: junctionTableNav } },
+    { resource: db.sequelize.models.commercialChampion, options: { navigation: commercialChampionNav } },
+    { resource: db.sequelize.models.milestone, options: { navigation: milestoneNav } },
+  ],
+  branding: {
+    companyName: 'Equitize Inc.',
+    softwareBrothers: false,
+  }
 }

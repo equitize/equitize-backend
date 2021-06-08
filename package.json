@@ -18,6 +18,7 @@
   "license": "ISC",
   "dependencies": {
     "@admin-bro/express": "^3.1.0",
+    "@admin-bro/sequelize": "^1.2.1",
     "@google-cloud/storage": "^5.8.5",
     "admin-bro": "^4.0.1",
     "axios": "^0.21.1",
