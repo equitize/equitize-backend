@@ -15,6 +15,10 @@ sequelize_config = {
     acquire: dbConfig.pool.acquire,
     idle: dbConfig.pool.idle
   },
+
+  define: {
+    freezeTableName: true
+  }
 };
 
 // disable logging in test

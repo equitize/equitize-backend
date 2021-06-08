@@ -36,47 +36,10 @@ app.use(multerMid.single('file'))
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Succesful API to upload file object with randon identifier
-// TODO: integrate the storing of the link in mysql
-app.post('/uploads', async (req, res, next) => {
-  try {
-    const myFile = req.file
-    
-    const imageUrl = await helpers.uploadImage(myFile)
-    // helpers.uploadImage(myFile)
-    // .then() {
-    //   console.log('res1', res)
-    // })
-    // .then(function (res) {
-    //   console.log('res2', res)
-    // })
-    res
-      .status(200)
-      .json({
-        message: "Upload was successful",
-        data: imageUrl
-      })
-  } catch (error) {
-    console.log(error)
-    next(error)
-  }
-});
-
-// Test SignedURL API Cloud Storage
-app.get('/abc', async (req, res, next) => {
-  try {
-    const myFile = req.body.file
-    const request = await helpers.getSignedURL(myFile)
-    res.send(request)
-  } catch (error) {
-    console.log(error)
-    next(error)
-  }
-})
 
 // db
 const db = require("./db/models");
-db.sequelize.sync({ force: true, logging:false }).then(() => {
+db.sequelize.sync({ force: true, logging:false }).then((res) => {
   console.log("Drop and re-sync db.");
 }).catch( function (error) {
   throw(error)
