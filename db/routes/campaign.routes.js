@@ -12,7 +12,7 @@ router.get("/", campaign.findAll);
 // Retrieve a single Startup with id
 router.get("/:id", campaign.findOne);
 
-// Update a Startup with id
+// Update a Startup with companyIid
 router.put("/:companyId", campaign.update);
 
 // Delete a Startup with id

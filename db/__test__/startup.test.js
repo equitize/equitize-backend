@@ -47,6 +47,7 @@ describe('Testing [/api/db/startup]', () => {
   const invalid_id = 1000000007
 
   let company_id
+  let company_id_alt
 
   it('create company', async() => {
     let requestBody = {
@@ -188,15 +189,25 @@ describe('Testing [/api/db/startup]', () => {
     campaign_id = res.body.id    
   });
 
-  // it('update campaign', async() => {  // IDK how to use this
-  //   requestBody = {
-  //     id:campaign_id,
-  //   }
-  //   res = await supertest(app)
-  //                         .post(`/api/db/startup/campaign/update/${company_id}`)
-  //                         .send(requestBody)
-  //   expect(res.statusCode).toBe(200)
-  // });
+  it('update campaign', async() => {
+    requestBody = {
+      tokensMinted:0.20,
+    }
+    res = await supertest(app)
+                          .put(`/api/db/startup/campaign/update/${company_id}`)
+                          .send(requestBody)
+    expect(res.statusCode).toBe(200)
+  });
+
+  it('create by update campaign', async() => {
+    requestBody = {
+      tokensMinted:0.69,
+    }
+    res = await supertest(app)
+                          .put(`/api/db/startup/campaign/update/${company_id}`)
+                          .send(requestBody)
+    expect(res.statusCode).toBe(200)
+  });
 
   it('set commerical champion', async() => {
     requestBody = {
