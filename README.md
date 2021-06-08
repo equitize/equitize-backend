@@ -12,7 +12,10 @@ Update PASSWORD field in ~/db/config/db.config.js
 
 # QuickStart
 ---
-`yarn dev`
+Use `yarn dev` for connections to local mySQL and CloudStorage (development bucket).
+
+
+Use `yarn prod` for connections to cloudSQL and CloudStorage (production bucket).
 
 Notes: For now, we will develop using local MySQL with CloudStorage Integration. 
 
