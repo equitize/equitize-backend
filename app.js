@@ -1,7 +1,7 @@
 const express = require("express");
 const createHttpError = require("http-errors");
 const multer = require("multer");
-
+const { adminBro, adminRouter } = require("./admin/adminBro");
 const cors = require("cors");
 const app = express();
 require('dotenv').config({
@@ -14,6 +14,7 @@ var corsOptions = {
 };
 
 app.use(cors(corsOptions));
+app.use(adminBro.options.rootPath, adminRouter)
 
 
 
