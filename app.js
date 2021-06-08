@@ -1,8 +1,7 @@
 const express = require("express");
 const createHttpError = require("http-errors");
 const multer = require("multer");
-// // const helpers = require("./cloudStorage/helpers/helpers");
-// // const getSignedURL = require("./cloudStorage/helpers/helpers");
+const { adminBro, adminRouter } = require("./adminBro/adminBro");
 
 const cors = require("cors");
 const app = express();
@@ -17,6 +16,8 @@ var corsOptions = {
 
 app.use(cors(corsOptions));
 
+// admin 
+app.use(adminBro.options.rootPath, adminRouter);
 
 // // for public routes
 // // TODO: implement view engine for admin dashboard if there is time

@@ -28,7 +28,12 @@ Notes: For now, we will develop using local MySQL with CloudStorage Integration.
 1. Test New Routes [HK]
 2. Integrate Authorisation Flows with Protected Roles based on Roles and Permission
 3. Integrate BlockChain 
-4. ...
+4. Testing Admin Dashboard 
+
+# Admin DashBoard
+--- 
+AdminBro will be used for Admin Dashboards. 
+
 
 # Completed
 ---
