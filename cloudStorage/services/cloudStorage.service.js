@@ -1,6 +1,13 @@
 const crypto = require("crypto");
 const gc = require("../index");
-const bucket = gc.bucket('equitize-cloud-storage')
+let bucket;
+if (process.env.NODE_ENV="dev") {
+  bucket = gc.bucket('equitize-cloud-storage-dev');
+}
+if (process.env.NODE_ENV="production") {
+  bucket = gc.bucket('equitize-cloud-storage');
+}
+
 
 module.exports = {
   uploadPitchDeck : function (pitchDeck) {

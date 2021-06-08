@@ -1,5 +1,10 @@
-const dbConfig = require("../config/db.config.js");
-// const dbConfig = require("../config/cloudSQL.config.js");
+let dbConfig;
+
+if (process.env.NODE_ENV == "production") {
+  dbConfig = require("../config/cloudSQL.config.js");
+} else {
+  dbConfig = require("../config/db.config.js");
+}
 
 
 const Sequelize = require("sequelize");

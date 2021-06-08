@@ -66,12 +66,18 @@ app.use((error, req, res, next) => {
 
 
 // set port, listen for requests
-const PORT = process.env.PORT || 8080;
+const DEV_PORT = process.env.DEV_PORT || 8080;
 
 if (process.env.NODE_ENV == 'test') {
   module.exports = app;
-} else {
+} 
+if (process.env.NODE_ENV == 'production') {
+  app.listen(process.env.PORT, "0.0.0.0" , () => {
+    console.log(`Server is running on port. ${process.env.PORT}`);
+  });
+}
+else {
   app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}.`);
+    console.log(`Server is running on port ${DEV_PORT}.`);
   });
 }
