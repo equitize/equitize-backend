@@ -23,8 +23,8 @@ module.exports = (sequelize, Sequelize) => {
         allowNull: false
       }
     },{
-      tableName: 'milestone',
-      freezeTableName: true
+      // tableName: 'milestone',
+      // freezeTableName: true
     });
   
     return Milestone;

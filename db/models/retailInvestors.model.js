@@ -25,8 +25,8 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.STRING
       },
     },{
-      tableName: 'retailInvestors',
-      freezeTableName: true
+      // tableName: 'retailInvestors',
+      // freezeTableName: true
     });
   
     return RetailInvestors;

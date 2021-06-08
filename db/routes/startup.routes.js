@@ -47,6 +47,42 @@ router.put("/pitchDeck/:id", CloudStorageController.uploadPitchDeck, startupCont
 // Get SignedURL for limited access on resource (pitchDeck)
 router.get("/pitchDeck/:id", startupController.getItemIdentifier, CloudStorageController.getSignedURL)
 
+// Convert CapTable to live Link via CloudStorage
+// Update Startup's video field to to link in db. 
+router.put("/capTable/:id", CloudStorageController.uploadCapTable, startupController.update);
+
+// Get SignedURL for limited access on resource (capTable)
+router.get("/capTable/:id", startupController.getItemIdentifier, CloudStorageController.getSignedURL);
+
+// Convert acraDocuments to live Link via CloudStorage
+// Update Startup's acraDocuments field to to link in db. 
+router.put("/acraDocuments/:id", CloudStorageController.uploadAcraDocuments, startupController.update);
+
+// Get SignedURL for limited access on resource (capTable)
+router.get("/acraDocuments/:id", startupController.getItemIdentifier, CloudStorageController.getSignedURL);
+
+// Convert bankInfo to live Link via CloudStorage
+// Update Startup's bankInfo field to to link in db. 
+router.put("/bankInfo/:id", CloudStorageController.uploadBankInfo, startupController.update);
+
+// Get SignedURL for limited access on resource (bankInfo)
+router.get("/bankInfo/:id", startupController.getItemIdentifier, CloudStorageController.getSignedURL);
+
+// Convert idProof to live Link via CloudStorage
+// Update Startup's idProof field to to link in db. 
+router.put("/idProof/:id", CloudStorageController.uploadIdProof, startupController.update);
+
+// Get SignedURL for limited access on resource (idProof)
+router.get("/idProof/:id", startupController.getItemIdentifier, CloudStorageController.getSignedURL);
+
+// Convert profilePhoto to live Link via CloudStorage
+// Update Startup's profilePhoto field to to link in db. 
+router.put("/profilePhoto/:id", CloudStorageController.uploadProfilePhoto, startupController.update);
+
+// Get SignedURL for limited access on resource (profilePhoto)
+router.get("/profilePhoto/:id", startupController.getItemIdentifier, CloudStorageController.getSignedURL);
+
+
 // Retrieve Startup by name
 router.get("/companyName/:companyName", startupController.findViaName);
 // router.get("/companyName/:companyName", startup.findViaName);

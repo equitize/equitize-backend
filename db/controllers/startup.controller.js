@@ -1,3 +1,4 @@
+const createHttpError = require("http-errors");
 const startupService = require("../services/startup.service");
 
 // Create and Save a new startup
@@ -27,6 +28,7 @@ exports.create = async (req, res, next) => {
       commericalChampion: req.body.commericalChampion ? req.body.commericalChampion :"",
       designSprintDatetime: req.body.designSprintDatetime ? req.body.designSprintDatetime :"",
       bankInfo:req.body.bankInfo ? req.body.bankInfo :"",
+      idProof:req.body.idProof ? req.body.idProof :"",
     };
     
     // TK's implmentation of Service Layer
@@ -213,9 +215,15 @@ exports.getItemIdentifier = async (req, res, next) => {
     const id = req.params.id
     // use startupService to get access to startup object field    
     const startup = await startupService.findOne(id)    
+    if (!startup) {
+      throw createHttpError.NotFound();
+    }
+    if (startup.dataValues[fileType] === "") {
+      throw createHttpError.NotFound();
+    }
     req.body.cloudItemIdentifier = startup.dataValues[fileType]
     next()
   } catch (error) {
-    next(error)
+    next(error);
   }
 }

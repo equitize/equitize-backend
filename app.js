@@ -1,8 +1,8 @@
 const express = require("express");
 const createHttpError = require("http-errors");
 const multer = require("multer");
-const helpers = require("./cloudStorage/helpers/helpers");
-// const getSignedURL = require("./cloudStorage/helpers/helpers");
+// // const helpers = require("./cloudStorage/helpers/helpers");
+// // const getSignedURL = require("./cloudStorage/helpers/helpers");
 
 const cors = require("cors");
 const app = express();
@@ -17,8 +17,9 @@ var corsOptions = {
 
 app.use(cors(corsOptions));
 
-// for public routes
-// TODO: implement view engine for admin dashboard if there is time
+
+// // for public routes
+// // TODO: implement view engine for admin dashboard if there is time
 app.use('/', require('./routes/index.route'));
 
 
@@ -35,47 +36,10 @@ app.use(multerMid.single('file'))
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Succesful API to upload file object with randon identifier
-// TODO: integrate the storing of the link in mysql
-app.post('/uploads', async (req, res, next) => {
-  try {
-    const myFile = req.file
-    
-    const imageUrl = await helpers.uploadImage(myFile)
-    // helpers.uploadImage(myFile)
-    // .then() {
-    //   console.log('res1', res)
-    // })
-    // .then(function (res) {
-    //   console.log('res2', res)
-    // })
-    res
-      .status(200)
-      .json({
-        message: "Upload was successful",
-        data: imageUrl
-      })
-  } catch (error) {
-    console.log(error)
-    next(error)
-  }
-});
 
-// Test SignedURL API Cloud Storage
-app.get('/abc', async (req, res, next) => {
-  try {
-    const myFile = req.body.file
-    const request = await helpers.getSignedURL(myFile)
-    res.send(request)
-  } catch (error) {
-    console.log(error)
-    next(error)
-  }
-})
-
-// db
+// // db
 const db = require("./db/models");
-db.sequelize.sync({ force: true, logging:false }).then(() => {
+db.sequelize.sync({ force: true, logging:false }).then((res) => {
   console.log("Drop and re-sync db.");
 }).catch( function (error) {
   throw(error)
@@ -94,20 +58,26 @@ app.use((error, req, res, next) => {
   next(createHttpError.NotFound());
 });
 // // other errors
-app.use((error, req, res, next) => {     
+app.use((error, req, res, next) => {
   error.status = error.status || 500
-  res.status(error.status); 
+  res.status(error.status);
   res.send(error);
 });
 
 
-// set port, listen for requests
-const PORT = process.env.PORT || 8080;
+// // set port, listen for requests
+const DEV_PORT = process.env.DEV_PORT || 8080;
 
 if (process.env.NODE_ENV == 'test') {
   module.exports = app;
-} else {
-  app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}.`);
+}
+else if (process.env.NODE_ENV == 'prod') {
+  app.listen(process.env.PORT, "0.0.0.0" , () => {
+    console.log(`Server is running on port. ${process.env.PORT}`);
+  });
+}
+else if (process.env.NODE_ENV == 'dev') {
+  app.listen(DEV_PORT, () => {
+    console.log(`Server is running on port ${DEV_PORT}.`);
   });
 }

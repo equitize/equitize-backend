@@ -1,5 +1,10 @@
-const dbConfig = require("../config/db.config.js");
-// const dbConfig = require("../config/cloudSQL.config.js");
+let dbConfig;
+
+if (process.env.NODE_ENV === "prod") {
+  dbConfig = require("../config/cloudSQL.config.js");
+} else if (process.env.NODE_ENV === "dev") {
+  dbConfig = require("../config/db.config.js");
+}
 
 
 const Sequelize = require("sequelize");
@@ -15,6 +20,10 @@ sequelize_config = {
     acquire: dbConfig.pool.acquire,
     idle: dbConfig.pool.idle
   },
+
+  define: {
+    freezeTableName: true
+  }
 };
 
 // disable logging in test
