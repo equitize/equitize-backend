@@ -51,8 +51,14 @@ describe('Testing [/api/db/startup]', () => {
   const sample_mp4_path = `${__dirname}/sample_files/sample.mp4`
   const sample_pdf_path = `${__dirname}/sample_files/sample.pdf`
 
-  const upload_files = [  // endpoint, description, filepath
-    ["","upload video",sample_mp4_path]
+  const upload_test_permutations = [  // endpoint, description, filepath
+    ["video","upload video",sample_mp4_path],
+    ["pitchDeck","upload pitchDeck",sample_pdf_path],
+    ["capTable","upload capTable",sample_pdf_path],
+    ["bankInfo","upload bankInfo",sample_pdf_path],
+    ["acraDocuments","upload acraDocuments",sample_pdf_path],
+    ["idProof","upload idProof",sample_pdf_path],
+    ["profilePhoto","upload profilePhoto",sample_pdf_path]
   ]
 
   let company_id
@@ -219,17 +225,20 @@ describe('Testing [/api/db/startup]', () => {
     expect(res.statusCode).toBe(200)
   });
 
-  it('upload pitch deck mp4', async() => {
-    exists = await fs.exists(sample_mp4_path)
-    if (!exists) {
-      console.log(`${sample_mp4_path} not found`);
-      throw new Error(`${sample_mp4_path} not found`); 
-    }
-    res = await supertest(app)
-                      .put(`/api/db/startup/video/${company_id}`)
-                      .attach('file', sample_mp4_path)
-    expect(res.statusCode).toBe(200)
-  });
+  // upload tests
+  for (let [_, [endpoint, description, filepath]] of Object.entries(upload_test_permutations)){
+    it(`${description}`, async() => {
+      exists = await fs.exists(filepath)
+      if (!exists) {
+        console.log(`${filepath} not found`);
+        throw new Error(`${filepath} not found`); 
+      }
+      res = await supertest(app)
+                        .put(`/api/db/startup/${endpoint}/${company_id}`)
+                        .attach('file', filepath)
+      expect(res.statusCode).toBe(200)
+    });
+  }
 
   it('set commerical champion', async() => {
     requestBody = {
