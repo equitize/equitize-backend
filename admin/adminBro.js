@@ -25,5 +25,27 @@ module.exports = {
   branding: {
     companyName: 'Equitize Inc.',
     softwareBrothers: false,
-  }
+  },
+  // pages: {
+  //   customPage: {
+  //     label: "Custom page",
+  //     handler: async (request, response, context) => {
+  //       return {
+  //         text: 'I am fetched from the backend',
+  //       }
+  //     },
+  //     // component: AdminBro.bundle('./components/some-stats'),
+      
+  //   },
+  // },
+  locale: {
+    translations: {
+      messages: {
+        loginWelcome: "to Equitize Inc. Backend Server"
+      }
+    }
+  },
+  // dashboard:{
+  //   component: AdminBro.bundle('./components/mainPage')
+  // },
 }

@@ -1840,11 +1840,6 @@ acorn@^8.2.4:
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-8.3.0.tgz#1193f9b96c4e8232f00b11a9edff81b2c8b98b88"
   integrity sha512-tqPKHZ5CaBJw0Xmy0ZZvLs1qTV+BNFSyvn77ASXkpBNfIRk8ev26fKrD9iLGwGA9zedPao52GSHzq8lyZG0NUw==
 
-admin-bro-theme-dark@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/admin-bro-theme-dark/-/admin-bro-theme-dark-1.0.0.tgz#20f831d19340959e621931d370126ca84120a23f"
-  integrity sha512-Ra6lwOg6O4RTejYcB1P2lye7xzzi6MyZg2T30P39pTIbDiLYNW6gxKAw7vTAxEasbG18ZImq+yDic9Xb2sIz/g==
-
 admin-bro@^4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/admin-bro/-/admin-bro-4.0.1.tgz#0f193371396175f235b7dd76134e04bc05e1bc3a"
@@ -5528,6 +5523,14 @@ react@=16.13.1:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
     prop-types "^15.6.2"
+
+react@^17.0.2:
+  version "17.0.2"
+  resolved "https://registry.yarnpkg.com/react/-/react-17.0.2.tgz#d0b5cc516d29eb3eee383f75b62864cfb6800037"
+  integrity sha512-gnhPt75i/dq/z3/6q/0asP78D0u592D5L1pd7M8P+dck6Fu/jJeL6iVVK23fptSUZj8Vjf++7wXA8UNclGQcbA==
+  dependencies:
+    loose-envify "^1.1.0"
+    object-assign "^4.1.1"
 
 readable-stream@1.1.x:
   version "1.1.14"
