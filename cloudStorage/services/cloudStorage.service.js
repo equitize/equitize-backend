@@ -9,6 +9,9 @@ if (process.env.NODE_ENV==="dev") {
 else if (process.env.NODE_ENV==="prod") {
   bucket = gc.bucket('equitize-cloud-storage');
   bucketName = 'equitize-cloud-storage-dev';
+} else {
+  bucket = gc.bucket('equitize-cloud-storage');
+  bucketName = 'equitize-cloud-storage-dev';
 }
 
 

@@ -1,6 +1,8 @@
 const app = require("../../app")
 const supertest = require('supertest')
 const db  = require("../models/index")
+const fs = require('mz/fs');
+
 require('mysql2/node_modules/iconv-lite').encodingExists('cesu8');
 
 
@@ -45,6 +47,13 @@ describe('Testing [/api/db/startup]', () => {
 
   const invalid_string = 'sample_invalid_string'
   const invalid_id = 1000000007
+
+  const sample_mp4_path = `${__dirname}/sample_files/sample.mp4`
+  const sample_pdf_path = `${__dirname}/sample_files/sample.pdf`
+
+  const upload_files = [  // endpoint, description, filepath
+    ["","upload video",sample_mp4_path]
+  ]
 
   let company_id
   let company_id_alt
@@ -96,6 +105,7 @@ describe('Testing [/api/db/startup]', () => {
                           .post("/api/db/startup")
                           .send(requestBody)
     expect(res.statusCode).toBe(200)
+    company_id_alt = res.body.id    
   });
 
   it('get a company by id', async() => {
@@ -204,8 +214,20 @@ describe('Testing [/api/db/startup]', () => {
       tokensMinted:0.69,
     }
     res = await supertest(app)
-                          .put(`/api/db/startup/campaign/update/${company_id}`)
+                          .put(`/api/db/startup/campaign/update/${company_id_alt}`)
                           .send(requestBody)
+    expect(res.statusCode).toBe(200)
+  });
+
+  it('upload pitch deck mp4', async() => {
+    exists = await fs.exists(sample_mp4_path)
+    if (!exists) {
+      console.log(`${sample_mp4_path} not found`);
+      throw new Error(`${sample_mp4_path} not found`); 
+    }
+    res = await supertest(app)
+                      .put(`/api/db/startup/video/${company_id}`)
+                      .attach('file', sample_mp4_path)
     expect(res.statusCode).toBe(200)
   });
 
