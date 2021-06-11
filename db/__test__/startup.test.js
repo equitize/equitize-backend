@@ -1,6 +1,8 @@
 const app = require("../../app")
 const supertest = require('supertest')
 const db  = require("../models/index")
+const fs = require('mz/fs');
+
 require('mysql2/node_modules/iconv-lite').encodingExists('cesu8');
 
 
@@ -45,6 +47,19 @@ describe('Testing [/api/db/startup]', () => {
 
   const invalid_string = 'sample_invalid_string'
   const invalid_id = 1000000007
+
+  const sample_mp4_path = `${__dirname}/sample_files/sample.mp4`
+  const sample_pdf_path = `${__dirname}/sample_files/sample.pdf`
+
+  const upload_test_permutations = [  // endpoint, description, filepath
+    ["video","upload video",sample_mp4_path],
+    ["pitchDeck","upload pitchDeck",sample_pdf_path],
+    ["capTable","upload capTable",sample_pdf_path],
+    ["bankInfo","upload bankInfo",sample_pdf_path],
+    ["acraDocuments","upload acraDocuments",sample_pdf_path],
+    ["idProof","upload idProof",sample_pdf_path],
+    ["profilePhoto","upload profilePhoto",sample_pdf_path]
+  ]
 
   let company_id
   let company_id_alt
@@ -96,6 +111,7 @@ describe('Testing [/api/db/startup]', () => {
                           .post("/api/db/startup")
                           .send(requestBody)
     expect(res.statusCode).toBe(200)
+    company_id_alt = res.body.id    
   });
 
   it('get a company by id', async() => {
@@ -204,10 +220,25 @@ describe('Testing [/api/db/startup]', () => {
       tokensMinted:0.69,
     }
     res = await supertest(app)
-                          .put(`/api/db/startup/campaign/update/${company_id}`)
+                          .put(`/api/db/startup/campaign/update/${company_id_alt}`)
                           .send(requestBody)
     expect(res.statusCode).toBe(200)
   });
+
+  // upload tests
+  for (let [_, [endpoint, description, filepath]] of Object.entries(upload_test_permutations)){
+    it(`${description}`, async() => {
+      exists = await fs.exists(filepath)
+      if (!exists) {
+        console.log(`${filepath} not found`);
+        throw new Error(`${filepath} not found`); 
+      }
+      res = await supertest(app)
+                        .put(`/api/db/startup/${endpoint}/${company_id}`)
+                        .attach('file', filepath)
+      expect(res.statusCode).toBe(200)
+    });
+  }
 
   it('set commerical champion', async() => {
     requestBody = {
