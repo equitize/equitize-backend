@@ -1,11 +1,12 @@
-const startupController = require("../controllers/startup.controller");
+const startupController = require("../controllers/startup.controller.js");
 const campaignController = require("../controllers/campaign.controller.js");
 const commercialChampionController = require("../controllers/commercialChampion.controller.js");
-const milestoneController = require("../controllers/milestone.controller.js");
+const milestonePartController = require("../controllers/milestonePart.controller");
+const industryController = require("../controllers/industry.controller");
 const auth0Controller = require("../../auth0/controllers/backend.controller");
-const auth0RegController = require("../../auth0/controllers/registration.controller");
+const auth0RegController = require("../../auth0/controllers/registration.controller.js");
 const { campaign } = require("../models");
-const CloudStorageController = require("../../cloudStorage/controllers/cloudStorage.controller");
+const CloudStorageController = require("../../cloudStorage/controllers/cloudStorage.controller.js");
 const router = require("express").Router();
 
 
@@ -103,8 +104,22 @@ router.put("/campaign/update/:companyId", campaignController.checkExists, campai
 // Set commercialChampion
 router.post("/setCommercialChampion/", commercialChampionController.create);
 
-// Set milestone
-router.post("/setMilestone/", milestoneController.create);
+// Get milestone associated with startupId
+router.get("/milestone/getMilestone/:startupId", milestonePartController.getStartup, milestonePartController.getMilestone)
+
+// create milestone part
+router.post("/milestone/addPart/", milestonePartController.create)
+
+// Delete all milestones associated with startupId
+router.delete("/milestone/deleteMilestone/", milestonePartController.delete);
+
+// Delete milestone part associated with startupId
+router.delete("/milestone/deletePart/:companyId", milestonePartController.deletePart);
+
+// Associate industries to startup
+router.post("/industries/addIndustries/", industryController.create);
+
+
 
 // Get campaign
 router.get("/getCampaign/:companyId", campaignController.findViaCompanyId);
@@ -112,8 +127,7 @@ router.get("/getCampaign/:companyId", campaignController.findViaCompanyId);
 // Get commercialChampion
 router.get("/getCommercialChampion/:companyId", commercialChampionController.findViaCompanyId);
 
-// // Get milestone
-router.get("/getMilestone/:companyId", milestoneController.findViaCompanyId);
+
 
 ///////////////////
 // Retrieve a single Startup with id

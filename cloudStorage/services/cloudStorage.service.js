@@ -48,7 +48,7 @@ module.exports = {
       
       const blob = bucket.file(id)
       const blobStream = blob.createWriteStream({
-        resumable: false, // recommended for files less than 10 mb.
+        resumable: true, // recommended for files less than 10 mb.
         // public: true
       });
   
@@ -74,7 +74,7 @@ module.exports = {
       
       const blob = bucket.file(id)
       const blobStream = blob.createWriteStream({
-        resumable: false, // recommended for files less than 10 mb.
+        resumable: true, // recommended for files less than 10 mb.
         // public: true
       });
   
@@ -100,7 +100,7 @@ module.exports = {
       
       const blob = bucket.file(id)
       const blobStream = blob.createWriteStream({
-        resumable: false, // recommended for files less than 10 mb.
+        resumable: true, // recommended for files less than 10 mb.
         // public: true
       });
   
@@ -126,7 +126,7 @@ module.exports = {
       
       const blob = bucket.file(id)
       const blobStream = blob.createWriteStream({
-        resumable: false, // recommended for files less than 10 mb.
+        resumable: true, // recommended for files less than 10 mb.
         // public: true
       });
   
@@ -152,7 +152,7 @@ module.exports = {
       
       const blob = bucket.file(id)
       const blobStream = blob.createWriteStream({
-        resumable: false, // recommended for files less than 10 mb.
+        resumable: true, // recommended for files less than 10 mb.
         // public: true
       });
   
@@ -178,7 +178,7 @@ module.exports = {
       
       const blob = bucket.file(id)
       const blobStream = blob.createWriteStream({
-        resumable: false, // recommended for files less than 10 mb.
+        resumable: true, // recommended for files less than 10 mb.
         // public: true
       });
   

@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-    const RetailInvestors = sequelize.define("retailInvestors", {
+    const RetailInvestors = sequelize.define("retailInvestor", {
       emailAddress: {
         type: Sequelize.STRING,
         allowNull: false,
@@ -25,8 +25,8 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.STRING
       },
     },{
-      // tableName: 'retailInvestors',
-      // freezeTableName: true
+      tableName: 'retailInvestors',
+      freezeTableName: true
     });
   
     return RetailInvestors;

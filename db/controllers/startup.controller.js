@@ -121,26 +121,26 @@ exports.update = (req, res) => {
 
 // Delete a startup with the specified id in the request
 exports.delete = (req, res) => {
-    const id = req.params.id;
-    
-    // TK's implementation of service layer
-    startupService.delete(id)
-    .then(num => {
-      if (num == 1) {
-        res.send({
-          message: "Startup was deleted successfully!"
-        });
-      } else {
-        res.status(500).send({
-          message: `Cannot delete Startup with id=${id}. Maybe Startup was not found!`
-        });
-      }
-    })
-    .catch(err => {
-      res.status(500).send({
-        message: "Could not delete Startup with id=" + id
+  const id = req.params.id;
+  
+  // TK's implementation of service layer
+  startupService.delete(id)
+  .then(num => {
+    if (num == 1) {
+      res.send({
+        message: "Startup was deleted successfully!"
       });
+    } else {
+      res.status(500).send({
+        message: `Cannot delete Startup with id=${id}. Maybe Startup was not found!`
+      });
+    }
+  })
+  .catch(err => {
+    res.status(500).send({
+      message: "Could not delete Startup with id=" + id
     });
+  });
 };
 
 // Delete all startups from the database.

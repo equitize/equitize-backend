@@ -25,8 +25,8 @@ app.use('/', require('./routes/index.route'));
 const multerMid = multer({
   storage: multer.memoryStorage(),
   limits: {
-    // limt : 5mb
-    fileSize: 10 * 1024 * 1024,
+    // limt : 3mb
+    fileSize: 30 * 1024 * 1024,
   },
 });
 
@@ -36,7 +36,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
-// // db
+// db
 const db = require("./db/models");
 db.sequelize.sync({ force: true, logging:false }).then((res) => {
   console.log("Drop and re-sync db.");
