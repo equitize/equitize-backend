@@ -8,11 +8,12 @@ if (process.env.NODE_ENV==="dev") {
 }
 else if (process.env.NODE_ENV==="prod") {
   bucket = gc.bucket('equitize-cloud-storage');
-  bucketName = 'equitize-cloud-storage-dev';
-} else {
-  bucket = gc.bucket('equitize-cloud-storage');
-  bucketName = 'equitize-cloud-storage-dev';
-}
+  bucketName = 'equitize-cloud-storage';
+} 
+else if (process.env.NODE_ENV==="test") {
+  bucket = gc.bucket('equitize-cloud-storage-test');
+  bucketName = 'equitize-cloud-storage-test';
+} 
 
 
 module.exports = {
