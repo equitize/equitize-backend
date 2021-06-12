@@ -36,8 +36,6 @@ describe('Testing Recommender System', () => {
   const interestedIndustries = ["Finance", "Environment"]
 
   const startup_csv_path = `${__dirname}/sample_files/startups.csv`
-  let stream = fs.createReadStream(startup_csv_path);
-  let startups = []
 
   let retailInvestor_id
   let startupCount = 0
@@ -107,7 +105,7 @@ describe('Testing Recommender System', () => {
   it('get all companies', async() => {
     requestBody = {}
     res = await supertest(app)
-                          .get("/api/db/startup")
+                          .get(`/api/db/retailInvestors/recommender/${retailInvestor_id}`)
                           .send(requestBody)
     expect(res.statusCode).toBe(200)
     expect(res.body.length).toBe(startupCount)

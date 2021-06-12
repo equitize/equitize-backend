@@ -53,7 +53,7 @@ exports.getIndustries = async (req, res) => {
         res.send(result)
       } else {
         res.status(500).send({
-          message: `Cannot get Industries with retailInvestorId=${retailInvestorId}. Maybe Industries was not found!`
+          message: `Cannot get Industries with retailInvestorId=${retailInvestorId}. Maybe Industries was not found or no industries set!`
         });
       }
       
