@@ -53,9 +53,9 @@ exports.getMilestone = async (req, res) => {
       });
     }
     
-} catch (error) {
-    return error
-}
+  } catch (error) {
+      return error
+  }
   
 }
 // middleware to get startup
