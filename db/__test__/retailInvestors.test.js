@@ -28,6 +28,7 @@ describe('Testing [/api/db/retailInvestors]', () => {
   const retailInvestor_name = 'kenny'
   const emailAddress = `${retailInvestor_name}@email.com`
   const userPassword = 'password'
+  const interestedIndustries = ["Finance", "Tech", "Farming"]
 
   const retailInvestor_name_alt = 'francisco'
   const emailAddress_alt = `investor-${retailInvestor_name_alt}@email.com`
@@ -160,6 +161,28 @@ describe('Testing [/api/db/retailInvestors]', () => {
                           .put(`/api/db/retailInvestors/${invalid_id}`)
                           .send(requestBody)
     expect(res.statusCode).toBe(500)
+  });
+
+  it('update interested industries', async() => {
+    requestBody = {
+      "industryNames":interestedIndustries,
+      "id":retailInvestor_id,
+      "accountType":"retailInvestor"
+    }
+    res = await supertest(app)
+                          .post(`/api/db/retailInvestors/industries/addIndustries/`)
+                          .send(requestBody)
+    expect(res.statusCode).toBe(200)
+  });
+
+  it('get interested industries', async() => {
+    requestBody = {
+    }
+    res = await supertest(app)
+                          .get(`/api/db/retailInvestors/industries/getIndustries/${retailInvestor_id}`)
+                          .send(requestBody)
+    expect(res.body.length).toBe(Object.keys(interestedIndustries).length)
+    expect(res.statusCode).toBe(200)
   });
 
   it('delete retailInvestor by id but invalid', async() => {
