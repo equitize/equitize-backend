@@ -55,7 +55,20 @@ describe('Testing Recommender System', () => {
                             .send(requestBody)
       expect(res.statusCode).toBe(200)
       company_id = res.body.id
-      
+
+      let industriesArr = data.surveyed_industries.split(",")
+      if (industriesArr[0] != "") {
+        requestBody = {
+          industryNames:industriesArr,
+          id:company_id,
+          accountType:"startup"
+        }
+        res = await supertest(app)
+                              .post(`/api/db/startup/industries/addIndustries/`)
+                              .send(requestBody)
+        expect(res.statusCode).toBe(200)
+      }
+
       if (!uploadingPictures) {continue} 
       let filepath = `${__dirname}/sample_files/avatars/${data.avatar}`
       res = await supertest(app)

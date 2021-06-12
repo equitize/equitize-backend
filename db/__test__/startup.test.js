@@ -30,6 +30,7 @@ describe('Testing [/api/db/startup]', () => {
   const companyName = 'equitize'
   const emailAddress = `company-${companyName}@email.com`
   const companyPassword = 'password'
+  const companyIndustries = ["Finance", "Environment"]
 
   const companyName_alt = 'tesla_motors'
   const emailAddress_alt = `company-${companyName_alt}@email.com`
@@ -173,6 +174,18 @@ describe('Testing [/api/db/startup]', () => {
                           .get(`/api/db/startup/email/${invalid_string}`)
                           .send(requestBody)
     // expect(res.statusCode).toBe(500)
+  });
+
+  it('update company industries', async() => {
+    requestBody = {
+      industryNames:companyIndustries,
+      id:company_id,
+      accountType:"startup"
+    }
+    res = await supertest(app)
+                          .post(`/api/db/startup/industries/addIndustries/`)
+                          .send(requestBody)
+    expect(res.statusCode).toBe(200)
   });
 
   it('update company details', async() => {
