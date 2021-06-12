@@ -2,8 +2,11 @@ const app = require("../../app")
 const supertest = require('supertest')
 const db  = require("../models/index")
 const fs = require('mz/fs');
+const csv = require('csvtojson');
 
 require('mysql2/node_modules/iconv-lite').encodingExists('cesu8');
+
+const uploadingPictures = false  // make false to speed up these tests
 
 
 // import supertest from "supertest"
@@ -26,26 +29,51 @@ describe('Testing Recommender System', () => {
       break
     }
   });
-
+  
   const retailInvestor_name = 'kenny'
   const emailAddress = `${retailInvestor_name}@email.com`
   const userPassword = 'password'
-  const interestedIndustries = ["Finance", "Tech", "Farming"]
+  const interestedIndustries = ["Finance", "Environment"]
+
+  const startup_csv_path = `${__dirname}/sample_files/startups.csv`
+  let stream = fs.createReadStream(startup_csv_path);
+  let startups = []
 
   let retailInvestor_id
+  let startupCount = 0
 
-  // initialise companies from list and assign industries
-  it('create company', async() => {
-    let requestBody = {
-      companyName:"TBC",
-      emailAddress:"TBC",
-      companyPassword:"TBC"
-    }
-    let res = await supertest(app)
-                          .post("/api/db/startup")
+  it('create companies', async() => {
+    const startups = await csv().fromFile(startup_csv_path);
+    for (let [cnt, data] of Object.entries(startups)){
+      if (!data.name || !data.url || !data.description || !data.avatar) {continue}
+      let requestBody = {
+        companyName:data.name,
+        emailAddress:data.url,
+        companyPassword:cnt,  // mock
+        profileDescription:data.description,
+      }
+      let res = await supertest(app)
+                            .post("/api/db/startup")
+                            .send(requestBody)
+      expect(res.statusCode).toBe(200)
+      company_id = res.body.id
+      
+      if (!uploadingPictures) {continue} 
+      let filepath = `${__dirname}/sample_files/avatars/${data.avatar}`
+      res = await supertest(app)
+                        .put(`/api/db/startup/profilePhoto/${company_id}`)
+                        .attach('file', filepath)
+      expect(res.statusCode).toBe(200)
+    };
+  }, 50000)  // increased timeout
+
+  it('get all companies', async() => {
+    requestBody = {}
+    res = await supertest(app)
+                          .get("/api/db/startup")
                           .send(requestBody)
     expect(res.statusCode).toBe(200)
-    company_id = res.body.id    
+    startupCount = res.body.length
   });
 
   // initialise retailInvestor
@@ -76,14 +104,13 @@ describe('Testing Recommender System', () => {
   });
 
   // get recommendations
-  it('get interested industries', async() => {
-    requestBody = {
-    }
+  it('get all companies', async() => {
+    requestBody = {}
     res = await supertest(app)
-                          .get(`/api/db/retailInvestors/industries/getIndustries/${retailInvestor_id}`)
+                          .get("/api/db/startup")
                           .send(requestBody)
-    expect(res.body.length).toBe(Object.keys(interestedIndustries).length)
     expect(res.statusCode).toBe(200)
+    expect(res.body.length).toBe(startupCount)
   });
 
   afterAll(async () => {
