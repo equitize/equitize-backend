@@ -17,10 +17,10 @@ module.exports = {
                 }
                 placeholder.push(dict)
             }   
-            console.log(placeholder)
+            // console.log(placeholder)
             return Industries.bulkCreate(placeholder)
             .then((industries) => {
-                console.log(">> industries: " + JSON.stringify(industries, null, 4));
+                // console.log(">> industries: " + JSON.stringify(industries, null, 4));
                 return industries;
             })
             .catch((err) => {

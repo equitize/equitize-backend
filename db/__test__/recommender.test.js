@@ -40,7 +40,7 @@ describe('Testing Recommender System', () => {
   let retailInvestor_id
   let startupCount = 0
 
-  it('create companies', async() => {
+  it('create companies and update industries', async() => {
     const startups = await csv().fromFile(startup_csv_path);
     for (let [cnt, data] of Object.entries(startups)){
       if (!data.name || !data.url || !data.description || !data.avatar) {continue}
@@ -114,8 +114,7 @@ describe('Testing Recommender System', () => {
     expect(res.statusCode).toBe(200)
   });
 
-  // get recommendations
-  it('get all companies', async() => {
+  it('get recommendations', async() => {
     requestBody = {}
     res = await supertest(app)
                           .get(`/api/db/retailInvestors/recommender/${retailInvestor_id}`)
