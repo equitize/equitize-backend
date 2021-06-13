@@ -6,7 +6,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+
     - name: Install modules
       run: yarn
+    
+    - name: MySQL setup
+      - uses: shogo82148/actions-setup-mysql@v1
+        with:
+          mysql-version: '8.0'
+      - run: mysql -uroot -h127.0.0.1 -e 'SELECT version()'
+    
     - name: Run tests
       run: yarn test
