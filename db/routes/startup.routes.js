@@ -7,19 +7,20 @@ const auth0Controller = require("../../auth0/controllers/backend.controller");
 const auth0RegController = require("../../auth0/controllers/registration.controller.js");
 const { campaign } = require("../models");
 const CloudStorageController = require("../../cloudStorage/controllers/cloudStorage.controller.js");
+const jwtController = require("../../auth0/controllers/jwt.controller");
 const router = require("express").Router();
 
 
 // Create a new Startup
 router.post("/",
-    // auth0Controller.getMgtToken,
-    // auth0RegController.createAccount,
-    // auth0RegController.startup,
+    auth0Controller.getMgtToken,
+    auth0RegController.createAccount,
+    auth0RegController.startup,
     startupController.create
 );
 
 // Update a Startup with id
-router.put("/:id", startupController.update);
+router.put("/:id", jwtController.authorizeAccessToken, startupController.update);
 
 // Delete a Startup with id
 router.delete("/:id", startupController.delete);
