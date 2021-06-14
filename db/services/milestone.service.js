@@ -1,12 +1,15 @@
 const db = require("../models");
-const Milestone = db.milestone;
+const Milestones = db.milestones;
+const MilestonePart = db.milestoneParts
+// const Milestone = require("../models/milestone.model");
+// const MilestonePart = require("../models/milestonePart.model");
 const Op = db.Sequelize.Op;
 
 module.exports = {
     create : function (milestone) {
         
         try {
-            const result = Milestone.create(milestone)
+            const result = Milestones.create(milestone)
             .then(data => {
                 return data
             })
@@ -18,21 +21,37 @@ module.exports = {
             return error
         }
     }, 
-    findAll : function (companyId) {
-        try {
-            var condition = companyId ? { companyId: { [Op.like]: `%${companyId}%` } } : null;
+    findMilestoneById : function (milestoneId) {
+        return Milestones.findByPk(milestoneId, { include: ["milestoneParts"] })
+          .then((milestone) => {
+            return milestone;
+          })
+          .catch((err) => {
+            console.log(">> Error while finding milestone: ", err);
+          });
+    },
+    // findAll : function (companyId) {
+    //     try {
+    //         var condition = companyId ? { companyId: { [Op.like]: `%${companyId}%` } } : null;
 
-            const result = Milestone.findAll({ where: condition })
-            .then(data => {
-                return data
-            })
-            .catch(err => {
-                throw err
-            });
-            return result
-        } catch (error) {
-            return error
-        }
+    //         const result = Milestone.findAll({ where: condition })
+    //         .then(data => {
+    //             return data
+    //         })
+    //         .catch(err => {
+    //             throw err
+    //         });
+    //         return result
+    //     } catch (error) {
+    //         return error
+    //     }
+    // },
+    findAll : function () {
+        return Milestones.findAll({
+          include: ["milestoneParts"],
+        }).then((milestones) => {
+          return milestones;
+        });
     },
     findOne : function (id) {
         try {
@@ -66,15 +85,18 @@ module.exports = {
     },
     delete : function(id) {
         try {
-            const result = Milestone.destroy({ where: { id : id }})
+            const result = Milestones.destroy({ where: { id : id }})
             .then(data => {
+                console.log(data)
                 return data
             })
             .catch(err => {
+                
                 throw err    
             });
             return result
         } catch (error) {
+            console.log(error)
             return error
         }
     },

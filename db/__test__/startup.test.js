@@ -1,6 +1,8 @@
 const app = require("../../app")
 const supertest = require('supertest')
 const db  = require("../models/index")
+const fs = require('mz/fs');
+
 require('mysql2/node_modules/iconv-lite').encodingExists('cesu8');
 
 
@@ -28,6 +30,7 @@ describe('Testing [/api/db/startup]', () => {
   const companyName = 'equitize'
   const emailAddress = `company-${companyName}@email.com`
   const companyPassword = 'password'
+  const companyIndustries = ["Finance", "Environment"]
 
   const companyName_alt = 'tesla_motors'
   const emailAddress_alt = `company-${companyName_alt}@email.com`
@@ -46,7 +49,22 @@ describe('Testing [/api/db/startup]', () => {
   const invalid_string = 'sample_invalid_string'
   const invalid_id = 1000000007
 
+  const sample_mp4_path = `${__dirname}/sample_files/sample.mp4`
+  const sample_pdf_path = `${__dirname}/sample_files/sample.pdf`
+  const signed_url_prefix = "https://storage.googleapis.com/equitize-"
+
+  const upload_test_permutations = [  // endpoint/description, filepath
+    ["video",        sample_mp4_path],
+    ["pitchDeck",    sample_pdf_path],
+    ["capTable",     sample_pdf_path],
+    ["bankInfo",     sample_pdf_path],
+    ["acraDocuments",sample_pdf_path],
+    ["idProof",      sample_pdf_path],
+    ["profilePhoto", sample_pdf_path]
+  ]
+
   let company_id
+  let company_id_alt
 
   it('create company', async() => {
     let requestBody = {
@@ -95,6 +113,7 @@ describe('Testing [/api/db/startup]', () => {
                           .post("/api/db/startup")
                           .send(requestBody)
     expect(res.statusCode).toBe(200)
+    company_id_alt = res.body.id    
   });
 
   it('get a company by id', async() => {
@@ -157,6 +176,18 @@ describe('Testing [/api/db/startup]', () => {
     // expect(res.statusCode).toBe(500)
   });
 
+  it('update company industries', async() => {
+    requestBody = {
+      industryNames:companyIndustries,
+      id:company_id,
+      accountType:"startup"
+    }
+    res = await supertest(app)
+                          .post(`/api/db/startup/industries/addIndustries/`)
+                          .send(requestBody)
+    expect(res.statusCode).toBe(200)
+  });
+
   it('update company details', async() => {
     requestBody = {
       companyName:companyName_new,
@@ -188,15 +219,54 @@ describe('Testing [/api/db/startup]', () => {
     campaign_id = res.body.id    
   });
 
-  // it('update campaign', async() => {  // IDK how to use this
-  //   requestBody = {
-  //     id:campaign_id,
-  //   }
-  //   res = await supertest(app)
-  //                         .post(`/api/db/startup/campaign/update/${company_id}`)
-  //                         .send(requestBody)
-  //   expect(res.statusCode).toBe(200)
-  // });
+  it('update campaign', async() => {
+    requestBody = {
+      tokensMinted:0.20,
+    }
+    res = await supertest(app)
+                          .put(`/api/db/startup/campaign/update/${company_id}`)
+                          .send(requestBody)
+    expect(res.statusCode).toBe(200)
+  });
+
+  it('create by update campaign', async() => {
+    requestBody = {
+      tokensMinted:0.69,
+    }
+    res = await supertest(app)
+                          .put(`/api/db/startup/campaign/update/${company_id_alt}`)
+                          .send(requestBody)
+    expect(res.statusCode).toBe(200)
+  });
+
+  // upload tests
+  for (let [_, [endpoint, filepath]] of Object.entries(upload_test_permutations)){
+    it(`upload ${endpoint}`, async() => {
+      exists = await fs.exists(filepath)
+      if (!exists) {
+        console.log(`${filepath} not found`);
+        throw new Error(`${filepath} not found`); 
+      }
+      res = await supertest(app)
+                        .put(`/api/db/startup/${endpoint}/${company_id}`)
+                        .attach('file', filepath)
+      expect(res.statusCode).toBe(200)
+    });
+  }
+
+  // get SignedURL tests
+  for (let [_, [endpoint, filepath]] of Object.entries(upload_test_permutations)){
+    it(`get uploaded ${endpoint}`, async() => {
+      requestBody = {
+        fileType:endpoint,
+      }
+      res = await supertest(app)
+                        .get(`/api/db/startup/${endpoint}/${company_id}`)
+                        .send(requestBody)
+      expect(res.body.message).toMatch(new RegExp(`^${signed_url_prefix}?`));
+      expect(res.statusCode).toBe(200)
+    });
+  }
 
   it('set commerical champion', async() => {
     requestBody = {
@@ -210,26 +280,40 @@ describe('Testing [/api/db/startup]', () => {
     expect(res.statusCode).toBe(200)
   });  
   
-  it('set milestone', async() => {
+  // milestone is tied to company, not campaign it seems
+  it('set milestone part 1', async() => {
     requestBody = {
-      companyId:company_id,
-      title:milestone_title,
-      milestonePart:milestonePart,
+      part:milestonePart,   // could be duplicate, it seems
+      startupId:company_id,
       endDate:milestone_endDate,
-      amount:milestone_amount
+      description:milestone_title,
+      amount:milestone_amount,  // any checks on this?
     }
     res = await supertest(app)
-                          .post(`/api/db/startup/setMilestone`)
+                          .post(`/api/db/startup/milestone/addPart`)
                           .send(requestBody)
     expect(res.statusCode).toBe(200)
   }); 
+
+  it('set milestone part 2', async() => {
+    requestBody = {
+      part:milestonePart+1,   // could be duplicate, it seems
+      startupId:company_id,
+      endDate:milestone_endDate,
+      description:milestone_title+" part 2",
+      amount:milestone_amount,  // any checks on this?
+    }
+    res = await supertest(app)
+                          .post(`/api/db/startup/milestone/addPart`)
+                          .send(requestBody)
+    expect(res.statusCode).toBe(200)
+  });
 
   it('get campaign', async() => {
     requestBody = {}
     res = await supertest(app)
                           .get(`/api/db/startup/getCampaign/${company_id}`)
                           .send(requestBody)
-    console.log(res.body)
     expect(res.body.length).toBe(1)
     expect(res.statusCode).toBe(200)
   });
@@ -243,12 +327,41 @@ describe('Testing [/api/db/startup]', () => {
     expect(res.statusCode).toBe(200)
   });
 
-  it('get milestone', async() => {
+  it('get milestones', async() => {
     requestBody = {}
     res = await supertest(app)
-                          .get(`/api/db/startup/getMilestone/${company_id}`)
+                          .get(`/api/db/startup/milestone/getMilestone/${company_id}`)
+                          .send(requestBody)
+    expect(res.body.length).toBe(2)
+    expect(res.statusCode).toBe(200)
+  });
+
+  it('delete milestone part', async() => {
+    requestBody = {
+      part:milestonePart
+    }
+    res = await supertest(app)
+                          .delete(`/api/db/startup/milestone/deletePart/${company_id}`)
+                          .send(requestBody)
+    expect(res.statusCode).toBe(200)
+  });
+
+  it('count remaining milestones', async() => {
+    requestBody = {}
+    res = await supertest(app)
+                          .get(`/api/db/startup/milestone/getMilestone/${company_id}`)
                           .send(requestBody)
     expect(res.body.length).toBe(1)
+    expect(res.statusCode).toBe(200)
+  });
+
+  it('delete milestone all', async() => {
+    requestBody = {
+      startupId:company_id
+    }
+    res = await supertest(app)
+                          .delete(`/api/db/startup/milestone/deleteMilestone/`)
+                          .send(requestBody)
     expect(res.statusCode).toBe(200)
   });
 

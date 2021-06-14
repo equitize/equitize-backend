@@ -8,8 +8,12 @@ if (process.env.NODE_ENV==="dev") {
 }
 else if (process.env.NODE_ENV==="prod") {
   bucket = gc.bucket('equitize-cloud-storage');
-  bucketName = 'equitize-cloud-storage-dev';
-}
+  bucketName = 'equitize-cloud-storage';
+} 
+else if (process.env.NODE_ENV==="test") {
+  bucket = gc.bucket('equitize-cloud-storage-test');
+  bucketName = 'equitize-cloud-storage-test';
+} 
 
 
 module.exports = {
@@ -74,7 +78,7 @@ module.exports = {
       
       const blob = bucket.file(id)
       const blobStream = blob.createWriteStream({
-        resumable: false, // recommended for files less than 10 mb.
+        resumable: true, // recommended for files less than 10 mb.
         // public: true
       });
   
@@ -100,7 +104,7 @@ module.exports = {
       
       const blob = bucket.file(id)
       const blobStream = blob.createWriteStream({
-        resumable: false, // recommended for files less than 10 mb.
+        resumable: true, // recommended for files less than 10 mb.
         // public: true
       });
   
@@ -126,7 +130,7 @@ module.exports = {
       
       const blob = bucket.file(id)
       const blobStream = blob.createWriteStream({
-        resumable: false, // recommended for files less than 10 mb.
+        resumable: true, // recommended for files less than 10 mb.
         // public: true
       });
   
@@ -152,7 +156,7 @@ module.exports = {
       
       const blob = bucket.file(id)
       const blobStream = blob.createWriteStream({
-        resumable: false, // recommended for files less than 10 mb.
+        resumable: true, // recommended for files less than 10 mb.
         // public: true
       });
   
@@ -178,7 +182,7 @@ module.exports = {
       
       const blob = bucket.file(id)
       const blobStream = blob.createWriteStream({
-        resumable: false, // recommended for files less than 10 mb.
+        resumable: true, // recommended for files less than 10 mb.
         // public: true
       });
   

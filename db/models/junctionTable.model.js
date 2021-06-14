@@ -13,8 +13,8 @@ module.exports = (sequelize, Sequelize) => {
         allowNull: false
       },
     },{
-      // tableName: 'junctionTable',
-      // freezeTableName: true
+      tableName: 'junctionTable',
+      freezeTableName: true
     });
   
     return JunctionTable;

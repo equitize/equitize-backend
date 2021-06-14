@@ -1,5 +1,5 @@
 const db = require("../models");
-const Startup = db.startup;
+const Startup = db.startups;
 const Op = db.Sequelize.Op;
 
 module.exports = {
@@ -22,7 +22,7 @@ module.exports = {
         try {
             var condition = companyName ? { companyName: { [Op.like]: `%${companyName}%` } } : null;
 
-            const result = Startup.findAll({ where: condition })
+            const result = Startup.findAll({ where: condition, include: ["milestones", "industries"] })
             .then(data => {
                 return data
             })
@@ -36,7 +36,7 @@ module.exports = {
     },
     findOne : function (id) {
         try {
-            const result = Startup.findByPk(id)
+            const result = Startup.findByPk(id, { include: ["milestones", "industries"] })
             .then(data => {
                 return data
             })

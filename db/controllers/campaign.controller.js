@@ -257,7 +257,6 @@ exports.findViaCompanyId = (req, res) => {
   // tk's implementation of service layer
   campaignService.findViaCompanyId(companyId)
   .then(data => {
-    // console.log(data)
     if (data.length === 0){
       res.status(500).send({
         message: "Campaign with id=" + companyId + " not found"

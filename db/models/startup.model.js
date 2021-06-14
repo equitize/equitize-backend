@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-    const Startup = sequelize.define("startups", {
+    const Startup = sequelize.define("startup", {
       companyName: {
         type: Sequelize.STRING,
         allowNull: false,  // set constraints for company_name

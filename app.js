@@ -1,8 +1,6 @@
 const express = require("express");
 const createHttpError = require("http-errors");
 const multer = require("multer");
-// // const helpers = require("./cloudStorage/helpers/helpers");
-// // const getSignedURL = require("./cloudStorage/helpers/helpers");
 
 const cors = require("cors");
 const app = express();
@@ -18,6 +16,7 @@ var corsOptions = {
 app.use(cors(corsOptions));
 
 
+
 // // for public routes
 // // TODO: implement view engine for admin dashboard if there is time
 app.use('/', require('./routes/index.route'));
@@ -26,7 +25,7 @@ app.use('/', require('./routes/index.route'));
 const multerMid = multer({
   storage: multer.memoryStorage(),
   limits: {
-    // limt : 5mb
+    // limt : 3mb
     fileSize: 30 * 1024 * 1024,
   },
 });
@@ -37,7 +36,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
-// // db
+// db
 const db = require("./db/models");
 db.sequelize.sync({ force: true, logging:false }).then((res) => {
   console.log("Drop and re-sync db.");
