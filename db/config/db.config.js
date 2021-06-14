@@ -1,7 +1,12 @@
+let password = 'Happymon10!'
+if (process.env.GITHUB_ACTIONS == 'true') {
+  password = 'root';
+} 
+
 module.exports = {
     HOST: "localhost",
     USER: "root",
-    PASSWORD: "Deadbarney123!", //insert your own password here
+    PASSWORD: "Happymon10!", //insert your own password above, but do not commit
     DB: "testdb", //make sure database with this name is instantiated on your mysql
     dialect: "mysql",
     pool: {
