@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon app.js",
+    "dev": "NODE_ENV=dev nodemon app.js",
     "prod": "NODE_ENV=prod nodemon app.js",
-    "test": "NODE_ENV=test jest --detectOpenHandles --runInBand"
+    "test": "NODE_ENV=test jest --detectOpenHandles --runInBand --coverage"
   },
   "jest": {
     "coveragePathIgnorePatterns": [
