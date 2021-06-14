@@ -98,6 +98,8 @@ exports.findOne = (req, res) => {
 // Update a startup by the id in the request
 exports.update = (req, res) => {
   const id = req.params.id;
+  console.log("EXPORTS UPDATE STARTUP ID:", req.params.id)
+  console.log("IN EXPORTS UPDATE:", req.body)
   // need to validate req.body in the future
   // TK's implementation of service layer
   startupService.update(req.body, id)

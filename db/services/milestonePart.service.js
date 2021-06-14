@@ -6,10 +6,11 @@ module.exports = {
     createMilestonePart : function (startupId, milestonePart) {
         
         return MilestoneParts.create({
+            title: milestonePart.title,
             part: milestonePart.part,
             endDate: milestonePart.endDate,
             description: milestonePart.description,
-            amount: milestonePart.amount,
+            percentageFunds: milestonePart.percentageFunds,
             startupId: startupId,
         })
         .then((milestonePart) => {

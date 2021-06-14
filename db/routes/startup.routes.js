@@ -11,7 +11,7 @@ const router = require("express").Router();
 
 
 // Create a new Startup
-router.post("/", 
+router.post("/",
     // auth0Controller.getMgtToken,
     // auth0RegController.createAccount,
     // auth0RegController.startup,
@@ -35,14 +35,14 @@ router.delete("/", startupController.deleteAll);
 router.put("/:id", startupController.update);
 
 // Convert StartUp Video to live Link via CloudStorage
-// Update Startup's video field to to link in db. 
+// Update Startup's video field to to link in db.
 router.put("/video/:id", CloudStorageController.uploadVideo, startupController.update);
 
 // Get SignedURL for limited access on resource (video)
 router.get("/video/:id", startupController.getItemIdentifier, CloudStorageController.getSignedURL)
 
 // Convert Pitch Deck pdf to live Link via CloudStorage
-// Update Startup's pitch deck field to to link in db. 
+// Update Startup's pitch deck field to to link in db.
 router.put("/pitchDeck/:id", CloudStorageController.uploadPitchDeck, startupController.update);
 
 // Get SignedURL for limited access on resource (pitchDeck)
@@ -136,4 +136,4 @@ router.get("/:id", startupController.findOne);
 // Retrieve all Startup
 router.get("/", startupController.findAll);
 
-module.exports = router; 
+module.exports = router;

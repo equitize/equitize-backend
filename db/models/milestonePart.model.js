@@ -1,5 +1,9 @@
 module.exports = (sequelize, Sequelize) => {
     const MilestonePart = sequelize.define("milestonePart", {
+      title: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
       part: {
         type: Sequelize.INTEGER,
         allowNull: false
@@ -11,7 +15,7 @@ module.exports = (sequelize, Sequelize) => {
       description: {
         type: Sequelize.STRING,
       },
-      amount:{
+      percentageFunds:{
         type: Sequelize.INTEGER,
         allowNull: false
       }

@@ -4,10 +4,11 @@ exports.create = async (req, res) => {
   try {
     const startupId = req.body.startupId
     const milestonePart = await milestonePartService.createMilestonePart(startupId, {
+        title: req.body.title,
         part: req.body.part,
         endDate: req.body.endDate,
         description: req.body.description,
-        amount: req.body.amount,
+        percentageFunds: req.body.percentageFunds,
     });
     res.send(milestonePart)
   } catch (err) {

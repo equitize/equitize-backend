@@ -9,18 +9,18 @@ module.exports = {
         try {
             const user_id = encodeURIComponent(req.user_id);
             console.log(user_id);
-            
+
             const data = {
                 "roles": [ roles.startup ]
             };
-    
+
             const headers = {
                 "Content-Type": "application/json",
                 "authorization": `Bearer ${process.env.AUTH0_MGT_TOKEN_TESTING}`
             };
             axios.post(`https://${process.env.AUTH0_DOMAIN}/api/v2/users/${user_id}/roles`, data, { headers : headers } )
             .then(function (response) {
-                console.log('register startup response reached')  
+                console.log('register startup response reached')
                 console.log(response.status)
                 next();
             })
@@ -44,7 +44,7 @@ module.exports = {
                 "authorization": `Bearer ${process.env.AUTH0_MGT_TOKEN_TESTING}`
             };
             axios.post(`https://${process.env.AUTH0_DOMAIN}/api/v2/users/${user_id}/roles`, data, { headers : headers } )
-            .then(function (response) {   
+            .then(function (response) {
                 console.log(response.status)
             })
             .catch(function (error) {
@@ -72,15 +72,15 @@ module.exports = {
             .then(function (response) {
                 req.user_id = response.data.user_id;
                 next();
-            })  
+            })
             .catch(function (error) {
-                // console.log(error);
-                console.log('alskdjfhalsdkjfhas')
+                console.log(error);
+                // console.log('alskdjfhalsdkjfhas')
                 next(error);
             });
         } catch (error) {
             next(error);
         };
     },
-    
+
 }

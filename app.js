@@ -10,7 +10,7 @@ require('dotenv').config({
 
 
 var corsOptions = {
-  origin: "http://localhost:8081"
+  origin: "http://localhost:3000"
 };
 
 app.use(cors(corsOptions));
@@ -57,9 +57,9 @@ app.use((error, req, res, next) => {
   next(createHttpError.NotFound());
 });
 // // other errors
-app.use((error, req, res, next) => {     
+app.use((error, req, res, next) => {
   error.status = error.status || 500
-  res.status(error.status); 
+  res.status(error.status);
   res.send(error);
 });
 
@@ -69,7 +69,7 @@ const DEV_PORT = process.env.DEV_PORT || 8080;
 
 if (process.env.NODE_ENV == 'test') {
   module.exports = app;
-} 
+}
 else if (process.env.NODE_ENV == 'prod') {
   app.listen(process.env.PORT, "0.0.0.0" , () => {
     console.log(`Server is running on port. ${process.env.PORT}`);

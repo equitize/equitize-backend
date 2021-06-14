@@ -2,6 +2,7 @@ node_modules/
 .DS_Store
 .idea/
 .env
+db/config/db.config.js
 
 yarn.lock
 package-lock.json
