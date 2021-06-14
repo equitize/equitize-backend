@@ -22,7 +22,7 @@ module.exports = {
         try {
             var condition = companyName ? { companyName: { [Op.like]: `%${companyName}%` } } : null;
 
-            const result = Startup.findAll({ where: condition })
+            const result = Startup.findAll({ where: condition, include: ["milestones", "industries"] })
             .then(data => {
                 return data
             })

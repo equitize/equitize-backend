@@ -21,7 +21,7 @@ exports.create = async (req, res, next) => {
 
 // middleware to get retail investor
 exports.getRetailInvestor = (req, res, next) => {
-    console.log('industry controller >> get retail investor')
+    // console.log('industry controller >> get retail investor')
     const retailInvestorId = req.params.id
     try {
       const db = require("../models");
@@ -30,8 +30,8 @@ exports.getRetailInvestor = (req, res, next) => {
       const result = RetailInvestors.findByPk(retailInvestorId)
       .then(data => {
         req.body.retailInvestor = data
-        console.log('get retail investor >> data')
-        console.log(data)
+        // console.log('get retail investor >> data')
+        // console.log(data)
         next();
       })
       .catch(err => {
@@ -53,7 +53,7 @@ exports.getIndustries = async (req, res) => {
         res.send(result)
       } else {
         res.status(500).send({
-          message: `Cannot get Industries with retailInvestorId=${retailInvestorId}. Maybe Industries was not found!`
+          message: `Cannot get Industries with retailInvestorId=${retailInvestorId}. Maybe Industries was not found or no industries set!`
         });
       }
       
