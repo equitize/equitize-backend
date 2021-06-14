@@ -44,7 +44,8 @@ describe('Testing [/api/db/startup]', () => {
   const milestone_title = "Sample milestone title"
   const milestonePart = 1
   const milestone_endDate = "Sample milestone endDate"
-  const milestone_amount = 100
+  const milestone_percentage_funds_1 = 30
+  const milestone_percentage_funds_2 = 60
 
   const invalid_string = 'sample_invalid_string'
   const invalid_id = 1000000007
@@ -283,11 +284,12 @@ describe('Testing [/api/db/startup]', () => {
   // milestone is tied to company, not campaign it seems
   it('set milestone part 1', async() => {
     requestBody = {
+      title: "1st milestone title",
       part:milestonePart,   // could be duplicate, it seems
       startupId:company_id,
       endDate:milestone_endDate,
       description:milestone_title,
-      amount:milestone_amount,  // any checks on this?
+      percentageFunds:milestone_percentage_funds_1,  // any checks on this?
     }
     res = await supertest(app)
                           .post(`/api/db/startup/milestone/addPart`)
@@ -297,11 +299,12 @@ describe('Testing [/api/db/startup]', () => {
 
   it('set milestone part 2', async() => {
     requestBody = {
+      title: "2nd milestone title",
       part:milestonePart+1,   // could be duplicate, it seems
       startupId:company_id,
       endDate:milestone_endDate,
       description:milestone_title+" part 2",
-      amount:milestone_amount,  // any checks on this?
+      percentageFunds:milestone_percentage_funds_2,  // any checks on this?
     }
     res = await supertest(app)
                           .post(`/api/db/startup/milestone/addPart`)
