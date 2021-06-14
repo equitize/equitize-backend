@@ -27,4 +27,8 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: yarn install
     - run: yarn test sample
-    - run: yarn test
+    - run: yarn test startup
+    - run: yarn test retailInvestors
+    - run: yarn test campaign
+    - run: yarn test junctionTable
+    - run: yarn test recommender
