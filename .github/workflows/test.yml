@@ -1,5 +1,5 @@
 name: Run database tests
-on: push
+on: [push, pull_request]
 
 # Main reference: https://ovirium.com/blog/how-to-make-mysql-work-in-your-github-actions/
 
