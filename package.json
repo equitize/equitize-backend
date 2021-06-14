@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "NODE_ENV=dev nodemon app.js",
+    "dev": "nodemon app.js",
     "prod": "NODE_ENV=prod nodemon app.js",
     "test": "jest --detectOpenHandles --runInBand"
   },
