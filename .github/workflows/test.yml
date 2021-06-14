@@ -37,3 +37,5 @@ jobs:
       if: always()
     - run: yarn test recommender
       if: always()
+    - run: yarn test
+      if: always()
