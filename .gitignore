@@ -3,6 +3,7 @@ node_modules/
 .idea/
 .env
 db/config/db.config.js
+coverage/
 
 yarn.lock
 package-lock.json
