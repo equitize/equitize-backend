@@ -51,7 +51,6 @@ module.exports = {
     },
     update : function(updates, id) {
         try {
-            console.log("IM HERE", updates)     // Doesnt reach
             const result = Startup.update(updates, { 
                 where : { id : id }
             })

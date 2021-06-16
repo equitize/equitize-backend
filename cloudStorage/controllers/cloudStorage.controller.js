@@ -4,9 +4,12 @@ const CloudStorageService = require("../services/cloudStorage.service");
 // get identifier & pass to next middleware
 exports.uploadVideo = async (req, res, next) => {
     const video = req.file;
+    const { originalname, buffer } = video;
+    console.log(originalname)
     const data = await CloudStorageService.uploadVideo(video);
     req.body = {
-      "video": data
+      "videoCloudID": data,
+      "videoOriginalName": originalname
     }
     next();
 };
@@ -15,10 +18,12 @@ exports.uploadVideo = async (req, res, next) => {
 // get identifer & pass to next middleware
 exports.uploadPitchDeck = async (req, res, next) => {
     const pitchDeck = req.file;
+    const { originalname, buffer } = pitchDeck;
     const data = await CloudStorageService.uploadPitchDeck(pitchDeck);
     
     req.body = {
-      "pitchDeck": data
+      "pitchDeckCloudID": data,
+      "pitchDeckOriginalName": originalname
     }
     next();
 };
@@ -77,8 +82,13 @@ exports.uploadProfilePhoto = async (req, res, next) => {
 exports.getSignedURL = async (req, res, next) => {
     try {
         const identifier = req.body.cloudItemIdentifier
+        const originalFileName = req.body.originalFileName
         const signedURL = await CloudStorageService.getSignedURL(identifier)
-        res.send(signedURL)
+        res.send(
+          {
+            "originalName": originalFileName,
+            "signedURL": signedURL
+          })
     } catch (error) {
         next(error)
     }

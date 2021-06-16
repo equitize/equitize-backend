@@ -24,7 +24,8 @@ exports.create = (req, res) => {
     lastName: req.body.lastName ? req.body.lastName :"",
     singPass: req.body.singPass ? req.body.singPass :"",
     incomeStatement: req.body.incomeStatement ? req.body.incomeStatement :"",
-    incomeTaxReturn: req.body.incomeTaxReturn ? req.body.incomeTaxReturn :""
+    incomeTaxReturn: req.body.incomeTaxReturn ? req.body.incomeTaxReturn :"", 
+    zilAddr: req.body.zilAddr ? req.body.zilAddr : "",
   };
 
   // TK's implementation of service layer

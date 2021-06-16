@@ -22,13 +22,16 @@ exports.create = async (req, res, next) => {
       profilePhoto: req.body.profilePhoto ? req.body.profilePhoto :"",
       capTable: req.body.capTable ? req.body.capTable :"",
       acraDocuments: req.body.acraDocuments ? req.body.acraDocuments :"",
-      pitchDeck: req.body.pitchDeck ? req.body.pitchDeck :"",
-      video: req.body.video ? req.body.video :"",
+      pitchDeckCloudID: req.body.pitchDeckCloudID ? req.body.pitchDeckCloudID :"",
+      pitchDeckOriginalName: req.body.pitchDeckOriginalName ? req.body.pitchDeckOriginalName:"",
+      videoCloudID: req.body.videoCloudID ? req.body.videoCloudID :"",
+      videoOriginalName: req.body.videoOriginalName ? req.body.videoOriginalName :"",
       zoomDatetime: req.body.zoomDatetime ? req.body.zoomDatetime :"",
       commericalChampion: req.body.commericalChampion ? req.body.commericalChampion :"",
       designSprintDatetime: req.body.designSprintDatetime ? req.body.designSprintDatetime :"",
       bankInfo:req.body.bankInfo ? req.body.bankInfo :"",
       idProof:req.body.idProof ? req.body.idProof :"",
+      zilAddr: req.body.zilAddr ? req.body.zilAddr : "",
     };
     
     // TK's implmentation of Service Layer
@@ -76,7 +79,7 @@ exports.findAll = (req, res) => {
 // Find a single startup with an id
 exports.findOne = (req, res) => {
   const id = req.params.id;
-
+  
   // TK's implementation of service layer
   startupService.findOne(id)
   .then(function (response) {
@@ -98,8 +101,8 @@ exports.findOne = (req, res) => {
 // Update a startup by the id in the request
 exports.update = (req, res) => {
   const id = req.params.id;
-  console.log("EXPORTS UPDATE STARTUP ID:", req.params.id)
-  console.log("IN EXPORTS UPDATE:", req.body)
+  const video = req.file;
+  const { originalname, buffer } = video
   // need to validate req.body in the future
   // TK's implementation of service layer
   startupService.update(req.body, id)
@@ -211,17 +214,20 @@ exports.findViaEmail= (req, res) => {
 // middleware to get ItemID from MySQL
 exports.getItemIdentifier = async (req, res, next) => {
   try {
-    const fileType = req.body.fileType 
+    const cloudIDType = req.body.cloudIDType;
+    const fileOGName = req.body.fileOGName; 
     const id = req.params.id
+
     // use startupService to get access to startup object field    
     const startup = await startupService.findOne(id)    
     if (!startup) {
       throw createHttpError.NotFound();
     }
-    if (startup.dataValues[fileType] === "") {
+    if (startup.dataValues[cloudIDType] === "") {
       throw createHttpError.NotFound();
     }
-    req.body.cloudItemIdentifier = startup.dataValues[fileType]
+    req.body.cloudItemIdentifier = startup.dataValues[cloudIDType]
+    req.body.originalFileName = startup.dataValues[fileOGName]
     next()
   } catch (error) {
     next(error);

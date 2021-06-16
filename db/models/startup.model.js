@@ -26,10 +26,16 @@ module.exports = (sequelize, Sequelize) => {
       acraDocuments: {
         type: Sequelize.STRING
       },
-      pitchDeck: {
+      pitchDeckCloudID: {
         type: Sequelize.STRING
       },
-      video:{
+      pitchDeckOriginalName : {
+        type: Sequelize.STRING
+      },
+      videoCloudID:{
+        type: Sequelize.STRING
+      },
+      videoOriginalName: {
         type: Sequelize.STRING
       },
       commericalChampion: {
