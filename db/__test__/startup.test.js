@@ -225,7 +225,7 @@ describe('Testing [/api/db/startup]', () => {
 
   it('create campaign', async() => {
     requestBody = {
-      companyId:company_id,
+      startupId:company_id,
     }
     res = await supertest(app)
                           .post(`/api/db/admin/createCampaign`)

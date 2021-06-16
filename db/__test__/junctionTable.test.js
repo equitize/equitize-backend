@@ -74,12 +74,12 @@ describe('Testing [/api/db/junctionTable]', () => {
 
   it('create campaign', async() => {
     let requestBody = {
-      companyId:companyId,
+      startupId:companyId,
       goal:goal,
       endDate:endDate
     }
     let res = await supertest(app)
-                          .post("/api/db/campaign")
+                          .post("/api/db/admin/createCampaign")
                           .send(requestBody)
     expect(res.statusCode).toBe(200)
     campaign_id = res.body.id    
