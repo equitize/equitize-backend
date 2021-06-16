@@ -41,10 +41,11 @@ const db = require("./db/models");
 db.sequelize.sync({ force: true, logging:false }).then((res) => {
   console.log("Drop and re-sync db.");
 }).catch( function (error) {
+  console.log(error)
   throw(error)
 });
 
-
+app.use('/api/db/admin', require('./db/routes/admin.routes'));
 app.use('/api/db/startup', require('./db/routes/startup.routes'));
 app.use('/api/db/retailInvestors', require('./db/routes/retailInvestors.routes'));
 app.use('/api/db/campaign', require('./db/routes/campaign.routes'));

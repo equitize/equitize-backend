@@ -1,5 +1,5 @@
 const db = require("../models");
-const Campaign = db.campaign;
+const Campaign = db.campaigns;
 const Op = db.Sequelize.Op;
 
 module.exports = {
@@ -48,10 +48,10 @@ module.exports = {
             return error
         }
     },
-    update : function(updates, companyId) {
+    update : function(updates, startupId) {
         try {
             const result = Campaign.update(updates, { 
-                where : { companyId : companyId }
+                where : { startupId : startupId }
             })
             .then(data => {
                 return data
@@ -95,9 +95,9 @@ module.exports = {
             return error
         }
     },
-    findViaCompanyId : function (companyId) {
+    findViaCompanyId : function (startupId) {
         try {
-            var condition = companyId ? { companyId: { [Op.like]: `${companyId}` } } : null;
+            var condition = startupId ? { startupId: { [Op.like]: `${startupId}` } } : null;
 
             const result = Campaign.findAll({ where: condition })
             .then(data => {

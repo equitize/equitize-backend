@@ -32,9 +32,6 @@ module.exports = (sequelize, Sequelize) => {
       video:{
         type: Sequelize.STRING
       },
-      zoomDatetime: {
-        type: Sequelize.STRING
-      },
       commericalChampion: {
         type: Sequelize.STRING
       },
@@ -47,6 +44,9 @@ module.exports = (sequelize, Sequelize) => {
       idProof: {
         type: Sequelize.STRING
       },
+      zilAddr: {
+        type: Sequelize.STRING
+      }
     },{
       tableName: "startups",
       freezeTableName: true

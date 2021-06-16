@@ -36,7 +36,8 @@ module.exports = {
     },
     findOne : function (id) {
         try {
-            const result = Startup.findByPk(id, { include: ["milestones", "industries"] })
+            // const result = Startup.findByPk(id, { include: ["milestones", "industries", "campaigns"] })
+            const result = Startup.findByPk(id, { include: { all : true } })
             .then(data => {
                 return data
             })

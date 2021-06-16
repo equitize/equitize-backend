@@ -1,3 +1,4 @@
+// this is strictly for auth0 management APIs
 const { default: axios } = require('axios');
 
 module.exports = {
@@ -26,5 +27,39 @@ module.exports = {
         } catch (error) {
             next(error);
         };
+    },
+    addPerms: function (req, res, next) {
+        try {
+            var options = {
+                method: 'POST',
+                url: `https://${process.env.AUTH0_DOMAIN}/api/v2/roles/ROLE_ID/permissions`,
+                headers: {
+                'content-type': 'application/json',
+                authorization: `${process.env.AUTH0_MGT_TOKEN_TESTING}`,
+                'cache-control': 'no-cache'
+                },
+                data: {
+                permissions: [
+                    {
+                    resource_server_identifier: 'API_IDENTIFIER',
+                    permission_name: 'PERMISSION_NAME'
+                    },
+                    {
+                    resource_server_identifier: `${process.env.AUTH0_AUDIENCE}`,
+                    permission_name: 'PERMISSION_NAME'
+                    }
+                ]
+                }
+            };
+            
+            axios.request(options).then(function (response) {
+            console.log(response.data);
+            }).catch(function (error) {
+            console.error(error);
+            });
+        } catch (error) {
+            console.log(error)
+            next(error)
+        }
     }
 }

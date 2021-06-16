@@ -11,7 +11,7 @@ module.exports = {
             console.log(user_id);
 
             const data = {
-                "roles": [ roles.startup ]
+                "roles": [ roles.startupUnverified ]
             };
 
             const headers = {
@@ -37,7 +37,7 @@ module.exports = {
         try {
             const user_id = encodeURIComponent(req.user_id);
             const data = {
-                "roles": [ roles.retail ]
+                "roles": [ roles.retailUnverified ]
             };
             const headers = {
                 "Content-Type": "application/json",

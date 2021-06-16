@@ -15,6 +15,7 @@ module.exports = {
         })
         .then((milestonePart) => {
             console.log(">> milestonePart: " + JSON.stringify(milestonePart, null, 4));
+            console.log(milestonePart)
             return milestonePart;
         })
         .catch((err) => {

@@ -3,23 +3,30 @@ const jwksRsa = require("jwks-rsa");
 const jwtAuthz = require("express-jwt-authz");
 
 module.exports = {
-    authorizeAccessToken :() => {
-        jwt({
+    authorizeAccessToken : (req, res, next) => {
+        try {            
+            jwt({
             secret: jwksRsa.expressJwtSecret({
             cache: true,
             rateLimit: true,
             jwksRequestsPerMinute: 5,
-            jwksUri: `https://${authConfig.domain}/.well-known/jwks.json`
+            jwksUri: `https://${process.env.AUTH0_DOMAIN}/.well-known/jwks.json`
             }),
-            audience: authConfig.audience,
-            issuer: `https://${authConfig.domain}/`,
+            audience: `${process.env.AUTH0_AUDIENCE}`,
+            issuer: `https://${process.env.AUTH0_DOMAIN}/`,
             algorithms: ["RS256"]
-        })
+            });
+            next();
+        } catch(err) {
+            console.log('authorize access toekn')
+            console.log(err)
+        }
     },
-    checkPermissions : () => {
+    checkPermissions : (req, res, next) => {
         jwtAuthz(["role:protectedapi"], {
         customScopeKey: "permissions",
         checkAllScopes: true
-        })
+        });
+        next();
     }
 }

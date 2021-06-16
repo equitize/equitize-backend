@@ -24,6 +24,9 @@ module.exports = (sequelize, Sequelize) => {
       incomeTaxReturn: {
         type: Sequelize.STRING
       },
+      zilAddr: {
+        type: Sequelize.STRING
+      }
     },{
       tableName: 'retailInvestors',
       freezeTableName: true

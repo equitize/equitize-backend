@@ -2,6 +2,7 @@ const { campaign } = require("../models");
 // const db = require("../models");
 // const Campaign = db.campaign;
 // const Op = db.Sequelize.Op;
+const startupService = require("../services/startup.service")
 const campaignService = require("../services/campaign.service");
 
 // Create and Save a new Campaign
@@ -113,9 +114,9 @@ exports.findOne = (req, res) => {
 
 // Update a Campaign by the id in the request
 exports.update = (req, res) => {
-  const companyId = req.params.companyId;
+  const startupId = req.params.startupId;
   // tk's implementation of service layer
-  campaignService.update(req.body, companyId)
+  campaignService.update(req.body, startupId)
   .then(num => {
     if (num == 1) {
       res.send({
@@ -123,14 +124,14 @@ exports.update = (req, res) => {
       });
     } else {
       res.status(500).send({
-        message: `Cannot update Campaign with id=${companyId}. Maybe Campaign was not found or req.body is empty!`
+        message: `Cannot update Campaign with id=${startupId}. Maybe Campaign was not found or req.body is empty!`
       });
     }
   })
   .catch(err => {
     console.log(err)
     res.status(500).send({
-      message: "Error updating Campaign with id=" + companyId
+      message: "Error updating Campaign with id=" + startupId
     });
   });
   // Campaign.update(req.body, {
@@ -285,40 +286,53 @@ exports.findViaCompanyId = (req, res) => {
 };
 
 // middleware to check if campaign exists
-exports.checkExists = (req, res, next) => {
-  const companyId = req.params.companyId;
+exports.checkExists = async (req, res, next) => {
+  const startupId = req.params.startupId;
   // tk's implementation of service layer
-  // console.log(req.params)
-  // console.log("check")
-  campaignService.findViaCompanyId(companyId)
-  .then(data => {
-    // console.log(data)
-    // console.log("check")
-    if (data.length === 0){
-      // no campaigns found so we create one
-      const campaign = {
-        companyId: companyId,
-      };
-      campaignService.create(campaign)
-      .then(data => {
-        next()
-      })
-      .catch(err => {
-        res.status(500).send({
-          message:
-            err.message || "Some error occurred while creating the Campaign."
-        });
-      });
-    } else {
-      next();
+  // need to first get a reference to startup object
+  // then call getCampaign()
+  console.log("checkExists")
+  const startup = await startupService.findOne(startupId);
+  const campaign = await startup.getCampaigns();
+  
+  if (campaign.length == 0) {
+    // create campaign
+    const campaign = {
+      startupId: startupId,
     }
-  })
-  .catch(err => {
-    res.status(500).send({
-      message:
-        err.message || "Some error occurred while retrieving Campaign."
-    });
-  });
+    campaignService.create(campaign)
+    next()
+  } else {
+    next()
+  }
+  // .then(data => {
+  //   console.log(data.getCampaign())
+  //   // console.log("check")
+  //   if (data.length === 0){
+  //     // no campaigns found so we create one
+  //     const campaign = {
+  //       startupId: startupId,
+  //     };
+  //     campaignService.create(campaign)
+  //     .then(data => {
+  //       next()
+  //     })
+  //     .catch(err => {
+  //       res.status(500).send({
+  //         message:
+  //           err.message || "Some error occurred while creating the Campaign."
+  //       });
+  //     });
+  //   } else {
+  //     next();
+  //   }
+  // })
+  // .catch(err => {
+  //   res.status(500).send({
+  //     message:
+  //       err.message || "Some error occurred while retrieving Campaign."
+  //   });
+  // });
   // Campaign.findAll({ where: condition })
   //   .then(data => {
   //     res.send(data);
