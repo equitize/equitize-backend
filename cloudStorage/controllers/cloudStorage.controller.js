@@ -78,8 +78,8 @@ exports.uploadProfilePhoto = async (req, res, next) => {
   next();
 };
 
-// gets signedURL of requested filetype
-exports.getSignedURL = async (req, res, next) => {
+// gets signedURL of requested filetype and send back original name
+exports.getSignedUrlWithName = async (req, res, next) => {
     try {
         const identifier = req.body.cloudItemIdentifier
         const originalFileName = req.body.originalFileName
@@ -92,4 +92,18 @@ exports.getSignedURL = async (req, res, next) => {
     } catch (error) {
         next(error)
     }
+}
+
+// gets signedURL of requested filetype without sending back original name
+exports.getSignedURL = async (req, res, next) => {
+  try {
+      const identifier = req.body.fileType
+      const signedURL = await CloudStorageService.getSignedURL(identifier)
+      res.send(
+        {
+          "signedURL": signedURL
+        })
+  } catch (error) {
+      next(error)
+  }
 }

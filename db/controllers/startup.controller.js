@@ -212,7 +212,8 @@ exports.findViaEmail= (req, res) => {
   };
 
 // middleware to get ItemID from MySQL
-exports.getItemIdentifier = async (req, res, next) => {
+// and send back original file name 
+exports.getItemIdentifierWithName = async (req, res, next) => {
   try {
     const cloudIDType = req.body.cloudIDType;
     const fileOGName = req.body.fileOGName; 
@@ -228,6 +229,28 @@ exports.getItemIdentifier = async (req, res, next) => {
     }
     req.body.cloudItemIdentifier = startup.dataValues[cloudIDType]
     req.body.originalFileName = startup.dataValues[fileOGName]
+    next()
+  } catch (error) {
+    next(error);
+  }
+}
+
+// middleware to get ItemID from MySQL 
+// without sending back original name 
+exports.getItemIdentifier = async (req, res, next) => {
+  try {
+    const fileType = req.body.fileType; 
+    const id = req.params.id
+
+    // use startupService to get access to startup object field    
+    const startup = await startupService.findOne(id)    
+    if (!startup) {
+      throw createHttpError.NotFound();
+    }
+    if (startup.dataValues[fileType] === "") {
+      throw createHttpError.NotFound();
+    }
+    req.body.fileType = startup.dataValues[fileType]
     next()
   } catch (error) {
     next(error);

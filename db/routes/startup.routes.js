@@ -30,14 +30,14 @@ router.delete("/:id", startupController.delete);
 router.put("/video/:id", CloudStorageController.uploadVideo, startupController.update);
 
 // Get SignedURL for limited access on resource (video)
-router.get("/video/:id", startupController.getItemIdentifier, CloudStorageController.getSignedURL)
+router.get("/video/:id", startupController.getItemIdentifierWithName, CloudStorageController.getSignedUrlWithName)
 
 // Convert Pitch Deck pdf to live Link via CloudStorage
 // Update Startup's pitch deck field to to link in db.
 router.put("/pitchDeck/:id", CloudStorageController.uploadPitchDeck, startupController.update);
 
 // Get SignedURL for limited access on resource (pitchDeck)
-router.get("/pitchDeck/:id", startupController.getItemIdentifier, CloudStorageController.getSignedURL)
+router.get("/pitchDeck/:id", startupController.getItemIdentifierWithName, CloudStorageController.getSignedUrlWithName)
 
 // Convert CapTable to live Link via CloudStorage
 // Update Startup's video field to to link in db. 
