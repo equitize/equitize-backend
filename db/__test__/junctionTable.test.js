@@ -10,7 +10,7 @@ it('Testing to see if Jest works', () => {
 })
 
 // this is an eg. of one test suite. 
-describe('Testing [/api/db/campaign]', () => {
+describe('Testing [/api/db/junctionTable]', () => {
   let thisDb = db
   
   beforeAll(async () => {

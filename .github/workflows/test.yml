@@ -6,6 +6,7 @@ on: [push, pull_request]
 jobs:
   test-host:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     env:
       DB_DATABASE: testdb
       DB_USER: root
@@ -36,4 +37,6 @@ jobs:
     - run: yarn test junctionTable
       if: always()
     - run: yarn test recommender
+      if: always()
+    - run: yarn test
       if: always()
