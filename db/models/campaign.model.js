@@ -9,6 +9,17 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.INTEGER,
         // allowNull: false
       },
+      currentlyRaised: {
+        type: Sequelize.FLOAT,
+        // allowNull: false
+      },
+      zoomDatetime: {
+        type: Sequelize.STRING
+      },
+      startDate: {
+        type: Sequelize.STRING,
+        // allowNull: false
+      },
       endDate: {
         type: Sequelize.STRING,
         // allowNull: false
@@ -21,7 +32,13 @@ module.exports = (sequelize, Sequelize) => {
       },
       tokensMinted: {
         type: Sequelize.INTEGER,
-      } 
+      },
+      campaignAddr: {
+        type: Sequelize.STRING
+      },
+      fungibleTokenAddr: {
+        type: Sequelize.STRING
+      }
     },{
       tableName: 'campaigns',
       freezeTableName: true
@@ -29,3 +46,5 @@ module.exports = (sequelize, Sequelize) => {
   
     return Campaign;
   };
+
+
