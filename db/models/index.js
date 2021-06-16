@@ -49,10 +49,12 @@ db.industries = require("./industries.model.js")(sequelize, Sequelize);
 // db.milestones.hasMany(db.milestoneParts, { onDelete: "cascade", as: "milestoneParts" });
 db.startups.hasMany(db.milestoneParts, { onDelete: "cascade", as: "milestones" })
 db.startups.hasMany(db.industries, { onDelete: "cascade", as: "industries" })
+db.startups.hasMany(db.campaign, { onDelete: "cascade", as: "campaigns" })
 db.retailInvestors.hasMany(db.industries, { onDelete: "cascade", as : "industryPreferences" })
 
 db.milestoneParts.belongsTo(db.startups , { foreignKey: "startupId",  as: "startup" });
-db.industries.belongsTo(db.startups , { foreignKey: "startupId",  as: "startup" });
+db.industries.belongsTo(db.startups, { foreignKey: "startupId",  as: "startup" });
+db.campaign.belongsTo(db.startups, { foreignKey: "startupId",  as: "startup" });
 db.industries.belongsTo(db.retailInvestors, {foreignKey: "retailInvestorId", as: "retailInvestor" });
 
 module.exports = db;

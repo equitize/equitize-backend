@@ -9,7 +9,7 @@ exports.create = (req, res) => {
   // Validate request
   if (!req.body.companyId) {
     res.status(400).send({
-      message: "companyId cannot be empty!"
+      message: "startupId cannot be empty!"
     });
     return;
   }
@@ -19,6 +19,7 @@ exports.create = (req, res) => {
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_Operator
   const campaign = {
     companyId: req.body.companyId,
+    startupId: req.body.companyId,
     // goal: req.body.goal,
     // end_date: req.body.end_date
   };

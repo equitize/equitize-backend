@@ -22,7 +22,7 @@ module.exports = {
         try {
             var condition = companyName ? { companyName: { [Op.like]: `%${companyName}%` } } : null;
 
-            const result = Startup.findAll({ where: condition, include: ["milestones", "industries"] })
+            const result = Startup.findAll({ where: condition, include: ["milestones", "industries", "campaigns"] })
             .then(data => {
                 return data
             })
@@ -36,7 +36,7 @@ module.exports = {
     },
     findOne : function (id) {
         try {
-            const result = Startup.findByPk(id, { include: ["milestones", "industries"] })
+            const result = Startup.findByPk(id, { include: ["milestones", "industries", "campaigns"] })
             .then(data => {
                 return data
             })

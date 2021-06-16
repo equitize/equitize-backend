@@ -1,6 +1,6 @@
 module.exports = (sequelize, Sequelize) => {
     const Campaign = sequelize.define("campaign", {
-      companyId: {
+      startupId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         // unique: true
