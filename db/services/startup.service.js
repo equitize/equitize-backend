@@ -34,6 +34,26 @@ module.exports = {
             return error
         }
     },
+    findAllForRecommender : function (companyName) {
+        try {
+            var condition = companyName ? { companyName: { [Op.like]: `%${companyName}%` } } : null;
+
+            const result = Startup.findAll({ 
+                where: condition, 
+                attributes: ['id', 'companyName', 'profileDescription'],
+                include: ["campaigns"] 
+            })
+            .then(data => {
+                return data
+            })
+            .catch(err => {
+                throw err
+            });
+            return result
+        } catch (error) {
+            return error
+        }
+    },
     findOne : function (id) {
         try {
             // const result = Startup.findByPk(id, { include: ["milestones", "industries", "campaigns"] })

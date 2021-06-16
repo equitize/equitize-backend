@@ -27,7 +27,13 @@ exports.getAndSortStartups = async (req, res) => {
         return
     }
     const industries = await retailInvestor.getIndustryPreferences();
-    let startups = await startupService.findAll();
+
+    let startups
+    if (req.body.fullInfo){
+        startups = await startupService.findAll();
+    } else {
+        startups = await startupService.findAllForRecommender();
+    }
     startups = shuffle(startups)  // make answer non-deterministic
 
     let industyNameToIdx = {};

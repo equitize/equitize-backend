@@ -125,7 +125,24 @@ describe('Testing Recommender System', () => {
   });
 
   it('get recommendations', async() => {
-    requestBody = {}
+    requestBody = {
+      fullInfo:null
+    }
+    res = await supertest(app)
+                          .get(`/api/db/retailInvestors/recommender/${retailInvestor_id}`)
+                          .send(requestBody)
+    expect(res.statusCode).toBe(200)
+    expect(res.body.length).toBe(startupCount)
+  });
+
+  afterAll(async () => {
+    await thisDb.sequelize.close()
+  })
+
+  it('get recommendations full info', async() => {
+    requestBody = {
+      fullInfo:true
+    }
     res = await supertest(app)
                           .get(`/api/db/retailInvestors/recommender/${retailInvestor_id}`)
                           .send(requestBody)
