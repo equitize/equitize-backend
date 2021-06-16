@@ -93,19 +93,19 @@ router.put("/campaign/update/:startupId", campaignController.checkExists, campai
 router.post("/setCommercialChampion/", commercialChampionController.create);
 
 // Get milestone associated with startupId
-router.get("/milestone/getMilestone/:startupId",   milestonePartController.getStartup, milestonePartController.getMilestone)
+router.get("/milestone/getMilestone/:startupId", milestonePartController.getStartup, milestonePartController.getMilestone)
 
 // create milestone part
-router.post("/milestone/addPart/",   milestonePartController.create)
+router.post("/milestone/addPart/", milestonePartController.create)
 
 // Delete all milestones associated with startupId
-router.delete("/milestone/deleteMilestone/",   milestonePartController.delete);
+router.delete("/milestone/deleteMilestone/", milestonePartController.delete);
 
 // Delete milestone part associated with startupId
-router.delete("/milestone/deletePart/:companyId",   milestonePartController.deletePart);
+router.delete("/milestone/deletePart/:companyId", milestonePartController.deletePart);
 
 // Associate industries to startup
-router.post("/industries/addIndustries/",   industryController.create);
+router.post("/industries/addIndustries/", industryController.create);
 
 
 // Get campaign

@@ -1,7 +1,4 @@
-const { campaign } = require("../models");
-// const db = require("../models");
-// const Campaign = db.campaign;
-// const Op = db.Sequelize.Op;
+const createHttpError = require("http-errors");
 const startupService = require("../services/startup.service")
 const campaignService = require("../services/campaign.service");
 
@@ -229,27 +226,6 @@ exports.deleteAll = (req, res) => {
   //       });
 };
 
-// // TODO: not implemented because we are attempting to switch to id
-// exports.findViaCompanyName = (req, res) => {
-//   // const company_name = req.query.company_name;
-//   const company_name = req.params.company_name;
-//   // console.log(req.query)
-//   var condition = company_name ? { company_name: { [Op.like]: `${company_name}` } } : null;
-
-//   Campaign.findAll({ where: condition })
-//     .then(data => {
-//       res.send(data);
-//     })
-//     .catch(err => {
-//       res.status(500).send({
-//         message:
-//           err.message || "Some error occurred while retrieving Startups."
-//       });
-//     });
-
-// };
-
-
 exports.findViaCompanyId = (req, res) => {
   // const company_id = req.query.company_id;
   const companyId = req.params.companyId;
@@ -287,6 +263,7 @@ exports.findViaCompanyId = (req, res) => {
 };
 
 // middleware to check if campaign exists
+// otherwise create one and move to next middleware
 exports.checkExists = async (req, res, next) => {
   const startupId = req.params.startupId;
   // tk's implementation of service layer
@@ -306,43 +283,63 @@ exports.checkExists = async (req, res, next) => {
   } else {
     next()
   }
-  // .then(data => {
-  //   console.log(data.getCampaign())
-  //   // console.log("check")
-  //   if (data.length === 0){
-  //     // no campaigns found so we create one
-  //     const campaign = {
-  //       startupId: startupId,
-  //     };
-  //     campaignService.create(campaign)
-  //     .then(data => {
-  //       next()
-  //     })
-  //     .catch(err => {
-  //       res.status(500).send({
-  //         message:
-  //           err.message || "Some error occurred while creating the Campaign."
-  //       });
-  //     });
-  //   } else {
-  //     next();
-  //   }
-  // })
-  // .catch(err => {
-  //   res.status(500).send({
-  //     message:
-  //       err.message || "Some error occurred while retrieving Campaign."
-  //   });
-  // });
-  // Campaign.findAll({ where: condition })
-  //   .then(data => {
-  //     res.send(data);
-  //   })
-  //   .catch(err => {
-  //     res.status(500).send({
-  //       message:
-  //         err.message || "Some error occurred while retrieving Campaign."
-  //     });
-  //   });
-
 };
+
+// middleware to get campaign associated to given startupId
+exports.getStartup = (req, res, next) => {
+  const startupId = req.params.startupId
+  try {
+    const db = require("../models");
+    const Startup = db.startups;
+    
+    const result = Startup.findByPk(startupId)
+    .then(data => {
+      req.body.startup = data
+      next();
+    })
+    .catch(err => {
+      throw err    
+    });
+  } catch (error) {
+      return error
+  }
+}
+
+// Get a campaign with the specified id in the request
+// and make a pledge to it
+exports.pledgeAmount = async (req, res, next) => {
+  const startup = req.body.startup;
+  const startupId = req.params.startupId;
+  const pledgeAmount = req.body.pledgeAmount;
+  try {
+    const result = await startup.getCampaigns();
+    if (!result) {
+      throw createHttpError.NotFound();
+    }
+    else if ( pledgeAmount < 0 ) {
+      throw createHttpError.BadRequest();
+    }
+    else if ( result.length != 0 ) {
+      var currentlyRaised = result[0].dataValues.currentlyRaised
+      
+      if (currentlyRaised == null) {
+        currentlyRaised = pledgeAmount
+      }
+      else {
+        currentlyRaised = currentlyRaised + pledgeAmount
+      }
+      
+      const updated = await campaignService.update({
+        "currentlyRaised" : currentlyRaised 
+      }, startupId)
+      if (updated == 1) {
+        res.status(200).send({
+          message: "Campaign was updated successfully."
+        });
+      }
+    }
+    
+  } catch (error) {
+    next(error)
+  }
+}

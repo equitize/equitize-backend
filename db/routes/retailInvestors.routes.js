@@ -4,6 +4,7 @@ const auth0RegController = require("../../auth0/controllers/registration.control
 const startupController = require("../controllers/startup.controller");
 const industryController = require("../controllers/industry.controller");
 const recommenderController = require("../controllers/recommender.controller");
+const campaignController = require("../controllers/campaign.controller");
 
 const router = require("express").Router();
 
@@ -40,7 +41,9 @@ router.post("/industries/addIndustries/", industryController.create);
 router.get("/recommender/:id", industryController.getRetailInvestor, recommenderController.getAndSortStartups);
 
 // Get industries associated with retailinvestorId
-router.get("/industries/getIndustries/:id", industryController.getRetailInvestor, industryController.getIndustries)
+router.get("/industries/getIndustries/:id", industryController.getRetailInvestor, industryController.getIndustries);
 
+// Pledge amount to campaign
+router.put("/campaign/pledge/:startupId", campaignController.getStartup, campaignController.pledgeAmount);
 
 module.exports = router;

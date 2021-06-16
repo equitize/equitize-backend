@@ -21,10 +21,6 @@ router.delete("/:id", campaign.delete);
 // Delete all Startup
 router.delete("/", campaign.deleteAll);
 
-////////////////
-//custom routes
-///////////////
-
 // Retrieve campaign by startup name
 router.get("/campaign/:companyId", campaign.findViaCompanyId);
 //http://localhost:8080/api/db/campaign/campaign/1
