@@ -37,6 +37,8 @@ describe('Testing Recommender System', () => {
 
   const startup_csv_path = `${__dirname}/sample_files/startups.csv`
 
+  const invalid_id = 1000000007
+
   let retailInvestor_id
   let startupCount = 0
 
@@ -114,8 +116,33 @@ describe('Testing Recommender System', () => {
     expect(res.statusCode).toBe(200)
   });
 
-  it('get recommendations', async() => {
+  it('get recommendations but invalid id', async() => {
     requestBody = {}
+    res = await supertest(app)
+                          .get(`/api/db/retailInvestors/recommender/${invalid_id}`)
+                          .send(requestBody)
+    expect(res.statusCode).toBe(500)
+  });
+
+  it('get recommendations', async() => {
+    requestBody = {
+      fullInfo:null
+    }
+    res = await supertest(app)
+                          .get(`/api/db/retailInvestors/recommender/${retailInvestor_id}`)
+                          .send(requestBody)
+    expect(res.statusCode).toBe(200)
+    expect(res.body.length).toBe(startupCount)
+  });
+
+  afterAll(async () => {
+    await thisDb.sequelize.close()
+  })
+
+  it('get recommendations full info', async() => {
+    requestBody = {
+      fullInfo:true
+    }
     res = await supertest(app)
                           .get(`/api/db/retailInvestors/recommender/${retailInvestor_id}`)
                           .send(requestBody)

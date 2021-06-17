@@ -5,7 +5,7 @@ const campaignService = require("../services/campaign.service");
 // Create and Save a new Campaign
 exports.create = (req, res) => {
   // Validate request
-  if (!req.body.companyId) {
+  if (!req.body.startupId) {
     res.status(400).send({
       message: "startupId cannot be empty!"
     });
@@ -16,10 +16,11 @@ exports.create = (req, res) => {
   // use ternary operator to handle null values 
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_Operator
   const campaign = {
-    companyId: req.body.companyId,
-    startupId: req.body.companyId,
-    // goal: req.body.goal,
-    // end_date: req.body.end_date
+    startupId: req.body.startupId,
+    goal: req.body.goal,
+    endDate: req.body.endDate,
+    sharesAllocated: req.body.sharesAllocated,
+    currentlyRaised: req.body.currentlyRaised
   };
   // tk's implementation of service layer
   campaignService.create(campaign)

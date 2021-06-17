@@ -22,8 +22,18 @@ function shuffle(array) {
 
 exports.getAndSortStartups = async (req, res) => {
     const retailInvestor = req.body.retailInvestor;
+    if (!retailInvestor){
+        res.status(500).send({message: "retailInvestor not found"})
+        return
+    }
     const industries = await retailInvestor.getIndustryPreferences();
-    let startups = await startupService.findAll();
+
+    let startups
+    if (req.body.fullInfo){
+        startups = await startupService.findAll();
+    } else {
+        startups = await startupService.findAllForRecommender();
+    }
     startups = shuffle(startups)  // make answer non-deterministic
 
     let industyNameToIdx = {};
@@ -44,8 +54,6 @@ exports.getAndSortStartups = async (req, res) => {
             }
         }
     }
-
-    // console.log(industryIdxToStartupIdxs)
 
     let startupsAlreadyAllocated = new Set(); 
     let startupsRecommendedOrder = new Array();

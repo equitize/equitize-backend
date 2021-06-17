@@ -71,12 +71,12 @@ describe('Testing [/api/db/campaign]', () => {
 
   it('create campaign', async() => {
     let requestBody = {
-      companyId:companyId,
+      startupId:companyId,
       goal:goal,
       endDate:endDate
     }
     let res = await supertest(app)
-                          .post("/api/db/campaign")
+                          .post("/api/db/admin/createCampaign")
                           .send(requestBody)
     expect(res.statusCode).toBe(200)
     campaign_id = res.body.id    
@@ -85,7 +85,7 @@ describe('Testing [/api/db/campaign]', () => {
 
   it('create campaign but missing info', async() => {
     let requestBody = {
-      // companyId:companyId, // info missed out
+      // startupId:companyId, // info missed out
       // goal:goal,
       endDate:endDate 
     }
@@ -99,7 +99,7 @@ describe('Testing [/api/db/campaign]', () => {
   // not doing this because we assume one startup can only have one campaign
   // it('create campaign with duplicate info', async() => {
   //   let requestBody = {
-  //     companyId:companyId,
+  //     startupId:companyId,
   //     goal:goal,
   //     endDate:endDate
   //   }
