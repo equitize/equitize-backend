@@ -75,7 +75,6 @@ module.exports = {
             });
             return result
         } catch (error) {
-            console.log('alskdjfhalsdkjfh')
             console.log(error)
             return error
         }

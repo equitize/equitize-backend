@@ -40,7 +40,7 @@ exports.deletePart = (req, res) => {
   });
 }
 
-// Get a Milestone with the specified id in the request
+// get a Milestone with the specified id in the request
 exports.getMilestone = async (req, res) => {
   const startup = req.body.startup;
   const startupId = req.params.startupId;
@@ -57,8 +57,8 @@ exports.getMilestone = async (req, res) => {
   } catch (error) {
       return error
   }
-
 }
+
 // middleware to get startup
 exports.getStartup = (req, res, next) => {
   const startupId = req.params.startupId
@@ -69,6 +69,7 @@ exports.getStartup = (req, res, next) => {
     const result = Startup.findByPk(startupId)
     .then(data => {
       req.body.startup = data
+      console.log('milestone.getstartup >>')
       next();
     })
     .catch(err => {
