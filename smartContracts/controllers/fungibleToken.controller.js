@@ -26,12 +26,15 @@ const address = getAddressFromPrivateKey(privateKey);
 
 module.exports ={
   deploy: async function(req, res, next){
+    console.log(req.body)
     if (!req.body.coinName || !req.body.coinSupply ||!req.body.coinSymbol ||!req.body.coinDecimals) {
+      console.log('ttttttttt')
       res.status(400).send({    
         message: "coinName, coinSupply, coinSymbol, coinDecimals can not be empty!"
       });
       return;
     }
+    console.log ('as;ldfkj;asdlfkja')
     try {
       // Get Balance
       const balance = await zilliqa.blockchain.getBalance(address);

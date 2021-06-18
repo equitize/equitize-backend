@@ -5,7 +5,7 @@ const CloudStorageService = require("../services/cloudStorage.service");
 exports.uploadVideo = async (req, res, next) => {
     const video = req.file;
     const { originalname, buffer } = video;
-    console.log(originalname)
+    
     const data = await CloudStorageService.uploadVideo(video);
     req.body = {
       "videoCloudID": data,
@@ -18,6 +18,7 @@ exports.uploadVideo = async (req, res, next) => {
 // get identifer & pass to next middleware
 exports.uploadPitchDeck = async (req, res, next) => {
     const pitchDeck = req.file;
+    
     const { originalname, buffer } = pitchDeck;
     const data = await CloudStorageService.uploadPitchDeck(pitchDeck);
     

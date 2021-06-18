@@ -61,6 +61,9 @@ exports.getMilestone = async (req, res) => {
 
 // middleware to get startup
 exports.getStartup = (req, res, next) => {
+  
+  console.log("milestonepart controller >>")
+  console.log(req.params)
   const startupId = req.params.startupId
   try {
     const db = require("../models");
@@ -70,6 +73,7 @@ exports.getStartup = (req, res, next) => {
     .then(data => {
       req.body.startup = data
       console.log('milestone.getstartup >>')
+      console.log(req.body.startup)
       next();
     })
     .catch(err => {

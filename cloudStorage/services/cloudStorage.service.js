@@ -1,4 +1,5 @@
 const crypto = require("crypto");
+const { nextTick } = require("process");
 const gc = require("../index");
 let bucket;
 let bucketName;
@@ -35,7 +36,6 @@ module.exports = {
           resolve(publicUrl)
         })
         .on('error', (err) => {
-          console.log(err)
           reject(`Unable to upload pitchDeck, something went wrong`)
         })
         .end(buffer)
@@ -61,7 +61,6 @@ module.exports = {
         resolve(publicUrl)
       })
       .on('error', (err) => {
-        console.log(err)
         reject(`Unable to upload video, something went wrong`)
       })
       .end(buffer)
@@ -87,7 +86,6 @@ module.exports = {
         resolve(publicUrl)
       })
       .on('error', (err) => {
-        console.log(err)
         reject(`Unable to upload capTable, something went wrong`)
       })
       .end(buffer)
@@ -113,7 +111,6 @@ module.exports = {
         resolve(publicUrl)
       })
       .on('error', (err) => {
-        console.log(err)
         reject(`Unable to upload acraDocuments, something went wrong`)
       })
       .end(buffer)
@@ -139,7 +136,6 @@ module.exports = {
         resolve(publicUrl)
       })
       .on('error', (err) => {
-        console.log(err)
         reject(`Unable to upload bankInfo, something went wrong`)
       })
       .end(buffer)
@@ -164,8 +160,7 @@ module.exports = {
         const publicUrl = `${blob.name}`
         resolve(publicUrl)
       })
-      .on('error', (err) => {
-        console.log(err)
+      .on('error', (err) => { 
         reject(`Unable to upload idProof, something went wrong`)
       })
       .end(buffer)
@@ -191,7 +186,6 @@ module.exports = {
         resolve(publicUrl)
       })
       .on('error', (err) => {
-        console.log(err)
         reject(`Unable to upload profilePhoto, something went wrong`)
       })
       .end(buffer)
@@ -204,7 +198,7 @@ module.exports = {
       
       const fileName = identifier;
       // const id = crypto.randomBytes(20).toString('hex') + '.jpeg';
-      console.log('here', identifier)
+      
       const options = {
         version: 'v4',
         action: 'read',
@@ -214,11 +208,10 @@ module.exports = {
       .bucket(bucketName)
       .file(identifier)
       .getSignedUrl(options);
-      return {
-        message : url
-      }
+      return url
+      
     } catch (err) {
-      console.log(err)
+      return err
     }
 }
 }

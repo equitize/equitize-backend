@@ -10,7 +10,7 @@ require('dotenv').config({
 
 
 var corsOptions = {
-  origin: "http://localhost:3000"
+  origin: "*"
 };
 
 app.use(cors(corsOptions));
@@ -51,12 +51,12 @@ app.use('/api/db/retailInvestors', require('./db/routes/retailInvestors.routes')
 app.use('/api/db/campaign', require('./db/routes/campaign.routes'));
 app.use('/api/db/junctionTable', require('./db/routes/junctionTable.routes'));
 app.use('/api/db/general', require('./db/routes/general.routes'));
-app.use('/api/blockchain', require('./blockchain/routes/zilliqa.routes'));
-app.use('/api/db/sc', require('./db/routes/sc.routes'));
+app.use('/api/sc', require('./smartContracts/routes/sc.routes'));
 
 /** Error Handlers */
 // 404
 app.use((error, req, res, next) => {
+  console.log(error)
   next(createHttpError.NotFound());
 });
 // // other errors
@@ -67,7 +67,9 @@ app.use((error, req, res, next) => {
 });
 
 
-// // set port, listen for requests
+
+
+// set port, listen for requests
 const DEV_PORT = process.env.DEV_PORT || 8080;
 
 if (process.env.NODE_ENV == 'test') {

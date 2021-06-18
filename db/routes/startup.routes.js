@@ -20,59 +20,56 @@ router.post("/",
 
 // Update a Startup with id
 // no need kyc verferification
-// router.put("/:id", startupController.update);
+router.put("/:startupId", startupController.update);
 
 // Delete a Startup with id
 // no need kyc verferification
-router.delete("/:id", startupController.delete);
+router.delete("/:startupId", startupController.delete);
 
 // upload video
-router.put("/video/:id", CloudStorageController.uploadVideo, startupController.update);
+router.put("/video/:startupId", CloudStorageController.uploadVideo, startupController.update);
 
-// Get SignedURL for limited access on resource (video)
-router.get("/video/:id", startupController.getItemIdentifierWithName, CloudStorageController.getSignedUrlWithName)
+// upload pitchdeck
+router.put("/pitchDeck/:startupId",CloudStorageController.uploadPitchDeck, startupController.update);
 
-// Convert Pitch Deck pdf to live Link via CloudStorage
-// Update Startup's pitch deck field to to link in db.
-router.put("/pitchDeck/:id", CloudStorageController.uploadPitchDeck, startupController.update);
-
-// Get SignedURL for limited access on resource (pitchDeck)
-router.get("/pitchDeck/:id", startupController.getItemIdentifierWithName, CloudStorageController.getSignedUrlWithName)
+// Get SignedURL & original file name for limited access on resource (pitchDeck and video)
+router.get("/getSignedURLPlus/:fileType/:startupId", startupController.getItemIdentifierWithName, CloudStorageController.getSignedUrlWithName)
 
 // Convert CapTable to live Link via CloudStorage
 // Update Startup's video field to to link in db. 
-router.put("/capTable/:id", CloudStorageController.uploadCapTable, startupController.update);
+router.put("/capTable/:startupId", CloudStorageController.uploadCapTable, startupController.update);
 
 // Get SignedURL for limited access on resource (capTable)
-router.get("/capTable/:id", startupController.getItemIdentifier, CloudStorageController.getSignedURL);
+router.get("/getSignedURL/:fileType/:startupId", startupController.getItemIdentifier, CloudStorageController.getSignedURL);
 
 // Convert acraDocuments to live Link via CloudStorage
 // Update Startup's acraDocuments field to to link in db. 
-router.put("/acraDocuments/:id", CloudStorageController.uploadAcraDocuments, startupController.update);
+router.put("/acraDocuments/:startupId", CloudStorageController.uploadAcraDocuments, startupController.update);
 
 // Get SignedURL for limited access on resource (capTable)
-router.get("/acraDocuments/:id", startupController.getItemIdentifier, CloudStorageController.getSignedURL);
+router.get("/acraDocuments/:startupId", startupController.getItemIdentifier, CloudStorageController.getSignedURL);
 
 // Convert bankInfo to live Link via CloudStorage
 // Update Startup's bankInfo field to to link in db. 
-router.put("/bankInfo/:id", CloudStorageController.uploadBankInfo, startupController.update);
+router.put("/bankInfo/:startupId", CloudStorageController.uploadBankInfo, startupController.update);
 
 // Get SignedURL for limited access on resource (bankInfo)
-router.get("/bankInfo/:id", startupController.getItemIdentifier, CloudStorageController.getSignedURL);
+router.get("/bankInfo/:startupId", startupController.getItemIdentifier, CloudStorageController.getSignedURL);
 
 // Convert idProof to live Link via CloudStorage
 // Update Startup's idProof field to to link in db. 
-router.put("/idProof/:id", CloudStorageController.uploadIdProof, startupController.update);
+router.put("/idProof/:startupId", CloudStorageController.uploadIdProof, startupController.update);
 
 // Get SignedURL for limited access on resource (idProof)
-router.get("/idProof/:id", startupController.getItemIdentifier, CloudStorageController.getSignedURL);
+router.get("/idProof/:startupId", startupController.getItemIdentifier, CloudStorageController.getSignedURL);
 
 // Convert profilePhoto to live Link via CloudStorage
 // Update Startup's profilePhoto field to to link in db. 
-router.put("/profilePhoto/:id", CloudStorageController.uploadProfilePhoto, startupController.update);
+router.put("/profilePhoto/:startupId", CloudStorageController.uploadProfilePhoto, startupController.update);
+
 
 // Get SignedURL for limited access on resource (profilePhoto)
-router.get("/profilePhoto/:id", startupController.getItemIdentifier, CloudStorageController.getSignedURL);
+router.get("/profilePhoto/:startupId", startupController.getItemIdentifier, CloudStorageController.getSignedURL);
 
 
 // not sure if this only needs admin route

@@ -100,12 +100,10 @@ exports.findOne = (req, res) => {
 
 // Update a startup by the id in the request
 exports.update = (req, res) => {
-  const id = req.params.id;
-  const video = req.file;
-  const { originalname, buffer } = video
+  const startupId = req.params.startupId;
   // need to validate req.body in the future
   // TK's implementation of service layer
-  startupService.update(req.body, id)
+  startupService.update(req.body, startupId)
   .then(num => {
     if (num == 1) {
       res.send({
@@ -113,13 +111,13 @@ exports.update = (req, res) => {
       });
     } else {
       res.status(500).send({
-        message: `Cannot update Startup with id=${id}. Maybe Startup was not found or req.body is empty!`
+        message: `Cannot update Startup with id=${startupId}. Maybe Startup was not found or req.body is empty!`
       });
     }
   })
   .catch(err => {
     res.status(500).send({
-      message: "Error updating Startup with id=" + id
+      message: "Error updating Startup with id=" + startupId
     });
   });
 };
@@ -215,35 +213,39 @@ exports.findViaEmail= (req, res) => {
 // and send back original file name 
 exports.getItemIdentifierWithName = async (req, res, next) => {
   try {
-    const cloudIDType = req.body.cloudIDType;
-    const fileOGName = req.body.fileOGName; 
-    const id = req.params.id
+    // const cloudIDType = req.body.cloudIDType;
+    // const fileOGName = req.body.fileOGName;
+    const fileType = req.params.fileType;
+    const startupId = req.params.startupId
+    const configs = embed(fileType)
+    
 
     // use startupService to get access to startup object field    
-    const startup = await startupService.findOne(id)    
+    const startup = await startupService.findOne(startupId)    
     if (!startup) {
       throw createHttpError.NotFound();
     }
-    if (startup.dataValues[cloudIDType] === "") {
+    if (startup.dataValues[configs.cloudIDType] === "") {
       throw createHttpError.NotFound();
     }
-    req.body.cloudItemIdentifier = startup.dataValues[cloudIDType]
-    req.body.originalFileName = startup.dataValues[fileOGName]
+    req.body.cloudItemIdentifier = startup.dataValues[configs.cloudIDType]
+    req.body.originalFileName = startup.dataValues[configs.fileOGName]
     next()
   } catch (error) {
     next(error);
   }
 }
 
+
 // middleware to get ItemID from MySQL 
 // without sending back original name 
 exports.getItemIdentifier = async (req, res, next) => {
   try {
-    const fileType = req.body.fileType; 
-    const id = req.params.id
+    const fileType = req.params.fileType; 
+    const startupId = req.params.startupId
 
     // use startupService to get access to startup object field    
-    const startup = await startupService.findOne(id)    
+    const startup = await startupService.findOne(startupId)    
     if (!startup) {
       throw createHttpError.NotFound();
     }
@@ -255,4 +257,19 @@ exports.getItemIdentifier = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+}
+
+// function to embedd cloudIDType and fileOGName
+const embed = function (fileType) {
+  const utils = {
+    "video" : {
+      "cloudIDType" : "videoCloudID",
+      "fileOGName"  : "videoOriginalName"
+    },
+    "pitchDeck" : {
+      "cloudIDType" : "pitchDeckCloudID",
+      "fileOGName"  : "pitchDeckOriginalName"
+    }
+  }
+  return utils[fileType]
 }
