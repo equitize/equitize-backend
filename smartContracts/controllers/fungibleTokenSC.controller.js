@@ -27,14 +27,14 @@ const address = getAddressFromPrivateKey(privateKey);
 module.exports ={
   deploy: async function(req, res, next){
     console.log(req.body)
-    if (!req.body.coinName || !req.body.coinSupply ||!req.body.coinSymbol ||!req.body.coinDecimals) {
-      console.log('ttttttttt')
+    if (!req.body.FTmetaData.coinName || !req.body.FTmetaData.coinSupply ||!req.body.FTmetaData.coinSymbol ||!req.body.FTmetaData.coinDecimals) {
+      
       res.status(400).send({    
         message: "coinName, coinSupply, coinSymbol, coinDecimals can not be empty!"
       });
       return;
     }
-    console.log ('as;ldfkj;asdlfkja')
+    
     try {
       // Get Balance
       const balance = await zilliqa.blockchain.getBalance(address);
@@ -68,22 +68,22 @@ module.exports ={
         {
           vname: 'name',
           type: 'String',
-          value: `${req.body.coinName}`,
+          value: `${req.body.FTmetaData.coinName}`,
         },
         {
           vname: 'symbol',
           type: 'String',
-          value: `${req.body.coinSymbol}`,
+          value: `${req.body.FTmetaData.coinSymbol}`,
         },
         {
           vname: 'decimals',
           type: 'Uint32',
-          value: `${req.body.coinDecimals}`,
+          value: `${req.body.FTmetaData.coinDecimals}`,
         },
         {
           vname: 'init_supply',
           type: 'Uint128',
-          value: `${req.body.coinSupply}`,
+          value: `${req.body.FTmetaData.coinSupply}`,
         },
       ];
   
@@ -122,8 +122,15 @@ module.exports ={
               console.log('Error writing file', err)
           } else {
               console.log('Successfully wrote file')
+              
           }
       });
+      req.body.SCstatus['fungibleTokenSC'] = {
+        status: true,
+        address: deployedFungibleToken.address
+      };
+      next()
+      
       //Following line added to fix issue https://github.com/Zilliqa/Zilliqa-JavaScript-Library/issues/168
       // const deployedContract = zilliqa.contracts.at(deployedFungibleToken.address);
     } catch (err) {

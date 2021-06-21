@@ -12,7 +12,7 @@ exports.create = async (req, res) => {
     });
     res.send(milestonePart)
   } catch (err) {
-      console.log(err)
+      next(err)
   }
 }
 
@@ -63,7 +63,7 @@ exports.getMilestone = async (req, res) => {
 exports.getStartup = (req, res, next) => {
   
   console.log("milestonepart controller >>")
-  console.log(req.params)
+  
   const startupId = req.params.startupId
   try {
     const db = require("../models");
@@ -72,8 +72,6 @@ exports.getStartup = (req, res, next) => {
     const result = Startup.findByPk(startupId)
     .then(data => {
       req.body.startup = data
-      console.log('milestone.getstartup >>')
-      console.log(req.body.startup)
       next();
     })
     .catch(err => {
@@ -91,7 +89,6 @@ exports.delete = (req, res) => {
   
   milestonePartService.delete(startupId)
   .then(num => {
-    console.log(num)
     if (num != 0) {
       res.send({
         message: "Milestone Parts was deleted successfully!"

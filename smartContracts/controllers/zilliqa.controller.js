@@ -26,11 +26,11 @@ module.exports = {
     getMilestone : async (req, res, next) => {
         console.log("zilliqa controller getmilestone >>")
         const startup = req.body.startup;
-        console.log(startup)
+        
         const startupId = req.params.startupId;
         try {
             const result = await startup.getMilestones();
-            console.log(result)
+        
             if ( result.length != 0 ) {
                 req.body.milestones = result
                 next()
@@ -41,7 +41,7 @@ module.exports = {
             }
         
         } catch (error) {
-            // console.log(error)
+            
             next(error)
         }
     },
@@ -59,7 +59,7 @@ module.exports = {
                 next();
             }
         } catch (error) {
-            console.log(error)  
+            
             next(error);
         }
       }

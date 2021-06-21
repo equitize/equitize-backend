@@ -262,3 +262,23 @@ exports.findViaEmail= (req, res) => {
   //     });
   //   });
   };
+
+
+exports.checkSCstatus = (req, res, next) => {
+  console.log("retail investors checkSCstatus >>")
+  try {
+    const SCstatus = req.body.SCstatus;
+    
+    if ( SCstatus.milestoneSC.status === true && SCstatus.fungibleTokenSC.status === true ) {
+      res.status(200).send({
+        message: "Milestone SC and Fungible Token SC succesfully deployed.",
+        milestoneSCaddress: SCstatus.milestoneSC.address,
+        fungibleTokenSCaddress: SCstatus.fungibleTokenSC.address
+      });
+    } else {
+      res.status(500).send("Error deploying Milestone SC and Fungible Token SC.")
+    }
+  } catch (error) {
+    next(error)
+  }
+}

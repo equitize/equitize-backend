@@ -1,5 +1,5 @@
-const FungibleTokenController = require("../controllers/fungibleToken.controller.js");
-const MilestoneController = require("../controllers/milestone.controller.js");
+const FungibleTokenController = require("../controllers/fungibleTokenSC.controller.js");
+const MilestoneController = require("../controllers/milestoneSC.controller.js");
 const zilliqaController = require("../controllers/zilliqa.controller");
 const milestonePartController = require("../../db/controllers/milestonePart.controller");
 const router = require("express").Router();

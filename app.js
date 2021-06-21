@@ -16,6 +16,9 @@ var corsOptions = {
 app.use(cors(corsOptions));
 
 
+app.get('/test', (req,res,next)=> {console.log('test');next();console.log('after next')}, ()=>{console.log('test2')})
+
+
 
 // // for public routes
 // // TODO: implement view engine for admin dashboard if there is time

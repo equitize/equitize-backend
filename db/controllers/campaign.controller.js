@@ -227,36 +227,42 @@ exports.pledgeAmount = async (req, res, next) => {
       }
       
       if (currentlyRaised + pledgeAmount >= campaignGoal) { // reached goal 
-        const axios = require('axios');
         
-        try {
-          // configs for FT SC deployment
-          // probably have to store this in db and get it dynamically in the future
-          const data = {
-            "coinName": "deloba",
-            "coinSymbol":"D",
-            "coinDecimals": 2,
-            "coinSupply":100
+        const updated = await campaignService.update({ "currentlyRaised" : currentlyRaised }, startupId);
+        if (updated == 1) {
+          // res.status(200).send({
+          //   message: "Campaign was updated successfully."
+          // });
+          
+          try {
+            // configs for FT SC deployment
+            // probably have to store this in db and get it dynamically in the future
+            req.body.FTmetaData = {
+              "coinName": "deloba",
+              "coinSymbol":"D",
+              "coinDecimals": 2,
+              "coinSupply":100
+            }
+            next()
+            // TODO: Option 1. post request to the sc deploy sc routes. 
+            // TODO: Option 2. Add middlewares to this route instead. 
+            
+          } catch (error) {
+            next(error)
           }
-          const headers = {  
-            "Content-Type" : "application/json"
-          }
-          const milestoneSCurl = "http://localhost:8080/api/sc/milestoneDeploy/" + startupId
-          const deployedMilestoneSC = await axios.post(milestoneSCurl, data, { headers : headers })
-          next()
-        } catch (error) {
-          next(error)
+        }
+      } else {
+        const updated = await campaignService.update({ "currentlyRaised" : currentlyRaised }, startupId);
+        if (updated == 1) {
+          res.status(200).send({
+            message: "Campaign was updated successfully."
+          });
         }
       }
 
-      const updated = await campaignService.update({
-        "currentlyRaised" : currentlyRaised 
-      }, startupId)
-      if (updated == 1) {
-        res.status(200).send({
-          message: "Campaign was updated successfully."
-        });
-      }
+      // update campaign after calling next()
+      // contract deployment will still happen but we will not be able to catch the error. 
+      
     }
     
   } catch (error) {
