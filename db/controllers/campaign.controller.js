@@ -226,8 +226,7 @@ exports.pledgeAmount = async (req, res, next) => {
         currentlyRaised = currentlyRaised + pledgeAmount
       }
       
-      if (currentlyRaised + pledgeAmount >= campaignGoal) { // reached goal 
-        
+      if (currentlyRaised >= campaignGoal) { // reached goal 
         const updated = await campaignService.update({ "currentlyRaised" : currentlyRaised }, startupId);
         if (updated == 1) {
           // res.status(200).send({
