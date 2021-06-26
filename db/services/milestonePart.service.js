@@ -14,12 +14,12 @@ module.exports = {
             startupId: startupId,
         })
         .then((milestonePart) => {
-            console.log(">> milestonePart: " + JSON.stringify(milestonePart, null, 4));
-            console.log(milestonePart)
-            return milestonePart;
+            // console.log(">> milestonePart: " + JSON.stringify(milestonePart, null, 4));
+            return {status: 200, milestonePart: milestonePart};
         })
         .catch((err) => {
             console.log(">> Error while creating milestonePart: ", err);
+            return {status: 500, error: err};
         });
     }, 
 
@@ -30,6 +30,7 @@ module.exports = {
         })
         .catch((err) => {
             console.log(">> Error while finding milestonePart: ", err);
+            return err
         });
     }, 
 
@@ -44,7 +45,6 @@ module.exports = {
             };
             const result = MilestoneParts.destroy({ where: condition })
             .then(data => {
-                console.log(data)
                 return data
             })
             .catch(err => {
@@ -53,7 +53,6 @@ module.exports = {
             });
             return result
         } catch (error) {
-            console.log(error)
             return error
         }
     },
@@ -66,8 +65,6 @@ module.exports = {
             };
             const result = MilestoneParts.destroy({ where: condition })
             .then(data => {
-                console.log('data section of delete fuinction ')
-                console.log(data)
                 return data
             })
             .catch(err => {
@@ -75,7 +72,6 @@ module.exports = {
             });
             return result
         } catch (error) {
-            console.log(error)
             return error
         }
     }

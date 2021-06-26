@@ -1,10 +1,7 @@
 const createHttpError = require("http-errors");
-const zilliqaService = require("../services/zilliqa.service");
-const milestonePartController = require("../../db/controllers/milestonePart.controller");
 
 module.exports = {
     getZilAmt : function (req, res, next) { 
-        console.log("zilliqa controller getZilAmt >>" )
         const campaign = req.body.campaign; // object
         const milestones = req.body.milestones; // array of 3 milestonePart object
         try {
@@ -24,9 +21,7 @@ module.exports = {
     },
     // middleware to get a Milestone with the specified id in the request
     getMilestone : async (req, res, next) => {
-        console.log("zilliqa controller getmilestone >>")
         const startup = req.body.startup;
-        
         const startupId = req.params.startupId;
         try {
             const result = await startup.getMilestones();
@@ -47,7 +42,6 @@ module.exports = {
     },
     // middleware to get campaign associated with startupId in params
     getCampaigns : async (req, res, next) => {
-        console.log("zilliq controller getcampaigns >>")
         const startup = req.body.startup; 
         try {
             const result = await startup.getCampaigns();
@@ -61,6 +55,23 @@ module.exports = {
         } catch (error) {
             
             next(error);
+        }
+      },
+      checkSCstatus : (req, res, next) => {
+        try {
+          const SCstatus = req.body.SCstatus;
+          
+          if ( SCstatus.milestoneSC.status === true && SCstatus.fungibleTokenSC.status === true ) {
+            res.status(200).send({
+              message: "Milestone SC and Fungible Token SC succesfully deployed.",
+              milestoneSCaddress: SCstatus.milestoneSC.address,
+              fungibleTokenSCaddress: SCstatus.fungibleTokenSC.address
+            });
+          } else {
+            res.status(500).send("Error deploying Milestone SC and Fungible Token SC.")
+          }
+        } catch (error) {
+          next(error)
         }
       }
 } 

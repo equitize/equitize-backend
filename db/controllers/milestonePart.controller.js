@@ -1,6 +1,7 @@
+const createHttpError = require("http-errors");
 const milestonePartService = require("../services/milestonePart.service");
 
-exports.create = async (req, res) => {
+exports.create = async (req, res, next) => {
   try {
     const startupId = req.body.startupId
     const milestonePart = await milestonePartService.createMilestonePart(startupId, {
@@ -10,9 +11,15 @@ exports.create = async (req, res) => {
         description: req.body.description,
         percentageFunds: req.body.percentageFunds,
     });
-    res.send(milestonePart)
+    
+    if ( milestonePart.status === 200 ) {
+      res.status(200).send({message: "milestonePart created succcesfully", milestonePart: milestonePart.milestonePart});
+    } else {
+      throw createHttpError[404];  
+    }
+    
   } catch (err) {
-      next(err)
+    next(err)
   }
 }
 
@@ -61,9 +68,6 @@ exports.getMilestone = async (req, res) => {
 
 // middleware to get startup
 exports.getStartup = (req, res, next) => {
-  
-  console.log("milestonepart controller >>")
-  
   const startupId = req.params.startupId
   try {
     const db = require("../models");

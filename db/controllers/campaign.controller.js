@@ -36,12 +36,12 @@ exports.create = (req, res) => {
 };
 
 // Retrieve all Campaign from the database by company_id
-exports.findAll = (req, res) => {
+exports.findAllByCompanyID = (req, res) => {
   const companyId = req.query.companyId;
   // var condition = company_id ? { company_id: { [Op.like]: `%${company_id}%` } } : null;
   
   // tk's implementation of service layer
-  campaignService.findAll(companyId)
+  campaignService.findAllByCompanyID(companyId)
   .then(data => {
     res.send(data);
   })
@@ -167,6 +167,7 @@ exports.checkExists = async (req, res, next) => {
   // need to first get a reference to startup object
   // then call getCampaign()
   const startup = await startupService.findOne(startupId);
+  if (startup === null) {res.status(404).send({'message':'No startup found'})}
   const campaign = await startup.getCampaigns();
   
   if (campaign.length == 0) {
@@ -226,38 +227,38 @@ exports.pledgeAmount = async (req, res, next) => {
         currentlyRaised = currentlyRaised + pledgeAmount
       }
       
-      if (currentlyRaised >= campaignGoal) { // reached goal 
-        const updated = await campaignService.update({ "currentlyRaised" : currentlyRaised }, startupId);
-        if (updated == 1) {
-          // res.status(200).send({
-          //   message: "Campaign was updated successfully."
-          // });
+      // if (currentlyRaised >= campaignGoal) { // reached goal 
+      //   const updated = await campaignService.update({ "currentlyRaised" : currentlyRaised }, startupId);
+      //   if (updated == 1) {
+      //     // res.status(200).send({
+      //     //   message: "Campaign was updated successfully."
+      //     // });
           
-          try {
-            // configs for FT SC deployment
-            // probably have to store this in db and get it dynamically in the future
-            req.body.FTmetaData = {
-              "coinName": "deloba",
-              "coinSymbol":"D",
-              "coinDecimals": 2,
-              "coinSupply":100
-            }
-            next()
-            // TODO: Option 1. post request to the sc deploy sc routes. 
-            // TODO: Option 2. Add middlewares to this route instead. 
+      //     try {
+      //       // configs for FT SC deployment
+      //       // probably have to store this in db and get it dynamically in the future
+      //       req.body.FTmetaData = {
+      //         "coinName": "deloba",
+      //         "coinSymbol":"D",
+      //         "coinDecimals": 2,
+      //         "coinSupply":100
+      //       }
+      //       next()
+      //       // TODO: Option 1. post request to the sc deploy sc routes. 
+      //       // TODO: Option 2. Add middlewares to this route instead. 
             
-          } catch (error) {
-            next(error)
-          }
-        }
-      } else {
-        const updated = await campaignService.update({ "currentlyRaised" : currentlyRaised }, startupId);
-        if (updated == 1) {
-          res.status(200).send({
-            message: "Campaign was updated successfully."
-          });
-        }
+      //     } catch (error) {
+      //       next(error)
+      //     }
+      //   }
+      // } else {
+      const updated = await campaignService.update({ "currentlyRaised" : currentlyRaised }, startupId);
+      if (updated == 1) {
+        res.status(200).send({
+          message: "Campaign was updated successfully."
+        });
       }
+      // }
 
       // update campaign after calling next()
       // contract deployment will still happen but we will not be able to catch the error. 
@@ -268,3 +269,39 @@ exports.pledgeAmount = async (req, res, next) => {
     next(error)
   }
 }
+
+exports.findAll = async (req, res, next) => {
+  try {
+    const campaigns = await campaignService.findAll()
+    res.send(campaigns)
+  } catch (error) {
+    next(error)
+  }
+}
+
+exports.cronFindAll = async (attributes) => {
+  try {
+    const campaigns = await campaignService.findAll(attributes)
+    return campaigns
+  } catch (error) {
+    return error 
+  }
+};
+
+exports.cronUpdate = async (updates, startupId) => {
+  return campaignService.update(updates, startupId)
+  .then(num => {
+    if (num == 1) {
+      return {
+        message: "Campaign was updated successfully."
+      };
+    } else {
+      return {
+        message: `Cannot update Campaign with id=${startupId}. Maybe Campaign was not found or req.body is empty!`
+      };
+    }
+  })
+  .catch(err => {
+    throw err.message("Error updating Campaign with id=" + startupId)  
+  });
+};

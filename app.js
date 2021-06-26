@@ -19,6 +19,15 @@ app.use(cors(corsOptions));
 app.get('/test', (req,res,next)=> {console.log('test');next();console.log('after next')}, ()=>{console.log('test2')})
 
 
+const cron = require("node-cron");
+const cronJobs = require("./cron/cronJobs");
+let campaigns;
+cron.schedule('*/5 * * * * *', ()=>{
+  campaigns = cronJobs.checkCampaignGoal(); 
+
+  // console.log('running every 5 seconds');
+})
+
 
 // // for public routes
 // // TODO: implement view engine for admin dashboard if there is time
@@ -48,7 +57,7 @@ db.sequelize.sync({ force: true, logging:false }).then((res) => {
   throw(error)
 });
 
-app.use('/api/db/admin', require('./db/routes/admin.routes'));
+app.use('/admin', require('./db/routes/admin.routes'));
 app.use('/api/db/startup', require('./db/routes/startup.routes'));
 app.use('/api/db/retailInvestors', require('./db/routes/retailInvestors.routes'));
 app.use('/api/db/campaign', require('./db/routes/campaign.routes'));
@@ -59,7 +68,6 @@ app.use('/api/sc', require('./smartContracts/routes/sc.routes'));
 /** Error Handlers */
 // 404
 app.use((error, req, res, next) => {
-  console.log(error)
   next(createHttpError.NotFound());
 });
 // // other errors

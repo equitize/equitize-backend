@@ -52,13 +52,13 @@ router.put("/campaign/pledge/:startupId",
 campaignController.getStartup, 
 campaignController.pledgeAmount,
 // add in middlewares that will deploy SC
-milestonePartController.getStartup,
-zilliqaController.getMilestone,
-zilliqaController.getCampaigns,
-zilliqaController.getZilAmt,
-milestoneSCController.deploy,
-fungibleTokenSCController.deploy,
-retailInvestorsController.checkSCstatus
+// milestonePartController.getStartup,
+// zilliqaController.getMilestone,
+// zilliqaController.getCampaigns,
+// zilliqaController.getZilAmt,
+// milestoneSCController.deploy,
+// fungibleTokenSCController.deploy,
+// retailInvestorsController.checkSCstatus
 );
 
 module.exports = router;

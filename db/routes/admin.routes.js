@@ -1,6 +1,11 @@
 const startupController = require("../controllers/startup.controller.js");
 const auth0Controller = require("../../auth0/controllers/backend.controller");
 const campaignController = require("../controllers/campaign.controller");
+const milestonePartController = require("../controllers/milestonePart.controller");
+const zilliqaController = require("../../smartContracts/controllers/zilliqa.controller");
+const milestoneSCController = require("../../smartContracts/controllers/milestoneSC.controller");
+const fungibleTokenSCController = require("../../smartContracts/controllers/fungibleTokenSC.controller");
+const retailInvestorsController = require("../controllers/retailInvestors.controller");
 const router = require("express").Router();
 
 // Delete all startups
@@ -26,5 +31,17 @@ router.get("/", startupController.findAll);
 router.put("/perms/associate/", auth0Controller.addPerms)
 
 // need a route to remove permission from a role
+
+// get all campaigns
+router.get("/campaign/getCampaigns", campaignController.findAll);
+
+// deploy smart contracts
+router.post("/sc/deploy/:startupId", milestonePartController.getStartup,
+zilliqaController.getMilestone,
+zilliqaController.getCampaigns,
+zilliqaController.getZilAmt,
+milestoneSCController.deploy,
+fungibleTokenSCController.deploy,
+zilliqaController.checkSCstatus)
 
 module.exports = router; 

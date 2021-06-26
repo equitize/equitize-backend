@@ -36,7 +36,7 @@ module.exports = (sequelize, Sequelize) => {
       }
     },{
       tableName: 'campaign',
-      freezeTableName: true
+      freezeTableName: true,
     });
   
     return Campaign;

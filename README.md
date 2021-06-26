@@ -22,12 +22,7 @@ Notes: For now, we will develop using local MySQL with CloudStorage Integration.
 # API User Flow
 --- 
 1. Retail Investor Pledge: 
-    - Create Retail Investor
-    - Create Startup
-    - Create Campaign
-    - Create Milestone Parts (3 parts; make sure the percentageFunds of all 3 = 100)
-    - Pledge Amount 
-    - If Campaign Goal is reached, deploy Milestone and Fungible Token Smart Contracts (THIS MIGHT TAKE 3-5 MINS)
+    - Retail Investor Pledge
 2. Startup Upload/Retreive File:
     - Create Startup
     - Upload File
@@ -37,6 +32,10 @@ Notes: For now, we will develop using local MySQL with CloudStorage Integration.
     - Add Industry to startup
 
 
+# CronJobs 
+---
+1. Smart Contract Deployments
+    - Checks for SC Deployment Ellgibility every 5s. (Development Mode)
 
 
 # Testing

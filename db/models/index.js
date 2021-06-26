@@ -22,8 +22,9 @@ sequelize_config = {
   },
 
   define: {
-    freezeTableName: true
-  }
+    freezeTableName: true,
+  }, 
+  logging: false
 };
 
 // disable logging in test

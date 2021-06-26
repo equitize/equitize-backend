@@ -44,7 +44,6 @@ exports.getRetailInvestor = (req, res, next) => {
 
 // Get a Preferred Industries with the specified retailinvestorId
 exports.getIndustries = async (req, res) => {
-    console.log('industry controller >> get industries')
     const retailInvestor = req.body.retailInvestor;
     const retailInvestorId = req.params.id;
     try {
@@ -58,7 +57,6 @@ exports.getIndustries = async (req, res) => {
       }
       
     } catch (error) {
-        console.log('error')
         console.log(error)
         return error
     }

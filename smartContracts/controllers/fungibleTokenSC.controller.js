@@ -27,7 +27,7 @@ const address = getAddressFromPrivateKey(privateKey);
 module.exports ={
   deploy: async function(req, res, next){
     console.log(req.body)
-    if (!req.body.FTmetaData.coinName || !req.body.FTmetaData.coinSupply ||!req.body.FTmetaData.coinSymbol ||!req.body.FTmetaData.coinDecimals) {
+    if (!req.body.coinName || !req.body.coinSupply ||!req.body.coinSymbol ||!req.body.coinDecimals) {
       
       res.status(400).send({    
         message: "coinName, coinSupply, coinSymbol, coinDecimals can not be empty!"
@@ -68,22 +68,22 @@ module.exports ={
         {
           vname: 'name',
           type: 'String',
-          value: `${req.body.FTmetaData.coinName}`,
+          value: `${req.body.coinName}`,
         },
         {
           vname: 'symbol',
           type: 'String',
-          value: `${req.body.FTmetaData.coinSymbol}`,
+          value: `${req.body.coinSymbol}`,
         },
         {
           vname: 'decimals',
           type: 'Uint32',
-          value: `${req.body.FTmetaData.coinDecimals}`,
+          value: `${req.body.coinDecimals}`,
         },
         {
           vname: 'init_supply',
           type: 'Uint128',
-          value: `${req.body.FTmetaData.coinSupply}`,
+          value: `${req.body.coinSupply}`,
         },
       ];
   

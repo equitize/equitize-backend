@@ -18,7 +18,7 @@ module.exports = {
             return (error)
         }
     },
-    findAll : function (companyId) {
+    findAllByCompanyID : function (companyId) {
         try {
             var condition = companyId ? { companyId: { [Op.like]: `%${companyId}%` } } : null;
 
@@ -111,4 +111,18 @@ module.exports = {
             return error
         }
     },
+    findAll : function (attributes) {
+        try {
+            const result = Campaign.findAll(attributes)
+            .then(data => {
+                return data;
+            })
+            .catch(err => {
+                throw err
+            })
+            return result;
+        } catch (error) {
+            return error
+        }
+    }
 }

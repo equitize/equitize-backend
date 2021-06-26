@@ -18,11 +18,11 @@ module.exports = {
             return (error)
         }
     },
-    findAll : function (companyName) {
+    findAll : function () {
         try {
-            var condition = companyName ? { companyName: { [Op.like]: `%${companyName}%` } } : null;
+            // var condition = companyName ? { companyName: { [Op.like]: `%${companyName}%` } } : null;
 
-            const result = Startup.findAll({ where: condition, include: ["milestones", "industries", "campaigns"] })
+            const result = Startup.findAll({ include: ["milestones", "industries", "campaigns"] })
             .then(data => {
                 return data
             })

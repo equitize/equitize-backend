@@ -3,10 +3,10 @@ const router = require("express").Router();
 // Maybe have this as admin utility since retail investors/startups have access to campaign services via their routes
 
 
-// Create a new Startup
+// Create a new campaign
 router.post("/", campaign.create);
 
-// Retrieve all Startup
+// Retreive all campaigns
 router.get("/", campaign.findAll);
 
 // Retrieve a single Startup with id
