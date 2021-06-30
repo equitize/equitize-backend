@@ -282,9 +282,9 @@ exports.findAll = async (req, res, next) => {
   }
 }
 
-exports.cronFindAll = async (attributes) => {
+exports.cronFindAll = async (conditions, attributes) => {
   try {
-    const campaigns = await campaignService.findAll(attributes)
+    const campaigns = await campaignService.findAll(conditions, attributes)
     return campaigns
   } catch (error) {
     return error 

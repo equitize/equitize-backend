@@ -111,9 +111,9 @@ module.exports = {
             return error
         }
     },
-    findAll : function (attributes) {
+    findAll : function (condition, attributes) {
         try {
-            const result = Campaign.findAll(attributes)
+            const result = Campaign.findAll(condition, attributes)
             .then(data => {
                 return data;
             })

@@ -2,7 +2,7 @@ const campaignController = require("../../db/controllers/campaign.controller");
 const axios = require("axios");
 const moment = require("moment");
 const cache = require("./cache");
-var deployCount = 2;
+var deployCount = 1;
 
 module.exports = {
     testFunction : () => {
@@ -10,10 +10,18 @@ module.exports = {
     },
     checkCampaignGoal : async () => {
         try {
-            const attributes = {
-                attributes: ['startDate', 'endDate', 'goal', 'currentlyRaised', 'startupId', 'liveStatus']
+            if (deployCount === 0) { 
+                return 
             }
-            const campaigns = await campaignController.cronFindAll(attributes)
+            
+            const attributes = {
+                attributes: ['startDate', 'endDate', 'goal', 'currentlyRaised', 'startupId']
+            }
+            const conditions = {
+                where : { liveStatus : false }
+            }
+            const campaigns = await campaignController.cronFindAll(conditions, attributes) // campaigns that are not yet live
+            
             if (campaigns.length != 0) {
                 for (let i=0; i < campaigns.length; i++) {
                     
@@ -23,14 +31,12 @@ module.exports = {
                     const campaignGoal = campaigns[i].dataValues.goal;
                     const currentlyRaised = campaigns[i].dataValues.currentlyRaised;
                     const startupId =  campaigns[i].dataValues.startupId;
-                    const liveStatus = campaigns[i].dataValues.liveStatus;
                     const campaignCache = cache;
-                    
-                    
+                     
+                    // console.log(campaignCache)
                     // if ( currentDateTime.isSame(campaignStartDateTime, 'second') && currentlyRaised >= campaignGoal ) {
                     if ( currentDateTime.isBetween(campaignStartDateTime, campaignEndDateTime, 'second') 
-                    && currentlyRaised >= campaignGoal 
-                    && !liveStatus) {
+                    && currentlyRaised >= campaignGoal ) {
                         // check if cache if campaign is currently deploying sc
                         if (!campaignCache.has(startupId)) { // cache do not have campaign
                             const obj = {
@@ -41,7 +47,7 @@ module.exports = {
                         } else { // cache has campaign 
                             // check deployStatus and check whether we can deploy this sc
                             const startup = campaignCache.get(startupId) // current startup
-                            console.log(`deployCount = ${deployCount}`)
+                        
                             if (startup.deployStatus === "Queued" && deployCount > 0) {
                                 startup.deployStatus = "inProgress"
                                 campaignCache.set(startupId, startup)

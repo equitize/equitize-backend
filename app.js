@@ -32,9 +32,8 @@ const cronJobs = require("./utils/cron/cronJobs");
 let campaigns;
 cron.schedule('*/5 * * * * *', ()=>{
   campaigns = cronJobs.checkCampaignGoal(); 
-
-  // console.log('running every 5 seconds');
 })
+
 
 
 // // for public routes

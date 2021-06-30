@@ -60,9 +60,11 @@ module.exports = {
       checkSCstatus : (req, res, next) => {
         try {
           const SCstatus = req.body.SCstatus;
+          const startupId = req.params.startupId;
           
           if ( SCstatus.milestoneSC.status === true && SCstatus.fungibleTokenSC.status === true ) {
             res.status(200).send({
+              startupId: startupId,
               message: "Milestone SC and Fungible Token SC succesfully deployed.",
               milestoneSCaddress: SCstatus.milestoneSC.address,
               fungibleTokenSCaddress: SCstatus.fungibleTokenSC.address
