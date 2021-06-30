@@ -12,29 +12,29 @@ const fungibleTokenSCController = require("../../smartContracts/controllers/fung
 
 const router = require("express").Router();
 
-// Create a new Startup
+// Create a new retailInv
 router.post("/", 
 // auth0Controller.getMgtToken, 
 // auth0RegController.createAccount, 
 // auth0RegController.retailInvestors,
 retailInvestorsController.create);
 
-// Retrieve all Startup
+// Retrieve all retailInv
 router.get("/", retailInvestorsController.findAll);
 
-// Retrieve a single Startup with id
+// Retrieve a single retailInv with id
 router.get("/:id", retailInvestorsController.findOne);
 
-// Update a Startup with id
+// Update a retailInv with id
 router.put("/:id", retailInvestorsController.update);
 
-// Delete a Startup with id
+// Delete a retailInv with id
 router.delete("/:id", retailInvestorsController.delete);
 
-// Delete all Startup
+// Delete all retailInv
 router.delete("/", retailInvestorsController.deleteAll);
 
-// Retrieve Startup by email
+// Retrieve retailInv by email
 router.get("/email/:emailAddress", retailInvestorsController.findViaEmail);
 //http://localhost:8080/api/db/retailInvestors/email/kenny@mail.xyz
 

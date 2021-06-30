@@ -78,7 +78,10 @@ exports.findOne = (req, res) => {
 exports.update = (req, res) => {
   const startupId = req.params.startupId;
   // tk's implementation of service layer
-  campaignService.update(req.body, startupId)
+  const campaign = req.body;
+  campaign["liveStatus"] = false;
+  campaign["startupId"] = startupId;
+  campaignService.update(campaign, startupId)
   .then(num => {
     if (num == 1) {
       res.send({

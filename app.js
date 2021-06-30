@@ -1,26 +1,34 @@
 const express = require("express");
 const createHttpError = require("http-errors");
 const multer = require("multer");
-
 const cors = require("cors");
+const logger = require("./utils/log/logger");
 const app = express();
 require('dotenv').config({
   path: `${__dirname}/.env`
 });
 
-
 var corsOptions = {
   origin: "*"
 };
 
+const multerMid = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+    // limt : 3mb
+    fileSize: 30 * 1024 * 1024,
+  },
+});
+
 app.use(cors(corsOptions));
-
-
-app.get('/test', (req,res,next)=> {console.log('test');next();console.log('after next')}, ()=>{console.log('test2')})
+app.disable('x-powered-by')
+app.use(multerMid.single('file'))
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 
 const cron = require("node-cron");
-const cronJobs = require("./cron/cronJobs");
+const cronJobs = require("./utils/cron/cronJobs");
 let campaigns;
 cron.schedule('*/5 * * * * *', ()=>{
   campaigns = cronJobs.checkCampaignGoal(); 
@@ -33,21 +41,6 @@ cron.schedule('*/5 * * * * *', ()=>{
 // // TODO: implement view engine for admin dashboard if there is time
 app.use('/', require('./routes/index.route'));
 
-
-const multerMid = multer({
-  storage: multer.memoryStorage(),
-  limits: {
-    // limt : 3mb
-    fileSize: 30 * 1024 * 1024,
-  },
-});
-
-app.disable('x-powered-by')
-app.use(multerMid.single('file'))
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-
 // db
 const db = require("./db/models");
 db.sequelize.sync({ force: true, logging:false }).then((res) => {
@@ -57,9 +50,10 @@ db.sequelize.sync({ force: true, logging:false }).then((res) => {
   throw(error)
 });
 
+
 app.use('/admin', require('./db/routes/admin.routes'));
 app.use('/api/db/startup', require('./db/routes/startup.routes'));
-app.use('/api/db/retailInvestors', require('./db/routes/retailInvestors.routes'));
+app.use('/api/db/retailInvestors', logger.retailInvLogger, require('./db/routes/retailInvestors.routes'));
 app.use('/api/db/campaign', require('./db/routes/campaign.routes'));
 app.use('/api/db/junctionTable', require('./db/routes/junctionTable.routes'));
 app.use('/api/db/general', require('./db/routes/general.routes'));

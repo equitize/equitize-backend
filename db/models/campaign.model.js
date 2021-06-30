@@ -33,6 +33,9 @@ module.exports = (sequelize, Sequelize) => {
       },
       fungibleTokenAddr: {
         type: Sequelize.STRING
+      },
+      liveStatus: {
+        type: Sequelize.BOOLEAN 
       }
     },{
       tableName: 'campaign',
