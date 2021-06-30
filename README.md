@@ -12,8 +12,9 @@ Update PASSWORD field in ~/db/config/db.config.js
 
 # QuickStart
 ---
-Use `yarn dev` for connections to local mySQL and CloudStorage (development bucket).
+Use `yarn clean` to remove all retailInvestor API logs.
 
+Use `yarn dev` for connections to local mySQL and CloudStorage (development bucket).
 
 Use `yarn prod` for connections to cloudSQL and CloudStorage (production bucket).
 
