@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "clean": "rm -rf ./utils/log/logs/retailInvestor",
     "dev": "NODE_ENV=dev nodemon --trace-warnings --ignore ./smartContracts/config/ app.js",
     "prod": "NODE_ENV=prod nodemon app.js",
     "test": "NODE_ENV=test jest --detectOpenHandles --runInBand --coverage"

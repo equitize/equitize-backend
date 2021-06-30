@@ -1,1 +1,0 @@
-[2021-06-30T05:20:51.137Z] POST /api/db/retailInvestors/ [ID:-] [PAYLOAD:{"firstName":"asdfasdf","lastName":"aaasdfas@asldfkjsha.xyz","userPassword":"kajlshdf!aslkdjh@#","emailAddress":"test@gmail.com","age":24,"gender":"Male","singPass":"singpass","incomeStatement":"incomeStatement","incomeTaxReturn":"incomeTaxReturn"}]
