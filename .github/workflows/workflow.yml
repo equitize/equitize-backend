@@ -3,11 +3,12 @@ name: Deploy to Google App Engine
 on:
   push:
     branches:
-      - master
+      - currently-silenced
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - name: Checkout
         uses: actions/checkout@v2
