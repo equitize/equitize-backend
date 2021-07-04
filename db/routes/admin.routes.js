@@ -36,7 +36,8 @@ router.put("/perms/associate/", auth0Controller.addPerms)
 router.get("/campaign/getCampaigns", campaignController.findAll);
 
 // deploy smart contracts
-router.post("/sc/deploy/:startupId", milestonePartController.getStartup,
+router.post("/sc/deploy/:startupId", 
+milestonePartController.getStartup,
 zilliqaController.getMilestone,
 zilliqaController.getCampaigns,
 zilliqaController.getZilAmt,

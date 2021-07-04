@@ -1,7 +1,7 @@
 module.exports = (sequelize, Sequelize) => {
   // name, email, profession, fields of interest
     const CommercialChampion = sequelize.define("commercialChampion", {
-      companyId:{
+      startupId:{
         type: Sequelize.INTEGER,
         allowNull: false
       },

@@ -1,6 +1,8 @@
 const createHttpError = require("http-errors");
 const startupService = require("../services/startup.service")
 const campaignService = require("../services/campaign.service");
+const retailInvestorService = require("../services/retailInvestor.service");
+const dbConstants = require("../constants/constants");
 
 // Create and Save a new Campaign
 exports.create = (req, res) => {
@@ -76,11 +78,11 @@ exports.findOne = (req, res) => {
 
 // Update a Campaign by the id in the request
 exports.update = (req, res) => {
-  const startupId = req.params.startupId;
-  // tk's implementation of service layer
+  const startupId = req.params.startupId ? req.params.startupId : "";
   const campaign = req.body;
-  campaign["liveStatus"] = false;
+  campaign["SCdeployedStatus"] = false;
   campaign["startupId"] = startupId;
+  campaign["campaignStatus"] = dbConstants.campaign.status.NONLIVE;
   campaignService.update(campaign, startupId)
   .then(num => {
     if (num == 1) {
@@ -165,15 +167,15 @@ exports.findViaCompanyId = (req, res) => {
 // middleware to check if campaign exists
 // otherwise create one and move to next middleware
 exports.checkExists = async (req, res, next) => {
-  const startupId = req.params.startupId;
-  // tk's implementation of service layer
-  // need to first get a reference to startup object
-  // then call getCampaign()
+  // TODO: Check if there exists a campaign with FK=startupId
+  const startupId = req.params.startupId ? req.params.startupId : "";
+  // campaignService.findOne
+
   const startup = await startupService.findOne(startupId);
-  if (startup === null) {res.status(404).send({'message':'No startup found'})}
-  const campaign = await startup.getCampaigns();
+  if (startup === null) {res.status(404).send({'message': `Startup with startupId=${startupId} not found`})}
+  const campaign = await startup.getCampaign();
   
-  if (campaign.length == 0) {
+  if (campaign === null) {
     // create campaign
     const campaign = {
       startupId: startupId,
@@ -187,7 +189,7 @@ exports.checkExists = async (req, res, next) => {
 
 // middleware to get campaign associated to given startupId
 exports.getStartup = (req, res, next) => {
-  const startupId = req.params.startupId
+  const startupId = req.params.startupId ? req.params.startupId : "";
   try {
     const db = require("../models");
     const Startup = db.startups;
@@ -208,64 +210,34 @@ exports.getStartup = (req, res, next) => {
 // Get a campaign with the specified id in the request
 // and make a pledge to it
 exports.pledgeAmount = async (req, res, next) => {
-  const startup = req.body.startup;
-  const startupId = req.params.startupId;
-  const pledgeAmount = req.body.pledgeAmount;
+  const startup = req.body.startup ? req.body.startup : "";
+  const startupId = req.params.startupId ? req.params.startupId : "" ;
+  const pledgeAmount = req.body.pledgeAmount ? req.body.pledgeAmount : "";
   try {
-    const result = await startup.getCampaigns();
-    if (!result) {
+    const campaign = await startup.getCampaign();
+    if (!campaign) {
       throw createHttpError.NotFound();
     }
     else if ( pledgeAmount < 0 ) {
       throw createHttpError.BadRequest();
     }
-    else if ( result.length != 0 ) { // exists a valid campaign
-      var currentlyRaised = result[0].dataValues.currentlyRaised;
-      const campaignGoal = result[0].dataValues.goal;
-
+    else if ( campaign )  { // exists a valid campaign
+      var currentlyRaised = JSON.parse(JSON.stringify(campaign)).currentlyRaised;
       if (currentlyRaised == null) {
+        console.log('null detected')
         currentlyRaised = pledgeAmount
       }
       else {
         currentlyRaised = currentlyRaised + pledgeAmount
-      }
-      
-      // if (currentlyRaised >= campaignGoal) { // reached goal 
-      //   const updated = await campaignService.update({ "currentlyRaised" : currentlyRaised }, startupId);
-      //   if (updated == 1) {
-      //     // res.status(200).send({
-      //     //   message: "Campaign was updated successfully."
-      //     // });
-          
-      //     try {
-      //       // configs for FT SC deployment
-      //       // probably have to store this in db and get it dynamically in the future
-      //       req.body.FTmetaData = {
-      //         "coinName": "deloba",
-      //         "coinSymbol":"D",
-      //         "coinDecimals": 2,
-      //         "coinSupply":100
-      //       }
-      //       next()
-      //       // TODO: Option 1. post request to the sc deploy sc routes. 
-      //       // TODO: Option 2. Add middlewares to this route instead. 
-            
-      //     } catch (error) {
-      //       next(error)
-      //     }
-      //   }
-      // } else {
-      const updated = await campaignService.update({ "currentlyRaised" : currentlyRaised }, startupId);
-      if (updated == 1) {
-        res.status(200).send({
-          message: "Campaign was updated successfully."
-        });
-      }
-      // }
+      };
 
-      // update campaign after calling next()
-      // contract deployment will still happen but we will not be able to catch the error. 
-      
+      const updated = await campaignService.update({ "currentlyRaised" : currentlyRaised }, startupId);
+      if (updated[0] === 1) {
+        req.body.campaign = campaign;
+        next()
+      } else {
+        throw updated
+      }
     }
     
   } catch (error) {

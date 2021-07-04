@@ -25,10 +25,10 @@ exports.create = async (req, res, next) => {
 
 // Delete a Milestone Part with the specified id in the request
 exports.deletePart = (req, res) => {
-  const companyId = req.params.companyId
-  const milestonePart = req.body.part;
+  const startupId = req.params.startupId ? req.params.startupId : "";
+  const milestonePart = req.body.part ? req.body.part : "";
   
-  milestonePartService.deletePart(companyId, milestonePart)
+  milestonePartService.deletePart(startupId, milestonePart)
   .then(num => {
     if (num == 1) {
       res.send({
@@ -36,21 +36,21 @@ exports.deletePart = (req, res) => {
       });
     } else {
       res.status(500).send({
-        message: `Cannot delete Milestone with companyId=${companyId}. Maybe Milestone was not found!`
+        message: `Cannot delete Milestone with startupId=${startupId}. Maybe Milestone was not found!`
       });
     }
   })
   .catch(err => {
     res.status(500).send({
-      message: "Could not delete Milestone Part with companyId=" + companyId
+      message: "Could not delete Milestone Part with startupId=" + startupId
     });
   });
 }
 
 // get a Milestone with the specified id in the request
 exports.getMilestone = async (req, res) => {
-  const startup = req.body.startup;
-  const startupId = req.params.startupId;
+  const startup = req.body.startup ? req.body.startup : "";
+  const startupId = req.params.startupId ? req.params.startupId : "";
   try {
     const result = await startup.getMilestones();
     if ( result.length != 0 ) {
@@ -68,20 +68,24 @@ exports.getMilestone = async (req, res) => {
 
 // middleware to get startup
 exports.getStartup = (req, res, next) => {
-  const startupId = req.params.startupId
+  const startupId = req.params.startupId ? req.params.startupId : "";
   try {
     const db = require("../models");
     const Startup = db.startups;
     
     const result = Startup.findByPk(startupId)
     .then(data => {
-      req.body.startup = data
-      next();
+      if (!data) res.status(404).send({"error": `Startup with startupId=${startupId} not found`});
+      if (data) {
+        req.body.startup = data;
+        next();
+      };
+      
     })
     .catch(err => {
       throw err    
     });
-} catch (error) {
+  } catch (error) {
     return error
 }
   
@@ -89,7 +93,7 @@ exports.getStartup = (req, res, next) => {
 
 // Delete a Milestone with the specified id in the request
 exports.delete = (req, res) => {
-  const startupId = req.body.startupId
+  const startupId = req.body.startupId ? req.body.startupId : "";
   
   milestonePartService.delete(startupId)
   .then(num => {

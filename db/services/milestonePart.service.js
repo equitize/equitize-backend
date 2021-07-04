@@ -48,7 +48,6 @@ module.exports = {
                 return data
             })
             .catch(err => {
-                
                 throw err    
             });
             return result

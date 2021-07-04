@@ -51,6 +51,7 @@ router.get("/industries/getIndustries/:id", industryController.getRetailInvestor
 router.put("/campaign/pledge/:startupId", 
 campaignController.getStartup, 
 campaignController.pledgeAmount,
+retailInvestorsController.addCampaign
 // add in middlewares that will deploy SC
 // milestonePartController.getStartup,
 // zilliqaController.getMilestone,

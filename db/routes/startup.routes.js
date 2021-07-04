@@ -99,7 +99,7 @@ router.post("/milestone/addPart/", milestonePartController.create)
 router.delete("/milestone/deleteMilestone/", milestonePartController.delete);
 
 // Delete milestone part associated with startupId
-router.delete("/milestone/deletePart/:companyId", milestonePartController.deletePart);
+router.delete("/milestone/deletePart/:startupId", milestonePartController.deletePart);
 
 // Associate industries to startup
 router.post("/industries/addIndustries/", industryController.create);
@@ -109,10 +109,10 @@ router.post("/industries/addIndustries/", industryController.create);
 // router.get("/getCampaign/:companyId", campaignController.findViaCompanyId);
 
 // Get commercialChampion
-router.get("/getCommercialChampion/:companyId", commercialChampionController.findViaCompanyId);
+router.get("/getCommercialChampion/:startupId", commercialChampionController.findViaStartupId);
 
 // Retrieve a single Startup with id
-router.get("/:id", startupController.findOne);
+router.get("/:startupId", startupController.findOne);
 
 // Retrieve all Startup
 router.get("/", startupController.findAll);

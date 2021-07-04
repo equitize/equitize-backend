@@ -18,7 +18,7 @@ module.exports = {
                 attributes: ['startDate', 'endDate', 'goal', 'currentlyRaised', 'startupId']
             }
             const conditions = {
-                where : { liveStatus : false }
+                where : { SCdeployedStatus : false }
             }
             const campaigns = await campaignController.cronFindAll(conditions, attributes) // campaigns that are not yet live
             
@@ -36,7 +36,7 @@ module.exports = {
                     // console.log(campaignCache)
                     // if ( currentDateTime.isSame(campaignStartDateTime, 'second') && currentlyRaised >= campaignGoal ) {
                     if ( currentDateTime.isBetween(campaignStartDateTime, campaignEndDateTime, 'second') 
-                    && currentlyRaised >= campaignGoal ) {
+                        && currentlyRaised >= campaignGoal ) {
                         // check if cache if campaign is currently deploying sc
                         if (!campaignCache.has(startupId)) { // cache do not have campaign
                             const obj = {
@@ -74,7 +74,7 @@ module.exports = {
                                         updates = {
                                             campaignAddr : deployStatus.data.milestoneSCaddress,
                                             fungibleTokenAddr : deployStatus.data.fungibleTokenSCaddress,
-                                            liveStatus : true
+                                            SCdeployedStatus : true
                                         }
                                         const updateStatus = await campaignController.cronUpdate(updates, startupId)
                                         console.log('updatestatus ',updateStatus);
@@ -89,10 +89,16 @@ module.exports = {
                                 deployCount++ 
                             }   
                         } 
-                    }
-                    
+                    } 
+                    // else if (failedFundraising) {}
+                    // going thru each campaign
 
-                    // TODO: How to handle expired campaigns? 
+                    /* TODO: How to handle expired campaigns? 
+                    1. Failed Fundraising.
+                    2. Failed Milestones.
+                    */
+                    // Failed Fundraising.
+                    
                 }
             }
             // console.log(campaigns)

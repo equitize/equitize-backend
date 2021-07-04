@@ -20,9 +20,7 @@ module.exports = {
     },
     findAll : function () {
         try {
-            // var condition = companyName ? { companyName: { [Op.like]: `%${companyName}%` } } : null;
-
-            const result = Startup.findAll({ include: ["milestones", "industries", "campaigns"] })
+            const result = Startup.findAll({ include: { all : true } })
             .then(data => {
                 return data
             })

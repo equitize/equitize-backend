@@ -34,8 +34,12 @@ module.exports = (sequelize, Sequelize) => {
       fungibleTokenAddr: {
         type: Sequelize.STRING
       },
-      liveStatus: {
+      SCdeployedStatus: {
         type: Sequelize.BOOLEAN 
+      },
+      campaignStatus: {
+        type: Sequelize.STRING,
+        defaultValue: null
       }
     },{
       tableName: 'campaign',

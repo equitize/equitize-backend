@@ -78,14 +78,14 @@ exports.findAll = (req, res) => {
 
 // Find a single startup with an id
 exports.findOne = (req, res) => {
-  const id = req.params.id;
+  const startupId = req.params.startupId;
   
   // TK's implementation of service layer
-  startupService.findOne(id)
+  startupService.findOne(startupId)
   .then(function (response) {
     if (response == null) {
       res.status(500).send({
-        message: "Startup with id=" + id
+        message: "No Startup with id=" + startupId
       })
     } else {
       res.send(response)
@@ -93,7 +93,7 @@ exports.findOne = (req, res) => {
   })
   .catch(function (err) {
     res.status(500).send({
-      message: "Error retrieving Startup with id=" + id
+      message: "Error retrieving Startup with id=" + startupId
     });
   }) 
 };
@@ -124,10 +124,10 @@ exports.update = (req, res) => {
 
 // Delete a startup with the specified id in the request
 exports.delete = (req, res) => {
-  const id = req.params.id;
+  const startupId = req.params.startupId;
   
   // TK's implementation of service layer
-  startupService.delete(id)
+  startupService.delete(startupId)
   .then(num => {
     if (num == 1) {
       res.send({
@@ -135,13 +135,13 @@ exports.delete = (req, res) => {
       });
     } else {
       res.status(500).send({
-        message: `Cannot delete Startup with id=${id}. Maybe Startup was not found!`
+        message: `Cannot delete Startup with id=${startupId}. Maybe Startup was not found!`
       });
     }
   })
   .catch(err => {
     res.status(500).send({
-      message: "Could not delete Startup with id=" + id
+      message: "Could not delete Startup with id=" + startupId
     });
   });
 };

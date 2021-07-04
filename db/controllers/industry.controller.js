@@ -2,15 +2,16 @@ const industryService = require("../services/industry.service");
 
 exports.create = async (req, res, next) => {
     try {
-        const id = req.body.id
-        const industryNames = req.body.industryNames
+        const id = req.body.id;
+        const industryArr = req.body.industryArr;
+        const industryNames = industryArr.map(a => a.name);
         const accountType = req.body.accountType ? req.body.accountType : null;
         if (accountType == null) {
             res.status(500).send({
                 message:
                   "accountType cannot be null"
               });
-        }
+        };
         
         const industries = await industryService.createIndustries(id, industryNames, accountType)
         res.send(industries)

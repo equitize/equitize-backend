@@ -34,7 +34,7 @@ module.exports = {
     },
     findOne : function (id) {
         try {
-            const result = RetailInvestors.findByPk(id, { include: ["industryPreferences"] })
+            const result = RetailInvestors.findByPk(id, { include: { all : true } })
             .then(data => {
                 return data
             })

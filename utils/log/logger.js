@@ -4,7 +4,7 @@ var rfs = require('rotating-file-stream'); // version 2.x
 
 // create a rotating write stream
 var retailInvAccessLogStream = rfs.createStream('access.log', {
-    interval: '30s', // rotate 30s
+    interval: '1d', // rotate 30s
     path: path.join(__dirname, 'logs/retailInvestor')
 })
 
