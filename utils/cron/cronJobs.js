@@ -2,6 +2,8 @@ const campaignController = require("../../db/controllers/campaign.controller");
 const axios = require("axios");
 const moment = require("moment");
 const cache = require("./cache");
+const dbConstants = require("../../db/constants/constants");
+const campaignService = require("../../db/services/campaign.service");
 var deployCount = 1;
 
 module.exports = {
@@ -18,7 +20,7 @@ module.exports = {
                 attributes: ['startDate', 'endDate', 'goal', 'currentlyRaised', 'startupId']
             }
             const conditions = {
-                where : { SCdeployedStatus : false }
+                where : { SCdeployedStatus : false , campaignStatus : dbConstants.campaign.status.NONLIVE }
             }
             const campaigns = await campaignController.cronFindAll(conditions, attributes) // campaigns that are not yet live
             
@@ -32,7 +34,6 @@ module.exports = {
                     const currentlyRaised = campaigns[i].dataValues.currentlyRaised;
                     const startupId =  campaigns[i].dataValues.startupId;
                     const campaignCache = cache;
-                     
                     // console.log(campaignCache)
                     // if ( currentDateTime.isSame(campaignStartDateTime, 'second') && currentlyRaised >= campaignGoal ) {
                     if ( currentDateTime.isBetween(campaignStartDateTime, campaignEndDateTime, 'second') 
@@ -84,21 +85,23 @@ module.exports = {
                                         console.log(`[ERROR] Failed to deploy Smart Contracts for startupId=${startupId} with error code: ${deployStatus.status}`);
                                     }
                                 } catch (error) {
+                                    // TODO: morgan log sc deployment errors. 
                                     console.log('errorrr >>>>', error)
-                                }
+                                };
                                 deployCount++ 
                             }   
                         } 
                     } 
-                    // else if (failedFundraising) {}
-                    // going thru each campaign
-
-                    /* TODO: How to handle expired campaigns? 
-                    1. Failed Fundraising.
-                    2. Failed Milestones.
+                    else if (currentDateTime.isAfter(campaignEndDateTime, 'seconds')) { // campaign expired
+                        // campaignGoal not reached
+                        // update campaignStatus -> failedFundraising
+                        const updates = { campaignStatus : dbConstants.campaign.status.FAILED.FUNDRAISING }
+                        await campaignService.update(updates, startupId)
+                    }
+                
+                    /* TODO: How to trigger failed Milestones? 
+                    1. Failed Milestones.
                     */
-                    // Failed Fundraising.
-                    
                 }
             }
             // console.log(campaigns)

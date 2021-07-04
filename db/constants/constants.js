@@ -5,8 +5,8 @@ module.exports = {
             LIVE: "LIVE",
             SUCCESSFUL: "SUCCESSFUL",
             FAILED: {
-                FUNDRAISING: "FUNDRAISING",
-                MILESTONES: "MILESTONES"
+                FUNDRAISING: "FAILEDFUNDRAISING",
+                MILESTONES: "FAILEDMILESTONES"
             }
         }
     }

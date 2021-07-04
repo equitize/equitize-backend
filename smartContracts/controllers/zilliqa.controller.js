@@ -64,7 +64,6 @@ module.exports = {
           const campaign = req.body.campaign ? req.body.campaign : "";
           
           if ( SCstatus.milestoneSC.status === true && SCstatus.fungibleTokenSC.status === true ) {
-                // TODO : Update campaignStatus
                 const updates = { campaignStatus :  dbConstants.campaign.status.LIVE }
                 campaignService.update(updates, startupId)
                 res.status(200).send({
