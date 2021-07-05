@@ -10,7 +10,7 @@ module.exports = (sequelize, Sequelize) => {
         allowNull: false,
         unique: true
       },
-      companyPassword: {
+      password: {
         type: Sequelize.STRING,
         allowNull: false
       },

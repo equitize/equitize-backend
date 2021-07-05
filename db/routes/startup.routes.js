@@ -5,6 +5,7 @@ const milestonePartController = require("../controllers/milestonePart.controller
 const industryController = require("../controllers/industry.controller");
 const auth0Controller = require("../../auth0/controllers/backend.controller");
 const auth0RegController = require("../../auth0/controllers/registration.controller.js");
+const auth0LoginController = require("../../auth0/controllers/login.controller");
 const CloudStorageController = require("../../cloudStorage/controllers/cloudStorage.controller.js");
 const jwtController = require("../../auth0/controllers/jwt.controller");
 const router = require("express").Router();
@@ -12,11 +13,15 @@ const router = require("express").Router();
 
 // Create a new Startup
 router.post("/",
-    // auth0Controller.getMgtToken,
-    // auth0RegController.createAccount,
-    // auth0RegController.startup,
-    startupController.create
+    auth0Controller.getMgtToken,
+    auth0RegController.createAccount,
+    auth0RegController.startup,
+    startupController.create,
+    auth0LoginController.startup
 );
+
+// Login
+router.post("/login", auth0LoginController.startup);
 
 // Update a Startup with id
 // no need kyc verferification

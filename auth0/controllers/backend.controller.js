@@ -4,7 +4,6 @@ const { default: axios } = require('axios');
 module.exports = {
     getMgtToken: function (req, res, next) {
         try {
-            console.log('[DEV] : Get Management Token Middleware Reached')
             const data = {
                 "grant_type": "client_credentials",
                 "client_id": `${process.env.AUTH0_CLIENT_ID_PDTN}`,
@@ -21,7 +20,6 @@ module.exports = {
                 next();
             })
             .catch(function (error) {
-                console.log(error)
                 next(error);
             });
         } catch (error) {
@@ -53,12 +51,10 @@ module.exports = {
             };
             
             axios.request(options).then(function (response) {
-            console.log(response.data);
             }).catch(function (error) {
-            console.error(error);
+                throw error
             });
         } catch (error) {
-            console.log(error)
             next(error)
         }
     }

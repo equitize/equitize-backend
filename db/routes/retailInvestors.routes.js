@@ -1,6 +1,7 @@
 const retailInvestorsController = require("../controllers/retailInvestors.controller.js");
 const auth0Controller = require("../../auth0/controllers/backend.controller");
 const auth0RegController = require("../../auth0/controllers/registration.controller");
+const auth0LogController = require("../../auth0/controllers/login.controller");
 const startupController = require("../controllers/startup.controller");
 const industryController = require("../controllers/industry.controller");
 const recommenderController = require("../controllers/recommender.controller");
@@ -14,10 +15,15 @@ const router = require("express").Router();
 
 // Create a new retailInv
 router.post("/", 
-// auth0Controller.getMgtToken, 
-// auth0RegController.createAccount, 
-// auth0RegController.retailInvestors,
-retailInvestorsController.create);
+auth0Controller.getMgtToken, 
+auth0RegController.createAccount, 
+auth0RegController.retailInvestors,
+retailInvestorsController.create,
+auth0LogController.retailInvestors
+);
+
+// Login
+router.post("/login", auth0LogController.retailInvestors)
 
 // Retrieve all retailInv
 router.get("/", retailInvestorsController.findAll);

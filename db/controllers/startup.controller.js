@@ -5,9 +5,9 @@ const startupService = require("../services/startup.service");
 exports.create = async (req, res, next) => {
   try {
     // Validate request
-    if (!req.body.companyName || !req.body.emailAddress || !req.body.companyPassword) {
+    if (!req.body.companyName || !req.body.emailAddress || !req.body.password) {
       res.status(400).send({    
-        message: "companyName, emailAddress, companyPassword can not be empty!"
+        message: "companyName, emailAddress, password can not be empty!"
       });
       return;
     }
@@ -17,7 +17,7 @@ exports.create = async (req, res, next) => {
     const startup = {
       companyName: req.body.companyName,
       emailAddress: req.body.emailAddress,
-      companyPassword: req.body.companyPassword,
+      password: req.body.password,
       profileDescription: req.body.profileDescription ? req.body.profileDescription :"",
       profilePhoto: req.body.profilePhoto ? req.body.profilePhoto :"",
       capTable: req.body.capTable ? req.body.capTable :"",
@@ -37,7 +37,8 @@ exports.create = async (req, res, next) => {
     // TK's implmentation of Service Layer
     startupService.create(startup)
     .then(function (response) {
-      res.send(response)
+      req.body.startup = response;
+      next()
     })
     .catch(function (err) {
       res.status(500).send({

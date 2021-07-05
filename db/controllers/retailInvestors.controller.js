@@ -3,9 +3,9 @@ const retailInvestorService = require("../services/retailInvestor.service");
 const retialInvestorService = require("../services/retailInvestor.service");
 
 // Create and Save a new retailInvestor
-exports.create = (req, res) => {
+exports.create = (req, res, next) => {
   // Validate request
-  if (!req.body.emailAddress || !req.body.userPassword) {
+  if (!req.body.emailAddress || !req.body.password) {
     res.status(400).send({
       message: "emailAddress, userPassword can not be empty!"
     });
@@ -17,7 +17,7 @@ exports.create = (req, res) => {
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_Operator
   const retailInvestors = {
     emailAddress: req.body.emailAddress,
-    userPassword: req.body.userPassword,
+    password: req.body.password,
     firstName: req.body.firstName ? req.body.firstName :"",
     lastName: req.body.lastName ? req.body.lastName :"",
     singPass: req.body.singPass ? req.body.singPass :"",
@@ -30,7 +30,9 @@ exports.create = (req, res) => {
 
   retialInvestorService.create(retailInvestors)
   .then(function (response) {
-    res.send(response)
+    // res.send(response)
+    req.body.retailInv = response;
+    next();
   })
   .catch(function (err) {
     res.status(500).send({

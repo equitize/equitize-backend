@@ -1,5 +1,4 @@
 const express = require("express");
-const createHttpError = require("http-errors");
 const multer = require("multer");
 const cors = require("cors");
 const logger = require("./utils/log/logger");
@@ -60,14 +59,20 @@ app.use('/api/sc', require('./smartContracts/routes/sc.routes'));
 
 /** Error Handlers */
 // 404
+app.use((req, res, next) => {
+  const error = new Error("Not found");
+  error.status = 404;
+  next(error);
+}); 
+// other errors
 app.use((error, req, res, next) => {
-  next(createHttpError.NotFound());
-});
-// // other errors
-app.use((error, req, res, next) => {
-  error.status = error.status || 500
-  res.status(error.status);
-  res.send(error);
+  console.log(error)
+  res.status(error.status || 500).send({
+    error: {
+      status: error.status || 500,
+      message: error.message || 'Internal Server Error',
+    },
+  });
 });
 
 
