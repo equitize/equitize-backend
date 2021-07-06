@@ -18,6 +18,19 @@ module.exports = {
             return (error)
         }
     },
+    bulkCreate : function(records) {
+        try {
+            const result = Startup.bulkCreate(records)
+            .then(data => {
+                return data
+            })
+            .catch(err => {
+                throw err
+            });
+        } catch (error) {
+            return (error)
+        }
+    },
     findAll : function () {
         try {
             const result = Startup.findAll({ include: { all : true } })

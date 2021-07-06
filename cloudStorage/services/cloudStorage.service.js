@@ -171,6 +171,7 @@ module.exports = {
   uploadProfilePhoto : function (profilePhoto) {
     return new Promise((resolve, reject) => {
     try {
+
       const { originalname, buffer } = profilePhoto
       const fileExt = originalname.split(".")[1]
       const id = crypto.randomBytes(20).toString("hex") + "." + fileExt;
@@ -190,6 +191,7 @@ module.exports = {
       })
       .end(buffer)
     } catch (err) {
+      console.log(err)
       return err      
     }});
   },

@@ -20,7 +20,7 @@ module.exports = {
             };
             const accessToken = await axios.post(url, data, { headers : headers });
             // console.log(accessToken)
-            if ( accessToken.status === 200) res.send({
+            if ( accessToken.status === 200) res.send({ 
                 retailInv : req.body.startup,
                 auth0 : accessToken.data
             })

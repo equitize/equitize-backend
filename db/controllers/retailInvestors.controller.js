@@ -21,8 +21,6 @@ exports.create = (req, res, next) => {
     firstName: req.body.firstName ? req.body.firstName :"",
     lastName: req.body.lastName ? req.body.lastName :"",
     singPass: req.body.singPass ? req.body.singPass :"",
-    age: req.body.age ? req.body.age : "",
-    gender: req.body.gender ? req.body.gender : "",
     incomeStatement: req.body.incomeStatement ? req.body.incomeStatement :"",
     incomeTaxReturn: req.body.incomeTaxReturn ? req.body.incomeTaxReturn :"", 
     zilAddr: req.body.zilAddr ? req.body.zilAddr : "",

@@ -72,7 +72,6 @@ exports.uploadIdProof = async (req, res, next) => {
 exports.uploadProfilePhoto = async (req, res, next) => {
   const profilePhoto = req.file;
   const data = await CloudStorageService.uploadProfilePhoto(profilePhoto);
-  
   req.body = {
     "profilePhoto": data
   }

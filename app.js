@@ -56,6 +56,8 @@ app.use('/api/db/campaign', require('./db/routes/campaign.routes'));
 app.use('/api/db/junctionTable', require('./db/routes/junctionTable.routes'));
 app.use('/api/db/general', require('./db/routes/general.routes'));
 app.use('/api/sc', require('./smartContracts/routes/sc.routes'));
+app.use('/api/db/misc', require('./db/routes/misc.routes')); // use for jest test setup teardown 
+
 
 /** Error Handlers */
 // 404
