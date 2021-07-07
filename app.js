@@ -29,9 +29,12 @@ app.use(express.urlencoded({ extended: true }));
 const cron = require("node-cron");
 const cronJobs = require("./utils/cron/cronJobs");
 let campaigns;
+
+if (process.env.NODE_ENV!=="test") {
 cron.schedule('*/5 * * * * *', ()=>{
   campaigns = cronJobs.checkCampaignGoal(); 
 })
+}
 
 
 

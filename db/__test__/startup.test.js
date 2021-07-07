@@ -74,7 +74,8 @@ describe('Testing [/api/db/startup]', () => {
     let requestBody = {
       companyName:companyName,
       emailAddress:emailAddress,
-      companyPassword:companyPassword
+      password:companyPassword,
+      profileDescription:companyName
     }
     let res = await supertest(app)
                           .post("/api/db/startup")
