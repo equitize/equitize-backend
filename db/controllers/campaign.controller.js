@@ -83,12 +83,17 @@ exports.update = (req, res) => {
   campaign["SCdeployedStatus"] = false;
   campaign["startupId"] = startupId;
   campaign["campaignStatus"] = dbConstants.campaign.status.NONLIVE;
+
   campaignService.update(campaign, startupId)
   .then(num => {
     if (num == 1) {
       res.send({
         message: "Campaign was updated successfully."
       });
+    } else if (num == 0) {
+      res.send({
+        message: "No updates were made, please try again."
+      })
     } else {
       res.status(500).send({
         message: `Cannot update Campaign with id=${startupId}. Maybe Campaign was not found or req.body is empty!`
