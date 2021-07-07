@@ -28,8 +28,11 @@ describe('Testing [/api/db/retailInvestors]', () => {
   const retailInvestor_name = 'kenny'
   const emailAddress = `${retailInvestor_name}@email.com`
   const userPassword = 'password'
-  const interestedIndustries = ["Finance", "Tech", "Farming"]
-
+  const interestedIndustries = [
+    {"name":"Finance", "id":1},
+    {"name":"Tech", "id":2},
+    {"name":"Farming", "id":3}
+  ]
   const retailInvestor_name_alt = 'francisco'
   const emailAddress_alt = `investor-${retailInvestor_name_alt}@email.com`
   const userPassword_alt = 'password'
@@ -44,8 +47,12 @@ describe('Testing [/api/db/retailInvestors]', () => {
   it('create retailInvestor', async() => {
     let requestBody = {
       firstName:retailInvestor_name,
+      lastName:retailInvestor_name,
       emailAddress:emailAddress,
-      userPassword:userPassword
+      password:userPassword,
+      singPass:"singPass",
+      incomeStatement:"incomeStatement",
+      incomeTaxReturn:"incomeTaxReturn"
     }
     let res = await supertest(app)
                           .post("/api/db/retailInvestors")
@@ -56,9 +63,13 @@ describe('Testing [/api/db/retailInvestors]', () => {
 
   it('create retailInvestor but missing info', async() => {
     let requestBody = {
-      firstName:retailInvestor_name_alt,
-      emailAddress:emailAddress_alt,
-      // userPassword:userPassword_alt
+      firstName:retailInvestor_name,
+      lastName:retailInvestor_name,
+      // emailAddress:emailAddress,
+      password:userPassword,
+      singPass:"singPass",
+      incomeStatement:"incomeStatement",
+      incomeTaxReturn:"incomeTaxReturn"
     }
     let res = await supertest(app)
                           .post("/api/db/retailInvestors")
@@ -67,10 +78,14 @@ describe('Testing [/api/db/retailInvestors]', () => {
   });
 
   it('create retailInvestor but duplicate info', async() => {
-    let requestBody ={
+    let requestBody = {
       firstName:retailInvestor_name,  // duplicate_info
+      lastName:retailInvestor_name,
       emailAddress:emailAddress,  // duplicate_info
-      userPassword:userPassword
+      password:userPassword,
+      singPass:"singPass",
+      incomeStatement:"incomeStatement",
+      incomeTaxReturn:"incomeTaxReturn"
     }
     let res = await supertest(app)
                           .post("/api/db/retailInvestors")
@@ -81,8 +96,13 @@ describe('Testing [/api/db/retailInvestors]', () => {
   it('create retailInvestor with different info', async() => {
     let requestBody = {
       firstName:retailInvestor_name_alt,
+      lastName:retailInvestor_name,
       emailAddress:emailAddress_alt,
-      userPassword:userPassword_alt
+      password:userPassword,
+      singPass:"singPass",
+      incomeStatement:"incomeStatement",
+      incomeTaxReturn:"incomeTaxReturn"
+
     }
     let res = await supertest(app)
                           .post("/api/db/retailInvestors")
@@ -165,9 +185,9 @@ describe('Testing [/api/db/retailInvestors]', () => {
 
   it('update interested industries', async() => {
     requestBody = {
-      "industryNames":interestedIndustries,
-      "id":retailInvestor_id,
-      "accountType":"retailInvestor"
+      industryArr:interestedIndustries,
+      id:retailInvestor_id,
+      accountType:"retailInvestor"
     }
     res = await supertest(app)
                           .post(`/api/db/retailInvestors/industries/addIndustries/`)
