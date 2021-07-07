@@ -21,7 +21,7 @@ module.exports = {
             const accessToken = await axios.post(url, data, { headers : headers });
             // console.log(accessToken)
             if ( accessToken.status === 200) res.send({ 
-                retailInv : req.body.startup,
+                startup : req.body.startup,
                 auth0 : accessToken.data
             })
             else if ( accessToken.status === 403 ) throw createHttpError[403]; // hide error sent to frontend
