@@ -30,7 +30,11 @@ describe('Testing [/api/db/startup]', () => {
   const companyName = 'equitize'
   const emailAddress = `company-${companyName}@email.com`
   const companyPassword = 'password'
-  const companyIndustries = ["Finance", "Environment"]
+  const companyIndustries = [
+    {"name":"Finance", "id":1},
+    {"name":"Tech", "id":2},
+    {"name":"Farming", "id":3}
+  ]
 
   const companyName_alt = 'tesla_motors'
   const emailAddress_alt = `company-${companyName_alt}@email.com`
@@ -88,7 +92,8 @@ describe('Testing [/api/db/startup]', () => {
     let requestBody = {
       companyName:companyName_alt,
       emailAddress:emailAddress_alt,
-      // companyPassword:companyPassword_alt  // info missed
+      // password:companyPassword_alt  // info missed
+      profileDescription:companyName
     }
     let res = await supertest(app)
                           .post("/api/db/startup")
@@ -100,7 +105,8 @@ describe('Testing [/api/db/startup]', () => {
     let requestBody ={
       companyName:companyName,  // duplicate info
       emailAddress:emailAddress,  // duplicate info
-      companyPassword:companyPassword
+      password:companyPassword,
+      profileDescription:companyName
     }
     let res = await supertest(app)
                           .post("/api/db/startup")
@@ -112,7 +118,8 @@ describe('Testing [/api/db/startup]', () => {
     let requestBody = {
       companyName:companyName_alt,
       emailAddress:emailAddress_alt,
-      companyPassword:companyPassword_alt
+      password:companyPassword_alt,
+      profileDescription:companyName
     }
     let res = await supertest(app)
                           .post("/api/db/startup")
@@ -183,7 +190,7 @@ describe('Testing [/api/db/startup]', () => {
 
   it('update company industries', async() => {
     requestBody = {
-      industryNames:companyIndustries,
+      industryArr:companyIndustries,
       id:company_id,
       accountType:"startup"
     }
@@ -224,16 +231,17 @@ describe('Testing [/api/db/startup]', () => {
   //   expect(res.statusCode).toBe(500)
   // });
 
-  it('create campaign', async() => {
-    requestBody = {
-      startupId:company_id,
-    }
-    res = await supertest(app)
-                          .post(`/api/db/admin/createCampaign`)
-                          .send(requestBody)
-    expect(res.statusCode).toBe(200)
-    campaign_id = res.body.id    
-  });
+  // not implemented
+  // it('create campaign', async() => {
+  //   requestBody = {
+  //     startupId:company_id,
+  //   }
+  //   res = await supertest(app)
+  //                         .post(`/api/db/admin/createCampaign`)
+  //                         .send(requestBody)
+  //   expect(res.statusCode).toBe(200)
+  //   campaign_id = res.body.id    
+  // });
 
   it('update campaign', async() => {
     requestBody = {
@@ -275,9 +283,9 @@ describe('Testing [/api/db/startup]', () => {
         fileOGName:bodyName
       }
       res = await supertest(app)
-                        .get(`/api/db/startup/${endpoint}/${company_id}`)
+                        .get(`/api/db/startup/getSignedURLPlus/${endpoint}/${company_id}`)
                         .send(requestBody)
-      expect(res.body.signedURL.message).toMatch(new RegExp(`^${signed_url_prefix}?`));
+      expect(res.body.signedURL).toMatch(new RegExp(`^${signed_url_prefix}?`));
       expect(res.statusCode).toBe(200)
     });
   }
@@ -301,18 +309,20 @@ describe('Testing [/api/db/startup]', () => {
         fileType:endpoint,
       }
       res = await supertest(app)
-                        .get(`/api/db/startup/${endpoint}/${company_id}`)
+                        .get(`/api/db/startup/getSignedURL/${endpoint}/${company_id}`)
                         .send(requestBody)
-      expect(res.body.signedURL.message).toMatch(new RegExp(`^${signed_url_prefix}?`));
+      expect(res.body.signedURL).toMatch(new RegExp(`^${signed_url_prefix}?`));
       expect(res.statusCode).toBe(200)
     });
   }
 
   it('set commerical champion', async() => {
     requestBody = {
-      companyId:company_id,
+      startupId:company_id,
       name:commercialChampion_name,
-      email:commercialChampion_email
+      email:commercialChampion_email,
+      professsion:commercialChampion_name,
+      fieldsOfInterest:commercialChampion_name
     }
     res = await supertest(app)
                           .post(`/api/db/startup/setCommercialChampion`)
@@ -432,13 +442,14 @@ describe('Testing [/api/db/startup]', () => {
     expect(res.statusCode).toBe(500)
   });
 
-  it('delete all companies', async() => {
-    requestBody = {}
-    res = await supertest(app)
-                          .delete(`/api/db/admin/`)
-                          .send(requestBody)
-    expect(res.statusCode).toBe(200)
-  });
+  // silenced
+  // it('delete all companies', async() => {
+  //   requestBody = {}
+  //   res = await supertest(app)
+  //                         .delete(`/api/db/admin/`)
+  //                         .send(requestBody)
+  //   expect(res.statusCode).toBe(200)
+  // });
 
   afterAll(async () => {
     await thisDb.sequelize.close()
