@@ -7,7 +7,7 @@ const fs = require('fs');
 
 
 module.exports = {
-    loadStartups : async (req, res, next) => {
+    loadStartups: async (req, res, next) => {
         try {
             const startup_csv_path = `${__dirname}/../__test__/sample_files/startups.csv`
             const startups = await csv().fromFile(startup_csv_path);
@@ -36,6 +36,7 @@ module.exports = {
                 if ( industriesPlaceholder[id-1][0] == "" ) industriesPlaceholder[id] = "Others";
                 const assignIndustryStatus = await industryService.createIndustries(id, industriesPlaceholder[id-1], accountType);
                 // upload profile photo
+                if (req.body.skip_upload_photos){continue}
                 let filepath = `${__dirname}/../__test__/sample_files/avatars/${avatars[id-1]}`
                 let formData = new FormData();
                 formData.append("file", fs.createReadStream(filepath));
@@ -44,8 +45,9 @@ module.exports = {
                     ...formData.getHeaders(),
                   }})
             }
+            let message = 
             res.status(200).send({
-                message : `Succesfully loaded ${acceptedStartupCount} startups, assigned industries to them and added profile photos`
+                message : `Succesfully loaded ${acceptedStartupCount} startups, assigned industries to them and (if not skipped) added profile photos`
             })
         } catch (error) {
             next(error);

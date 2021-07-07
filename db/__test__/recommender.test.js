@@ -33,8 +33,11 @@ describe('Testing Recommender System', () => {
   const retailInvestor_name = 'kenny'
   const emailAddress = `${retailInvestor_name}@email.com`
   const userPassword = 'password'
-  const interestedIndustries = ["Finance", "Environment"]
-
+  const interestedIndustries = [
+    {"name":"Finance", "id":1},
+    {"name":"Tech", "id":2},
+    {"name":"Farming", "id":3}
+  ]
   const startup_csv_path = `${__dirname}/sample_files/startups.csv`
 
   const invalid_id = 1000000007
@@ -42,47 +45,17 @@ describe('Testing Recommender System', () => {
   let retailInvestor_id
   let startupCount = 0
 
-  it('create companies and update industries', async() => {
-    const startups = await csv().fromFile(startup_csv_path);
-    for (let [cnt, data] of Object.entries(startups)){
-      if (!data.name || !data.url || !data.description || !data.avatar) {continue}
-      let requestBody = {
-        companyName:data.name,
-        emailAddress:data.url,
-        companyPassword:cnt,  // mock
-        profileDescription:data.description,
-      }
-      let res = await supertest(app)
-                            .post("/api/db/startup")
-                            .send(requestBody)
-      expect(res.statusCode).toBe(200)
-      company_id = res.body.id
-
-      let industriesArr = data.surveyed_industries.split(",")
-      if (industriesArr[0] != "") {
-        requestBody = {
-          industryNames:industriesArr,
-          id:company_id,
-          accountType:"startup"
-        }
-        res = await supertest(app)
-                              .post(`/api/db/startup/industries/addIndustries/`)
-                              .send(requestBody)
-        expect(res.statusCode).toBe(200)
-      }
-
-      if (!uploadingPictures) {continue} 
-      let filepath = `${__dirname}/sample_files/avatars/${data.avatar}`
-      res = await supertest(app)
-                        .put(`/api/db/startup/profilePhoto/${company_id}`)
-                        .attach('file', filepath)
-      expect(res.statusCode).toBe(200)
-    };
-  }, 50000)  // increased timeout
+  it('load all startups', async() => {
+    requestBody = {"skip_upload_photos": true}  // for faster loading
+    let res = await supertest(app)
+                          .post("/api/db/misc/loadStartups")
+                          .send(requestBody)
+    expect(res.statusCode).toBe(200)
+  }, 10000);
 
   it('get all companies', async() => {
     requestBody = {}
-    res = await supertest(app)
+    let res = await supertest(app)
                           .get("/api/db/startup")
                           .send(requestBody)
     expect(res.statusCode).toBe(200)
@@ -93,8 +66,12 @@ describe('Testing Recommender System', () => {
   it('create retailInvestor', async() => {
     let requestBody = {
       firstName:retailInvestor_name,
+      lastName:retailInvestor_name,
       emailAddress:emailAddress,
-      userPassword:userPassword
+      password:userPassword,
+      singPass:"singPass",
+      incomeStatement:"incomeStatement",
+      incomeTaxReturn:"incomeTaxReturn"
     }
     let res = await supertest(app)
                           .post("/api/db/retailInvestors")
@@ -106,9 +83,9 @@ describe('Testing Recommender System', () => {
   // assign interested industries to retailInvestor
   it('update interested industries', async() => {
     requestBody = {
-      "industryNames":interestedIndustries,
-      "id":retailInvestor_id,
-      "accountType":"retailInvestor"
+      industryArr:interestedIndustries,
+      id:retailInvestor_id,
+      accountType:"retailInvestor"
     }
     res = await supertest(app)
                           .post(`/api/db/retailInvestors/industries/addIndustries/`)

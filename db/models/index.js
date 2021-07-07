@@ -40,12 +40,12 @@ db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
 db.milestoneParts = require("./milestonePart.model.js")(sequelize, Sequelize);
-db.startups = require("./startup.model.js")(sequelize, Sequelize);
-db.retailInvestors = require("./retailInvestors.model.js")(sequelize, Sequelize);
-db.campaigns = require("./campaign.model.js")(sequelize, Sequelize);
-db.junctionTable = require("./junctionTable.model.js")(sequelize, Sequelize);
-db.commercialChampion = require("./commercialChampion.model.js")(sequelize, Sequelize);
 db.industries = require("./industries.model.js")(sequelize, Sequelize);
+db.junctionTable = require("./junctionTable.model.js")(sequelize, Sequelize);
+db.campaigns = require("./campaign.model.js")(sequelize, Sequelize);
+db.commercialChampion = require("./commercialChampion.model.js")(sequelize, Sequelize);
+db.retailInvestors = require("./retailInvestors.model.js")(sequelize, Sequelize);
+db.startups = require("./startup.model.js")(sequelize, Sequelize);
 
 // db.milestones.hasMany(db.milestoneParts, { onDelete: "cascade", as: "milestoneParts" });
 db.startups.hasMany(db.milestoneParts, { onDelete: "cascade", as: "milestones" });
