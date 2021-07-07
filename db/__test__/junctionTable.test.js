@@ -50,7 +50,8 @@ describe('Testing [/api/db/junctionTable]', () => {
     let requestBody = {
       companyName:companyName,
       emailAddress:company_emailAddress,
-      companyPassword:companyPassword
+      password:companyPassword,
+      profileDescription:companyName
     }
     let res = await supertest(app)
                           .post("/api/db/startup")
@@ -62,8 +63,12 @@ describe('Testing [/api/db/junctionTable]', () => {
   it('create retailInvestor', async() => {
     let requestBody = {
       firstName:investor_name,
+      lastName:investor_name,
       emailAddress:investor_emailAddress,
-      userPassword:investor_password
+      password:investor_password,
+      singPass:"singPass",
+      incomeStatement:"incomeStatement",
+      incomeTaxReturn:"incomeTaxReturn"
     }
     let res = await supertest(app)
                           .post("/api/db/retailInvestors")
@@ -72,17 +77,14 @@ describe('Testing [/api/db/junctionTable]', () => {
     retailInvestor_id = res.body.id    
   });
 
-  it('create campaign', async() => {
-    let requestBody = {
-      startupId:companyId,
-      goal:goal,
-      endDate:endDate
+  it('create campaign by update', async() => {
+    requestBody = {
+      tokensMinted:0.20,
     }
-    let res = await supertest(app)
-                          .post("/api/db/admin/createCampaign")
+    res = await supertest(app)
+                          .put(`/api/db/startup/campaign/update/${companyId}`)
                           .send(requestBody)
     expect(res.statusCode).toBe(200)
-    campaign_id = res.body.id    
   });
 
   // TODO: note that the investment is made on companyId, not campaign_id, not sure if intended

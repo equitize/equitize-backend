@@ -91,7 +91,9 @@ exports.update = (req, res) => {
       });
     } else {
       res.status(500).send({
-        message: `Cannot update Campaign with id=${startupId}. Maybe Campaign was not found or req.body is empty!`
+        message: `Cannot update Campaign with id=${startupId}. Maybe Campaign was not found or req.body is empty!`,
+        error: num,
+        campaign: campaign
       });
     }
   })
@@ -168,22 +170,29 @@ exports.findViaCompanyId = (req, res) => {
 // otherwise create one and move to next middleware
 exports.checkExists = async (req, res, next) => {
   // TODO: Check if there exists a campaign with FK=startupId
-  const startupId = req.params.startupId ? req.params.startupId : "";
-  // campaignService.findOne
+  try {
+      const startupId = req.params.startupId ? req.params.startupId : "";
+    // campaignService.findOne
 
-  const startup = await startupService.findOne(startupId);
-  if (startup === null) {res.status(404).send({'message': `Startup with startupId=${startupId} not found`})}
-  const campaign = await startup.getCampaign();
-  
-  if (campaign === null) {
-    // create campaign
-    const campaign = {
-      startupId: startupId,
+    const startup = await startupService.findOne(startupId);
+    if (startup === null) {
+      // res.status(404).send({'message': `Startup with startupId=${startupId} not found`})
+      throw createHttpError(404, `Startup with startupId=${startupId} not found`)
     }
-    campaignService.create(campaign)
-    next()
-  } else {
-    next()
+    const campaign = await startup.getCampaign();
+    
+    if (campaign === null) {
+      // create campaign
+      const campaign = {
+        startupId: startupId,
+      }
+      campaignService.create(campaign)
+      next()
+    } else {
+      next()
+    }
+  } catch (error) {
+    next(error);
   }
 };
 
