@@ -57,6 +57,7 @@ module.exports = {
                 return data
             })
             .catch(err => {
+                console.log('alsdkjfhalsdkjfh')
                 throw err    
             });
             return result
