@@ -45,7 +45,4 @@ milestoneSCController.deploy,
 fungibleTokenSCController.deploy,
 zilliqaController.checkSCstatus)
 
-// drop all auth0 users
-router.post("/auth0/dropUsers", auth0Controller.delAllUsers)
-
 module.exports = router; 

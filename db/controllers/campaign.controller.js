@@ -83,17 +83,12 @@ exports.update = (req, res) => {
   campaign["SCdeployedStatus"] = false;
   campaign["startupId"] = startupId;
   campaign["campaignStatus"] = dbConstants.campaign.status.NONLIVE;
-
   campaignService.update(campaign, startupId)
   .then(num => {
     if (num == 1) {
       res.send({
         message: "Campaign was updated successfully."
       });
-    } else if (num == 0) {
-      res.send({
-        message: "No updates were made, please try again."
-      })
     } else {
       res.status(500).send({
         message: `Cannot update Campaign with id=${startupId}. Maybe Campaign was not found or req.body is empty!`,
@@ -176,12 +171,13 @@ exports.findViaCompanyId = (req, res) => {
 exports.checkExists = async (req, res, next) => {
   // TODO: Check if there exists a campaign with FK=startupId
   try {
-    const startupId = req.params.startupId ? req.params.startupId : "";
+      const startupId = req.params.startupId ? req.params.startupId : "";
     // campaignService.findOne
 
     const startup = await startupService.findOne(startupId);
     if (startup === null) {
-      throw createHttpError(404, `Startup with startupId=${startupId} not found`);
+      // res.status(404).send({'message': `Startup with startupId=${startupId} not found`})
+      throw createHttpError(404, `Startup with startupId=${startupId} not found`)
     }
     const campaign = await startup.getCampaign();
     
