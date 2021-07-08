@@ -52,7 +52,7 @@ module.exports = {
             const result = Startup.findAll({ 
                 where: condition, 
                 attributes: ['id', 'companyName', 'profileDescription', 'profilePhoto'],
-                include: ["campaigns"] 
+                include: ["campaign", "industries"]
             })
             .then(data => {
                 return data

@@ -45,7 +45,6 @@ module.exports = {
                     ...formData.getHeaders(),
                   }})
             }
-            let message = 
             res.status(200).send({
                 message : `Succesfully loaded ${acceptedStartupCount} startups, assigned industries to them and (if not skipped) added profile photos`
             })

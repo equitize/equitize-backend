@@ -18,9 +18,14 @@ describe('Testing [/api/db/startup]', () => {
   beforeAll(async () => {
     for (attemptCount in [...Array(10).keys()]){
       try {
-        console.log("attempt at database sync", attemptCount)
-        await thisDb.sequelize.sync({force: false});
-      } catch {
+        // https://stackoverflow.com/a/21006886/5894029
+        // await thisDb.sequelize.query('SET FOREIGN_KEY_CHECKS = 0')
+        // console.log("attempt at database sync", attemptCount)
+        // await thisDb.sequelize.sync({force: true});
+        // await thisDb.sequelize.query('SET FOREIGN_KEY_CHECKS = 1')
+        // https://stackoverflow.com/a/53236489/5894029
+        await thisDb.sequelize.sync({force: false, alter : true});
+    } catch {
         continue
       }
       break
@@ -452,6 +457,7 @@ describe('Testing [/api/db/startup]', () => {
   // });
 
   afterAll(async () => {
+    await thisDb.sequelize.drop();
     await thisDb.sequelize.close()
   })
 })

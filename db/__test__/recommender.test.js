@@ -1,12 +1,8 @@
 const app = require("../../app")
 const supertest = require('supertest')
 const db  = require("../models/index")
-const fs = require('mz/fs');
-const csv = require('csvtojson');
 
 require('mysql2/node_modules/iconv-lite').encodingExists('cesu8');
-
-const uploadingPictures = false  // make false to speed up these tests
 
 
 // import supertest from "supertest"
@@ -17,26 +13,30 @@ it('Testing to see if Jest works', () => {
 // this is an eg. of one test suite. 
 describe('Testing Recommender System', () => {
   let thisDb = db
-  
+    
   beforeAll(async () => {
     for (attemptCount in [...Array(10).keys()]){
       try {
-        console.log("attempt at database sync", attemptCount)
-        await thisDb.sequelize.sync({force: false});
-      } catch {
+        // https://stackoverflow.com/a/21006886/5894029
+        // await thisDb.sequelize.query('SET FOREIGN_KEY_CHECKS = 0')
+        // console.log("attempt at database sync", attemptCount)
+        // await thisDb.sequelize.sync({force: true});
+        // await thisDb.sequelize.query('SET FOREIGN_KEY_CHECKS = 1')
+        // https://stackoverflow.com/a/53236489/5894029
+        await thisDb.sequelize.sync({force: false, alter : true});
+    } catch {
         continue
       }
       break
     }
   });
-  
+
   const retailInvestor_name = 'kenny'
   const emailAddress = `${retailInvestor_name}@email.com`
   const userPassword = 'password'
   const interestedIndustries = [
-    {"name":"Finance", "id":1},
-    {"name":"Tech", "id":2},
-    {"name":"Farming", "id":3}
+    {"name":"Finance", "id":0},
+    {"name":"Environment", "id":2}
   ]
   const startup_csv_path = `${__dirname}/sample_files/startups.csv`
 
@@ -45,22 +45,6 @@ describe('Testing Recommender System', () => {
   let retailInvestor_id
   let startupCount = 0
 
-  it('load all startups', async() => {
-    requestBody = {"skip_upload_photos": true}  // for faster loading
-    let res = await supertest(app)
-                          .post("/api/db/misc/loadStartups")
-                          .send(requestBody)
-    expect(res.statusCode).toBe(200)
-  }, 10000);
-
-  it('get all companies', async() => {
-    requestBody = {}
-    let res = await supertest(app)
-                          .get("/api/db/startup")
-                          .send(requestBody)
-    expect(res.statusCode).toBe(200)
-    startupCount = res.body.length
-  });
 
   // initialise retailInvestor
   it('create retailInvestor', async() => {
@@ -93,6 +77,22 @@ describe('Testing Recommender System', () => {
     expect(res.statusCode).toBe(200)
   });
 
+  it('load all startups', async() => {
+    requestBody = {"skip_upload_photos": true}  // for faster loading
+    let res = await supertest(app)
+                          .post("/api/db/misc/loadStartups")
+                          .send(requestBody)
+  }, 10000);
+
+  it('get all companies', async() => {
+    requestBody = {}
+    let res = await supertest(app)
+                          .get("/api/db/startup")
+                          .send(requestBody)
+    expect(res.statusCode).toBe(200)
+    startupCount = res.body.length
+  });
+
   it('get recommendations but invalid id', async() => {
     requestBody = {}
     res = await supertest(app)
@@ -112,10 +112,6 @@ describe('Testing Recommender System', () => {
     expect(res.body.length).toBe(startupCount)
   });
 
-  afterAll(async () => {
-    await thisDb.sequelize.close()
-  })
-
   it('get recommendations full info', async() => {
     requestBody = {
       fullInfo:true
@@ -128,6 +124,7 @@ describe('Testing Recommender System', () => {
   });
 
   afterAll(async () => {
+    await thisDb.sequelize.drop();
     await thisDb.sequelize.close()
   })
 })
