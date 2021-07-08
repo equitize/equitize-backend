@@ -13,11 +13,11 @@ const router = require("express").Router();
 
 // Create a new Startup
 router.post("/",
-    auth0Controller.getMgtToken,
-    auth0RegController.createAccount,
-    auth0RegController.startup,
+    // auth0Controller.getMgtToken,
+    // auth0RegController.createAccount,
+    // auth0RegController.startup,
     startupController.create,
-    auth0LoginController.startup
+    // auth0LoginController.startup
 );
 
 // Login

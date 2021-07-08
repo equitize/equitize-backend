@@ -15,11 +15,11 @@ const router = require("express").Router();
 
 // Create a new retailInv
 router.post("/", 
-auth0Controller.getMgtToken, 
-auth0RegController.createAccount, 
-auth0RegController.retailInvestors,
+// auth0Controller.getMgtToken, 
+// auth0RegController.createAccount, 
+// auth0RegController.retailInvestors,
 retailInvestorsController.create,
-auth0LogController.retailInvestors
+// auth0LogController.retailInvestors
 );
 
 // Login

@@ -96,7 +96,9 @@ exports.update = (req, res) => {
       })
     } else {
       res.status(500).send({
-        message: `Cannot update Campaign with id=${startupId}. Maybe Campaign was not found or req.body is empty!`
+        message: `Cannot update Campaign with id=${startupId}. Maybe Campaign was not found or req.body is empty!`,
+        error: num,
+        campaign: campaign
       });
     }
   })

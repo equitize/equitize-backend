@@ -29,8 +29,9 @@ exports.create = (req, res, next) => {
   retialInvestorService.create(retailInvestors)
   .then(function (response) {
     // res.send(response)
-    req.body.retailInv = response;
-    next();
+    // req.body.retailInv = response;
+    // next();
+    res.send(response)
   })
   .catch(function (err) {
     res.status(500).send({
