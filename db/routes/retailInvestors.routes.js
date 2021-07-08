@@ -13,17 +13,23 @@ const fungibleTokenSCController = require("../../smartContracts/controllers/fung
 
 const router = require("express").Router();
 
-// Create a new retailInv
-router.post("/", 
-// auth0Controller.getMgtToken, 
-// auth0RegController.createAccount, 
-// auth0RegController.retailInvestors,
-retailInvestorsController.create,
-// auth0LogController.retailInvestors
-);
 
-// Login
-router.post("/login", auth0LogController.retailInvestors)
+// Create a new retailInv
+if (process.env.NODE_ENV == 'test') {
+    router.post("/", 
+        retailInvestorsController.create,
+    );
+} else {
+    router.post("/", 
+        auth0Controller.getMgtToken, 
+        auth0RegController.createAccount, 
+        auth0RegController.retailInvestors,
+        retailInvestorsController.create,
+        auth0LogController.retailInvestors
+    );
+    // Login
+    router.post("/login", auth0LogController.retailInvestors)
+}
 
 // Retrieve all retailInv
 router.get("/", retailInvestorsController.findAll);
