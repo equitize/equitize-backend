@@ -28,10 +28,9 @@ exports.create = (req, res, next) => {
 
   retialInvestorService.create(retailInvestors)
   .then(function (response) {
-    // res.send(response)
-    // req.body.retailInv = response;
-    // next();
-    res.send(response)
+    if (process.env.NODE_ENV == 'test') {res.send(response)}
+    req.body.retailInv = response;
+    next();
   })
   .catch(function (err) {
     res.status(500).send({

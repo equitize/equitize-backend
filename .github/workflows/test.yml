@@ -1,10 +1,10 @@
 name: Run database tests
 
 on:
+  workflow_dispatch:
   pull_request:
     branches:
-      - currently-silenced
-
+      - master
 
 # Main reference: https://ovirium.com/blog/how-to-make-mysql-work-in-your-github-actions/
 
