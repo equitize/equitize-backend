@@ -51,22 +51,6 @@ db.sequelize.sync({ force: true, logging:false }).then((res) => {
   throw(error)
 });
 
-// const createTcpPool = async config => {
-//   // Extract host and port from socket address
-//   // const dbSocketAddr = process.env.DB_HOST.split(':');
-
-//   // Establish a connection to the database
-//   return await mysql.createPool({
-//     user: "equitize-backend", // e.g. 'my-db-user'
-//     password: "9fM7'ZRn9B,DFB7r", // e.g. 'my-db-password'
-//     database: "equitize-cloudsql", // e.g. 'my-database'
-//     host: "10.53.240.3", // e.g. '127.0.0.1'
-//     port: "3306", // e.g. '3306'
-//     // ... Specify additional properties here.
-//     ...config,
-//   });
-// };
-
 app.use(async(req,res, next) => {
   try {
     const result = await createTcpPool
