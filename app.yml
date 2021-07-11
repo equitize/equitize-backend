@@ -3,4 +3,4 @@ runtime: nodejs14
 entrypoint: yarn prod-VPC
 
 vpc_access_connector:
-  name: projects/equitize-backend/locations/asia-southeast1/connectors/cloudsql-connector
+  name: projects/equitize-backend/locations/asia-southeast2/connectors/cloudsql-connector
