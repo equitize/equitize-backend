@@ -4,7 +4,9 @@ if (process.env.NODE_ENV === "prod") {
   dbConfig = require("../config/cloudSQL.config.js");
 } else if (process.env.NODE_ENV === "dev" || process.env.NODE_ENV === "test") {
   dbConfig = require("../config/db.config.js");
-} 
+} else if (process.env.NODE_ENV === "prod-VPC") {
+  dbConfig = require("../config/cloudSQL-VPC.config.js");
+}
  
 
 const Sequelize = require("sequelize");

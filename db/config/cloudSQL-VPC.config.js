@@ -1,6 +1,6 @@
-// for public IP configuration on Cloud SQL side
+// for private IP configuration on Cloud SQL side
 module.exports = {
-    HOST: "34.126.161.30",
+    HOST: "10.53.240.3",
     USER: "equitize-backend",
     PASSWORD: "9fM7'ZRn9B,DFB7r", //insert your own password here
     DB: "equitize_cloudsql", //make sure database with this name is instantiated on your mysql
@@ -12,3 +12,4 @@ module.exports = {
       idle: 10000
     }
   };
+
