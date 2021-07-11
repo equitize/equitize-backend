@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "clean": "rimraf ./utils/log/logs/retailInvestor",
+    "clean": "rimraf ./utils/log/logs/retailInvestor/*",
     "dev": "cross-env NODE_ENV=dev nodemon --trace-warnings --ignore ./smartContracts/config/ app.js",
     "prod": "cross-env NODE_ENV=prod nodemon app.js",
     "prod-VPC": "NODE_ENV=prod-VPC nodemon app.js",

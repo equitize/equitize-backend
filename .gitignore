@@ -9,4 +9,3 @@ yarn.lock
 package-lock.json
 yarn-error.log
 
-utils/log/logs/
