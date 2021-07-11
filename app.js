@@ -51,17 +51,6 @@ db.sequelize.sync({ force: true, logging:false }).then((res) => {
   throw(error)
 });
 
-app.use(async(req,res, next) => {
-  try {
-    const result = await createTcpPool
-    console.log(result)
-  } catch (error) {
-    console.log(error)
-    next(error)
-  }
-})
-
-
 app.use('/admin', require('./db/routes/admin.routes'));
 app.use('/api/db/startup', require('./db/routes/startup.routes'));
 app.use('/api/db/retailInvestors', logger.retailInvLogger, require('./db/routes/retailInvestors.routes'));
@@ -69,7 +58,7 @@ app.use('/api/db/campaign', require('./db/routes/campaign.routes'));
 app.use('/api/db/junctionTable', require('./db/routes/junctionTable.routes'));
 app.use('/api/db/general', require('./db/routes/general.routes'));
 app.use('/api/sc', require('./smartContracts/routes/sc.routes'));
-app.use('/api/db/misc', require('./db/routes/misc.routes')); // use for jest test setup teardown 
+if (process.env.NODE_ENV !== 'prod-VPC') app.use('/api/db/misc', require('./db/routes/misc.routes')); // use for jest test setup teardown 
 
 
 /** Error Handlers */
