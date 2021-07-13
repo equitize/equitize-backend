@@ -1,13 +1,13 @@
 const morgan = require('morgan');
 const retailInvLogService = require('../../db/services/retailInvLog.service');
 var path = require('path');
-var rfs = require('rotating-file-stream'); // version 2.x
+// var rfs = require('rotating-file-stream'); // version 2.x
 
 // create a rotating write stream
-var retailInvAccessLogStream = rfs.createStream('access.log', {
-    interval: '1d', // rotate 30s
-    path: path.join(__dirname, 'logs/retailInvestor')
-})
+// var retailInvAccessLogStream = rfs.createStream('access.log', {
+//     interval: '1d', // rotate 30s
+//     path: path.join(__dirname, 'logs/retailInvestor')
+// })
 
 
 var sqlCloudStream = (message) => {
