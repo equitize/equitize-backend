@@ -88,7 +88,7 @@ const DEV_PORT = process.env.DEV_PORT || 8080;
 if (process.env.NODE_ENV == 'test') {
   module.exports = app;
 }
-else if (process.env.NODE_ENV == 'prod') {
+else if (process.env.NODE_ENV == 'prod' || process.env.NODE_ENV == 'prod-VPC') {
   app.listen(process.env.PORT, "0.0.0.0" , () => {
     console.log(`Server is running on port. ${process.env.PORT}`);
   });
