@@ -31,15 +31,15 @@ const cronJobs = require("./utils/cron/cronJobs");
 
 
 if (process.env.NODE_ENV!=="test") {
-cron.schedule('*/5 * * * * *', ()=>{
+  cron.schedule('*/5 * * * * *', () => {
   campaigns = cronJobs.checkCampaignGoal(); 
-})
+  })
 }
 
 
 
-// // for public routes
-// // TODO: implement view engine for admin dashboard if there is time
+// for public routes
+// TODO: implement view engine for admin dashboard if there is time
 app.use('/', require('./routes/index.route'));
 
 // db
@@ -57,7 +57,7 @@ app.use('/api/db/retailInvestors', logger.retailInvLogger, require('./db/routes/
 app.use('/api/db/campaign', require('./db/routes/campaign.routes'));
 app.use('/api/db/junctionTable', require('./db/routes/junctionTable.routes'));
 app.use('/api/db/general', require('./db/routes/general.routes'));
-app.use('/api/sc', require('./smartContracts/routes/sc.routes'));
+app.use('/api/sc/', require('./smartContracts/routes/sc.routes'));
 if (process.env.NODE_ENV !== 'prod-VPC') app.use('/api/db/misc', require('./db/routes/misc.routes')); // use for jest test setup teardown 
 
 

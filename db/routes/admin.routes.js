@@ -6,6 +6,7 @@ const zilliqaController = require("../../smartContracts/controllers/zilliqa.cont
 const milestoneSCController = require("../../smartContracts/controllers/milestoneSC.controller");
 const fungibleTokenSCController = require("../../smartContracts/controllers/fungibleTokenSC.controller");
 const retailInvestorsController = require("../controllers/retailInvestors.controller");
+const retailInvLogController = require("../controllers/retailInvLog.controller");
 const router = require("express").Router();
 
 // Delete all startups
@@ -43,9 +44,12 @@ zilliqaController.getCampaigns,
 zilliqaController.getZilAmt,
 milestoneSCController.deploy,
 fungibleTokenSCController.deploy,
-zilliqaController.checkSCstatus)
+zilliqaController.checkSCstatus);
 
 // drop all auth0 users
-router.post("/auth0/dropUsers", auth0Controller.delAllUsers)
+router.post("/auth0/dropUsers", auth0Controller.delAllUsers);
+
+// get all retailInvLogs (Request Logs)
+router.get("/logs/retailInvLogs", retailInvLogController.findAll);
 
 module.exports = router; 
