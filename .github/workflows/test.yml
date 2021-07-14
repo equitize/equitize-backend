@@ -1,6 +1,7 @@
 name: Run database tests
 
 on:
+  workflow_dispatch:
   pull_request:
     branches:
       - master
@@ -42,7 +43,7 @@ jobs:
       if: always()
     - run: yarn test recommender
       if: always()
-    - run: yarn test auth0
+    - run: yarn test auth
       if: always()
     - run: yarn test
       if: always()
