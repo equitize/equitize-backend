@@ -38,6 +38,10 @@ module.exports = {
                     // if ( currentDateTime.isSame(campaignStartDateTime, 'second') && currentlyRaised >= campaignGoal ) {
                     if ( currentDateTime.isBetween(campaignStartDateTime, campaignEndDateTime, 'second') 
                         && currentlyRaised >= campaignGoal ) {
+                        const update = {
+                            campaignStatus : dbConstants.campaign.status.LIVE,
+                            }
+                        const updateStatus = await campaignController.cronUpdate(update, startupId)
                         // check if cache if campaign is currently deploying sc
                         if (!campaignCache.has(startupId)) { // cache do not have campaign
                             const obj = {
@@ -75,7 +79,8 @@ module.exports = {
                                         updates = {
                                             campaignAddr : deployStatus.data.milestoneSCaddress,
                                             fungibleTokenAddr : deployStatus.data.fungibleTokenSCaddress,
-                                            SCdeployedStatus : true
+                                            SCdeployedStatus : true,
+                                            campaignStatus : dbConstants.campaign.status.SUCCESSFUL
                                         }
                                         const updateStatus = await campaignController.cronUpdate(updates, startupId)
                                         console.log('updatestatus ',updateStatus);
