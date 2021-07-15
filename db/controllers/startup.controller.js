@@ -100,6 +100,34 @@ exports.findOne = (req, res) => {
   }) 
 };
 
+// Find a single startup with an id
+exports.findOneByEmail = (req, res) => {
+  const emailAddress = req.body.emailAddress;
+  
+  // TK's implementation of service layer
+  startupService.findOneByEmail(emailAddress)
+  .then(function (response) {
+    if (response == null) {
+      res.status(500).send({
+        message: "No Startup with emailAddress=" + emailAddress
+      })
+    } else {
+      const id = JSON.parse(JSON.stringify(response))
+      if (!id) throw createHttpError[404]
+      startupObj = {
+        startupID: id,
+        auth0: req.body.accessToken
+      }
+      res.send(startupObj)
+    }
+  })
+  .catch(function (err) {
+    res.status(500).send({
+      message: "Error retrieving Startup with emailAddress=" + emailAddress
+    });
+  }) 
+};
+
 // Update a startup by the id in the request
 exports.update = (req, res) => {
   const startupId = req.params.startupId;

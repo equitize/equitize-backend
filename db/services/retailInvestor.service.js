@@ -46,6 +46,23 @@ module.exports = {
             return error
         }
     },
+    findIDByEmail : function (email) {
+        try {
+            const result = RetailInvestors.findOne({  
+                where: { emailAddress : email },
+                attributes: ['id'],
+            })
+            .then(data => {
+                return data
+            })
+            .catch(err => {
+                throw err
+            });
+            return result
+        } catch (error) {
+            return error
+        }
+    },
     update : function (updates, id) {
         try {
             const result = RetailInvestors.update(updates, {

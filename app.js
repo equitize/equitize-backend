@@ -64,6 +64,7 @@ if (process.env.NODE_ENV !== 'prod-VPC') app.use('/api/db/misc', require('./db/r
 /** Error Handlers */
 // 404
 app.use((req, res, next) => {
+  
   const error = new Error("Not found");
   error.status = 404;
   next(error);

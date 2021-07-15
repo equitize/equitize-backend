@@ -1,3 +1,4 @@
+const createHttpError = require("http-errors");
 const { retailInvestors, campaigns } = require("../models");
 const retailInvestorService = require("../services/retailInvestor.service");
 const retialInvestorService = require("../services/retailInvestor.service");
@@ -32,7 +33,7 @@ exports.create = (req, res, next) => {
     req.body.retailInv = response;
     next();
   })
-  .catch(function (err) {
+  .catch(function (err) { 
     res.status(500).send({
       message:
         err.message || "Some error occurred while creating the Retail Investor."
@@ -74,6 +75,33 @@ exports.findOne = (req, res) => {
         message: "Error retrieving RetailInvestors with id=" + id
       });
     })
+};
+
+// Find a single retailInvestor by email
+exports.findIDByEmail = (req, res) => {
+  const emailAddress = req.body.emailAddress;
+  retialInvestorService.findIDByEmail(emailAddress)
+  .then(function (response) {
+    if (response == null) {
+      res.status(500).send({
+        message: "RetailInvestors with email=" + email + " not found"
+      })
+    } else {
+      const id = JSON.parse(JSON.stringify(response))
+      if (!id) throw createHttpError[404]
+      retailInvObject = {
+        retailInvID: id,
+        auth0: req.body.accessToken
+      }
+      res.send(retailInvObject)
+    }
+  })
+  .catch(function (err) {
+    console.log(err)
+    res.status(500).send({
+      message: "Error retrieving RetailInvestors with email=" + email
+    });
+  })
 };
 
 // Update a retailInvestor by the id in the request

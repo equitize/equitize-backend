@@ -25,41 +25,52 @@ if (process.env.NODE_ENV == 'test') {
         auth0RegController.createAccount, 
         auth0RegController.retailInvestors,
         retailInvestorsController.create,
-        auth0LogController.retailInvestors
+        auth0LogController.createRetailInvLogin,
     );
-    // Login
-    router.post("/login", auth0LogController.retailInvestors)
+    // Login (TODO: include jwt check before db access)
+    // no need kyc verferification
+    router.post("/login", auth0LogController.retailInvLogin, retailInvestorsController.findIDByEmail)
 }
 
 // Retrieve all retailInv
+// no need kyc verferification
 router.get("/", retailInvestorsController.findAll);
 
 // Retrieve a single retailInv with id
+// no need kyc verferification
 router.get("/:id", retailInvestorsController.findOne);
 
 // Update a retailInv with id
+// no need kyc verferification
 router.put("/:id", retailInvestorsController.update);
 
 // Delete a retailInv with id
+// no need kyc verferification
 router.delete("/:id", retailInvestorsController.delete);
 
 // Delete all retailInv
+// move to admin 
 router.delete("/", retailInvestorsController.deleteAll);
 
 // Retrieve retailInv by email
+// no need kyc verferification
 router.get("/email/:emailAddress", retailInvestorsController.findViaEmail);
 //http://localhost:8080/api/db/retailInvestors/email/kenny@mail.xyz
 
 // Associate industries to retail investor
+// no need kyc verferification
 router.post("/industries/addIndustries/", industryController.create);
 
 // Associate industries to retail investor
+// need kyc verferification
 router.get("/recommender/:id", industryController.getRetailInvestor, recommenderController.getAndSortStartups);
 
 // Get industries associated with retailinvestorId
+// no need kyc verferification
 router.get("/industries/getIndustries/:id", industryController.getRetailInvestor, industryController.getIndustries);
 
 // Pledge amount to campaign
+// need kyc verferification
 router.put("/campaign/pledge/:startupId", 
 campaignController.getStartup, 
 campaignController.pledgeAmount,
