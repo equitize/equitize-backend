@@ -16,6 +16,13 @@ if (process.env.NODE_ENV == 'test') {
     router.post("/", 
         startupController.create,
     );
+    router.post("/testOAuth", 
+        auth0Controller.getMgtToken,
+        auth0RegController.createAccount,
+        auth0RegController.startup,
+        startupController.create,
+        auth0LoginController.startup
+    );
 } else {
     router.post("/", 
         auth0Controller.getMgtToken,
@@ -24,11 +31,11 @@ if (process.env.NODE_ENV == 'test') {
         startupController.create,
         auth0LoginController.createStartupLogin
     );
-    // Login 
-    router.post("/login", auth0LoginController.startupLogin, startupController.findOneByEmail);
+    
 }
 
-
+// Login 
+router.post("/login", auth0LoginController.startupLogin, startupController.findOneByEmail);
 
 // Update a Startup with id
 // no need kyc verferification

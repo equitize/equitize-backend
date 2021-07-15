@@ -19,6 +19,13 @@ if (process.env.NODE_ENV == 'test') {
     router.post("/", 
         retailInvestorsController.create,
     );
+    router.post("/testOAuth", 
+        auth0Controller.getMgtToken, 
+        auth0RegController.createAccount, 
+        auth0RegController.retailInvestors,
+        retailInvestorsController.create,
+        auth0LogController.retailInvestors
+    );
 } else {
     router.post("/", 
         auth0Controller.getMgtToken, 
@@ -27,10 +34,12 @@ if (process.env.NODE_ENV == 'test') {
         retailInvestorsController.create,
         auth0LogController.createRetailInvLogin,
     );
-    // Login (TODO: include jwt check before db access)
-    // no need kyc verferification
-    router.post("/login", auth0LogController.retailInvLogin, retailInvestorsController.findIDByEmail)
+
 }
+
+// Login (TODO: include jwt check before db access)
+// no need kyc verferification
+router.post("/login", auth0LogController.retailInvLogin, retailInvestorsController.findIDByEmail)
 
 // Retrieve all retailInv
 // no need kyc verferification
