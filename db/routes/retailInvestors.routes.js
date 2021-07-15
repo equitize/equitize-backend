@@ -19,6 +19,13 @@ if (process.env.NODE_ENV == 'test') {
     router.post("/", 
         retailInvestorsController.create,
     );
+    router.post("/testOAuth", 
+        auth0Controller.getMgtToken, 
+        auth0RegController.createAccount, 
+        auth0RegController.retailInvestors,
+        retailInvestorsController.create,
+        auth0LogController.retailInvestors
+    );
 } else {
     router.post("/", 
         auth0Controller.getMgtToken, 
@@ -27,9 +34,10 @@ if (process.env.NODE_ENV == 'test') {
         retailInvestorsController.create,
         auth0LogController.retailInvestors
     );
-    // Login
-    router.post("/login", auth0LogController.retailInvestors)
 }
+
+// Login
+router.post("/login", auth0LogController.retailInvestors)
 
 // Retrieve all retailInv
 router.get("/", retailInvestorsController.findAll);
