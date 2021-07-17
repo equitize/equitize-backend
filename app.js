@@ -2,9 +2,11 @@ const express = require("express");
 const multer = require("multer");
 const cors = require("cors");
 const logger = require("./utils/log/logger");
+const jwtController = require("./auth0/controllers/jwt.controller");
 const app = express();
 require('dotenv').config({
   path: `${__dirname}/.env`
+  
 });
 
 var corsOptions = {
@@ -44,14 +46,23 @@ app.use('/', require('./routes/index.route'));
 
 // db
 const db = require("./db/models");
-db.sequelize.sync({ force: true, logging:false }).then((res) => {
-  console.log("Drop and re-sync db.");
-}).catch( function (error) {
-  console.log(error)
-  throw(error)
-});
+const createHttpError = require("http-errors");
+if (process.env.NODE_ENV === '') {
+  db.sequelize.sync({ alter: true, logging:false }).then((res) => {
+    console.log("Checked current db state and made necessary changes to match defined models.");
+  }).catch( function (error) {
+    throw(error)
+  });
+} else {
+  db.sequelize.sync({ force: true, logging:false }).then((res) => {
+    console.log("Drop and re-sync db.");
+  }).catch( function (error) {
+    throw(error)
+  });
+}
 
 app.use('/admin', require('./db/routes/admin.routes'));
+// app.use('/admin', authorizeAccessToken, checkAdmin, require('./db/routes/admin.routes'));
 app.use('/api/db/startup', require('./db/routes/startup.routes'));
 app.use('/api/db/retailInvestors', logger.retailInvLogger, require('./db/routes/retailInvestors.routes'));
 app.use('/api/db/campaign', require('./db/routes/campaign.routes'));
@@ -63,18 +74,25 @@ if (process.env.NODE_ENV !== 'prod-VPC') app.use('/api/db/misc', require('./db/r
 
 /** Error Handlers */
 // 404
-app.use((req, res, next) => {
-  
-  const error = new Error("Not found");
-  error.status = 404;
-  next(error);
+app.use((err, req, res, next) => {
+  console.log(err)
+  if (err.name === "UnauthorizedError") {
+    next(createHttpError(401, "Invalid Token"))
+  }
+  else if (err.statusCode === 403) {
+    next(err)
+  }
+  else {
+    const error = new Error("Not found");
+    error.status = 404;
+    next(error);
+  }
 }); 
 // other errors
 app.use((error, req, res, next) => {
-  console.log(error)
-  res.status(error.status || 500).send({
+  res.status(error.status || error.statusCode || 500).send({
     error: {
-      status: error.status || 500,
+      status: error.status || error.statusCode || 500,
       message: error.message || 'Internal Server Error',
     },
   });

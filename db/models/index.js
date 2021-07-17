@@ -51,19 +51,16 @@ db.startups = require("./startup.model.js")(sequelize, Sequelize);
 db.retailInvLog = require("./retailInvLog.model.js")(sequelize, Sequelize);
 
 
-// db.milestones.hasMany(db.milestoneParts, { onDelete: "cascade", as: "milestoneParts" });
 db.startups.hasMany(db.milestoneParts, { onDelete: "cascade", as: "milestones" });
 db.startups.hasMany(db.industries, { onDelete: "cascade", as: "industries" });
 db.retailInvestors.hasMany(db.industries, { onDelete: "cascade", as : "industryPreferences" });
-// db.startups.hasMany(db.campaigns, { onDelete: "cascade", as: "campaigns" });
 db.startups.hasOne(db.campaigns, { onDelete : "cascade" });
-// db.retailInvestors.hasMany(db.campaigns, { onDelete: "cascade", as : "campaigns" });
+db.startups.hasOne(db.commercialChampion, { onDelete : "cascade" });
 db.retailInvestors.belongsToMany(db.campaigns, { through : "campaign_retailInv", onDelete : "cascade" })
 
 db.milestoneParts.belongsTo(db.startups , { foreignKey: "startupId",  as: "startup" });
 db.industries.belongsTo(db.startups , { foreignKey: "startupId",  as: "startup" });
 db.campaigns.belongsTo(db.startups);
-// db.campaigns.belongsTo(db.retailInvestors , { foreignKey: "retailInvestorId",  as: "retailInvestor" });
 db.campaigns.belongsToMany(db.retailInvestors, { through : "campaign_retailInv", onDelete : "cascade" })
 db.industries.belongsTo(db.retailInvestors, {foreignKey: "retailInvestorId", as: "retailInvestor" });
 

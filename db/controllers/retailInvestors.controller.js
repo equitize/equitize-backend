@@ -84,7 +84,7 @@ exports.findIDByEmail = (req, res) => {
   .then(function (response) {
     if (response == null) {
       res.status(500).send({
-        message: "RetailInvestors with email=" + email + " not found"
+        message: "RetailInvestors with email=" + emailAddress + " not found"
       })
     } else {
       const id = JSON.parse(JSON.stringify(response))
@@ -97,7 +97,6 @@ exports.findIDByEmail = (req, res) => {
     }
   })
   .catch(function (err) {
-    console.log(err)
     res.status(500).send({
       message: "Error retrieving RetailInvestors with email=" + email
     });

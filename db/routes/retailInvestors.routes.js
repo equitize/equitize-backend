@@ -10,6 +10,8 @@ const milestonePartController = require("../controllers/milestonePart.controller
 const zilliqaController = require("../../smartContracts/controllers/zilliqa.controller");
 const milestoneSCController = require("../../smartContracts/controllers/milestoneSC.controller");
 const fungibleTokenSCController = require("../../smartContracts/controllers/fungibleTokenSC.controller");
+const jwtController = require("../../auth0/controllers/jwt.controller");
+
 
 const router = require("express").Router();
 
@@ -23,75 +25,62 @@ if (process.env.NODE_ENV == 'test') {
         auth0Controller.getMgtToken, 
         auth0RegController.createAccount, 
         auth0RegController.retailInvestors,
+        auth0Controller.addPerms,
         retailInvestorsController.create,
-        auth0LogController.retailInvestors
+        auth0LogController.createRetailInvLogin
     );
 } else {
     router.post("/", 
         auth0Controller.getMgtToken, 
         auth0RegController.createAccount, 
         auth0RegController.retailInvestors,
+        auth0Controller.addPerms,
         retailInvestorsController.create,
         auth0LogController.createRetailInvLogin,
     );
 
 }
 
-// Login (TODO: include jwt check before db access)
+// Login
 // no need kyc verferification
 router.post("/login", auth0LogController.retailInvLogin, retailInvestorsController.findIDByEmail)
 
 // Retrieve all retailInv
 // no need kyc verferification
-router.get("/", retailInvestorsController.findAll);
+router.get("/", jwtController.authorizeAccessToken, jwtController.checkretailKYCUnverified, retailInvestorsController.findAll);
 
 // Retrieve a single retailInv with id
 // no need kyc verferification
-router.get("/:id", retailInvestorsController.findOne);
+router.get("/:id", jwtController.authorizeAccessToken, jwtController.checkretailKYCUnverified, retailInvestorsController.findOne);
 
 // Update a retailInv with id
 // no need kyc verferification
-router.put("/:id", retailInvestorsController.update);
+router.put("/:id", jwtController.authorizeAccessToken, jwtController.checkretailKYCUnverified, retailInvestorsController.update);
 
 // Delete a retailInv with id
 // no need kyc verferification
-router.delete("/:id", retailInvestorsController.delete);
-
-// Delete all retailInv
-// move to admin 
-router.delete("/", retailInvestorsController.deleteAll);
+router.delete("/:id", jwtController.authorizeAccessToken, jwtController.checkretailKYCUnverified, retailInvestorsController.delete);
 
 // Retrieve retailInv by email
 // no need kyc verferification
-router.get("/email/:emailAddress", retailInvestorsController.findViaEmail);
+router.get("/email/:emailAddress", jwtController.authorizeAccessToken, jwtController.checkretailKYCUnverified, retailInvestorsController.findViaEmail);
 //http://localhost:8080/api/db/retailInvestors/email/kenny@mail.xyz
 
 // Associate industries to retail investor
 // no need kyc verferification
-router.post("/industries/addIndustries/", industryController.create);
+router.post("/industries/addIndustries/", jwtController.authorizeAccessToken, jwtController.checkretailKYCUnverified, industryController.create);
 
 // Associate industries to retail investor
 // need kyc verferification
-router.get("/recommender/:id", industryController.getRetailInvestor, recommenderController.getAndSortStartups);
+router.get("/recommender/:id", jwtController.authorizeAccessToken, jwtController.checkretailKYCverified, industryController.getRetailInvestor, recommenderController.getAndSortStartups);
 
 // Get industries associated with retailinvestorId
 // no need kyc verferification
-router.get("/industries/getIndustries/:id", industryController.getRetailInvestor, industryController.getIndustries);
+router.get("/industries/getIndustries/:id", jwtController.authorizeAccessToken, jwtController.checkretailKYCUnverified, industryController.getRetailInvestor, industryController.getIndustries);
 
 // Pledge amount to campaign
 // need kyc verferification
 router.put("/campaign/pledge/:startupId", 
-campaignController.getStartup, 
-campaignController.pledgeAmount,
-retailInvestorsController.addCampaign
-// add in middlewares that will deploy SC
-// milestonePartController.getStartup,
-// zilliqaController.getMilestone,
-// zilliqaController.getCampaigns,
-// zilliqaController.getZilAmt,
-// milestoneSCController.deploy,
-// fungibleTokenSCController.deploy,
-// retailInvestorsController.checkSCstatus
-);
+jwtController.authorizeAccessToken, jwtController.checkretailKYCverified, campaignController.getStartup, campaignController.pledgeAmount, retailInvestorsController.addCampaign);
 
 module.exports = router;
