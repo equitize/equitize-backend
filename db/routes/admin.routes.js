@@ -37,7 +37,7 @@ router.get("/email/:email", jwtController.authorizeAccessToken, jwtController.ch
 router.post("/createCampaign/", jwtController.authorizeAccessToken, jwtController.checkAdmin, campaignController.create);
 
 // Retrieve a single Startup with id
-router.get("/getStartup/:id", jwtController.authorizeAccessToken, jwtController.checkAdmin, startupController.findOne);
+router.get("/getStartup/:startupId", jwtController.authorizeAccessToken, jwtController.checkAdmin, startupController.findOne);
 
 // Retrieve all Startup
 router.get("/getStartups", jwtController.authorizeAccessToken, jwtController.checkAdmin, startupController.findAll);
