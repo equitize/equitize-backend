@@ -2,14 +2,9 @@ const retailInvestorsController = require("../controllers/retailInvestors.contro
 const auth0Controller = require("../../auth0/controllers/backend.controller");
 const auth0RegController = require("../../auth0/controllers/registration.controller");
 const auth0LogController = require("../../auth0/controllers/login.controller");
-const startupController = require("../controllers/startup.controller");
 const industryController = require("../controllers/industry.controller");
 const recommenderController = require("../controllers/recommender.controller");
 const campaignController = require("../controllers/campaign.controller");
-const milestonePartController = require("../controllers/milestonePart.controller");
-const zilliqaController = require("../../smartContracts/controllers/zilliqa.controller");
-const milestoneSCController = require("../../smartContracts/controllers/milestoneSC.controller");
-const fungibleTokenSCController = require("../../smartContracts/controllers/fungibleTokenSC.controller");
 const jwtController = require("../../auth0/controllers/jwt.controller");
 
 

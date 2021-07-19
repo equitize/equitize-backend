@@ -7,7 +7,7 @@ if (process.env.NODE_ENV==="dev") {
   bucket = gc.bucket('equitize-cloud-storage-dev');
   bucketName = 'equitize-cloud-storage-dev';
 }
-else if (process.env.NODE_ENV==="prod") {
+else if (process.env.NODE_ENV==="prod" || process.env.NODE_ENV==="prod-VPC") {
   bucket = gc.bucket('equitize-cloud-storage');
   bucketName = 'equitize-cloud-storage';
 } 

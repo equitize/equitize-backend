@@ -2,7 +2,6 @@ const express = require("express");
 const multer = require("multer");
 const cors = require("cors");
 const logger = require("./utils/log/logger");
-const jwtController = require("./auth0/controllers/jwt.controller");
 const app = express();
 require('dotenv').config({
   path: `${__dirname}/.env`
@@ -16,7 +15,7 @@ var corsOptions = {
 const multerMid = multer({
   storage: multer.memoryStorage(),
   limits: {
-    // limt : 3mb
+    // limt : 30mb
     fileSize: 30 * 1024 * 1024,
   },
 });
@@ -62,7 +61,6 @@ if (process.env.NODE_ENV === '') {
 }
 
 app.use('/admin', require('./db/routes/admin.routes'));
-// app.use('/admin', authorizeAccessToken, checkAdmin, require('./db/routes/admin.routes'));
 app.use('/api/db/startup', require('./db/routes/startup.routes'));
 app.use('/api/db/retailInvestors', logger.retailInvLogger, require('./db/routes/retailInvestors.routes'));
 app.use('/api/db/campaign', require('./db/routes/campaign.routes'));

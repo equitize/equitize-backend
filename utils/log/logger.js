@@ -1,6 +1,6 @@
 const morgan = require('morgan');
 const retailInvLogService = require('../../db/services/retailInvLog.service');
-var path = require('path');
+// var path = require('path');
 // var rfs = require('rotating-file-stream'); // version 2.x
 
 // create a rotating write stream
