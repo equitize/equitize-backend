@@ -2,5 +2,8 @@ runtime: nodejs14
 
 entrypoint: yarn prod-VPC
 
+env_variables:
+  SQL_PASSWORD: ${{ secrets.SQL_PASSWORD }}
+
 vpc_access_connector:
   name: projects/equitize-backend/locations/asia-southeast2/connectors/cloudsql-connector
