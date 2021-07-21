@@ -23,6 +23,11 @@ module.exports = {
         // checkAllScopes: true,
         failWithError: true
     }),
+    checkStartupKYCUnverifiedretailInvVerified : jwtAuthz([perms.startupUnverified, perms.startupVerified, perms.retailInvestorVerified], { // routes should still be accessible after KYC-verification
+        customScopeKey: "permissions",
+        // checkAllScopes: true,
+        failWithError: true
+    }),
     checkStartupKYCverified : jwtAuthz([perms.startupVerified], {
         customScopeKey: "permissions",
         checkAllScopes: true,

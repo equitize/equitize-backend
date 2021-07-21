@@ -11,6 +11,8 @@ var deployCount = 1;
 module.exports = {
     testFunction : () => {
         console.log('runnning every 5 seconds')
+        // console.log(moment('2021-07-20T18:06:30+08:00'))
+        // console.log(moment())
     },
     checkCampaignGoal : async () => {
         try {
@@ -26,8 +28,7 @@ module.exports = {
                 where : { SCdeployedStatus : false , campaignStatus : dbConstants.campaign.status.NONLIVE }
             }
             const campaigns = await campaignController.cronFindAll(conditions, attributes) // campaigns that are not yet live
-            
-            if (campaigns.length != 0) { // no non live campaigns
+            if (campaigns.length = 0) { // non live campaigns exists
                 for (let i=0; i < campaigns.length; i++) {
                     
                     const campaignStartDateTime = moment(campaigns[i].dataValues.startDate);
@@ -36,14 +37,21 @@ module.exports = {
                     const campaignGoal = campaigns[i].dataValues.goal;
                     const currentlyRaised = campaigns[i].dataValues.currentlyRaised;
                     const startupId =  campaigns[i].dataValues.startupId;
-                
-                    if ( currentDateTime.isBetween(campaignStartDateTime, campaignEndDateTime, 'second') 
-                        && currentlyRaised >= campaignGoal ) {
-                        
+                    if (currentDateTime.isBetween(campaignStartDateTime, campaignEndDateTime, 'second')) {
                         const update = {
                             campaignStatus : dbConstants.campaign.status.LIVE,
                             }
                         const updateStatus = await campaignController.cronUpdate(update, startupId)
+                    } else if (currentDateTime.isAfter(campaignEndDateTime, 'seconds')) { // campaign expired
+                        // campaignGoal not reached
+                        // update campaignStatus -> failedFundraising
+                        const updates = { campaignStatus : dbConstants.campaign.status.FAILED.FUNDRAISING }
+                        await campaignService.update(updates, startupId)
+                    }
+
+                    if ( currentDateTime.isBetween(campaignStartDateTime, campaignEndDateTime, 'second') 
+                        && currentlyRaised >= campaignGoal ) {
+                    
                         // check if cache if campaign is currently deploying sc
                         if (!campaignCache.has(startupId)) { // cache do not have non live campaign
                             const obj = {
@@ -53,18 +61,13 @@ module.exports = {
                             campaignCache.set(startupId, obj);
                         }
                     } 
-                    else if (currentDateTime.isAfter(campaignEndDateTime, 'seconds')) { // campaign expired
-                        // campaignGoal not reached
-                        // update campaignStatus -> failedFundraising
-                        const updates = { campaignStatus : dbConstants.campaign.status.FAILED.FUNDRAISING }
-                        await campaignService.update(updates, startupId)
-                    }
-                
+                    
                     /* TODO: How to trigger failed Milestones? 
                     1. Failed Milestones.
                     */
                 }
-            } else if (campaignCache.size !== 0) {
+            } 
+            if (campaignCache.size !== 0) { // change this to if 
                 campaignCache.forEach(async function (value, key) {
                     const startup = value
                     const startupId = key

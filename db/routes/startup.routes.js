@@ -56,7 +56,7 @@ router.put("/pitchDeck/:startupId", jwtController.authorizeAccessToken, jwtContr
 
 // Get SignedURL & original file name for limited access on resource (pitchDeck and video)
 // no need kyc verferification
-router.get("/getSignedURLPlus/:fileType/:startupId", jwtController.authorizeAccessToken, jwtController.checkStartupKYCUnverified, startupController.getItemIdentifierWithName, CloudStorageController.getSignedUrlWithName)
+router.get("/getSignedURLPlus/:fileType/:startupId", jwtController.authorizeAccessToken, jwtController.checkStartupKYCUnverifiedretailInvVerified, startupController.getItemIdentifierWithName, CloudStorageController.getSignedUrlWithName)
 
 // Convert CapTable to live Link via CloudStorage
 // Update captable field to to link in db. 
@@ -65,7 +65,7 @@ router.put("/capTable/:startupId", jwtController.authorizeAccessToken, jwtContro
 
 // Get SignedURL for limited access on resource (capTable)
 // no need kyc verferification
-router.get("/getSignedURL/:fileType/:startupId", jwtController.authorizeAccessToken, jwtController.checkStartupKYCUnverified, startupController.getItemIdentifier, CloudStorageController.getSignedURL);
+router.get("/getSignedURL/:fileType/:startupId", jwtController.authorizeAccessToken, jwtController.checkStartupKYCUnverifiedretailInvVerified, startupController.getItemIdentifier, CloudStorageController.getSignedURL);
 
 // Convert acraDocuments to live Link via CloudStorage
 // Update Startup's acraDocuments field to to link in db. 
@@ -74,7 +74,7 @@ router.put("/acraDocuments/:startupId", jwtController.authorizeAccessToken, jwtC
 
 // Get SignedURL for limited access on resource (capTable)
 // no need kyc verferification
-router.get("/acraDocuments/:startupId", jwtController.authorizeAccessToken, jwtController.checkStartupKYCUnverified, startupController.getItemIdentifier, CloudStorageController.getSignedURL);
+router.get("/acraDocuments/:startupId", jwtController.authorizeAccessToken, jwtController.checkStartupKYCUnverifiedretailInvVerified, startupController.getItemIdentifier, CloudStorageController.getSignedURL);
 
 // Convert bankInfo to live Link via CloudStorage
 // Update Startup's bankInfo field to to link in db. 
@@ -83,7 +83,7 @@ router.put("/bankInfo/:startupId", jwtController.authorizeAccessToken, jwtContro
 
 // Get SignedURL for limited access on resource (bankInfo)
 // no need kyc verferification
-router.get("/bankInfo/:startupId", jwtController.authorizeAccessToken, jwtController.checkStartupKYCUnverified, startupController.getItemIdentifier, CloudStorageController.getSignedURL);
+router.get("/bankInfo/:startupId", jwtController.authorizeAccessToken, jwtController.checkStartupKYCUnverifiedretailInvVerified, startupController.getItemIdentifier, CloudStorageController.getSignedURL);
 
 // Convert idProof to live Link via CloudStorage
 // Update Startup's idProof field to to link in db. 
@@ -92,7 +92,7 @@ router.put("/idProof/:startupId", jwtController.authorizeAccessToken, jwtControl
 
 // Get SignedURL for limited access on resource (idProof)
 // no need kyc verferification
-router.get("/idProof/:startupId", jwtController.authorizeAccessToken, jwtController.checkStartupKYCUnverified, startupController.getItemIdentifier, CloudStorageController.getSignedURL);
+router.get("/idProof/:startupId", jwtController.authorizeAccessToken, jwtController.checkStartupKYCUnverifiedretailInvVerified, startupController.getItemIdentifier, CloudStorageController.getSignedURL);
 
 // Convert profilePhoto to live Link via CloudStorage
 // Update Startup's profilePhoto field to to link in db. 
@@ -102,7 +102,7 @@ router.put("/profilePhoto/:startupId", jwtController.authorizeAccessToken, jwtCo
 
 // Get SignedURL for limited access on resource (profilePhoto)
 // no need kyc verferification
-router.get("/profilePhoto/:startupId", jwtController.authorizeAccessToken, jwtController.checkStartupKYCUnverified, startupController.getItemIdentifier, CloudStorageController.getSignedURL);
+router.get("/profilePhoto/:startupId", jwtController.authorizeAccessToken, jwtController.checkStartupKYCUnverifiedretailInvVerified, startupController.getItemIdentifier, CloudStorageController.getSignedURL);
 
 // Retrieve Startup by name
 router.get("/companyName/:companyName", jwtController.authorizeAccessToken, jwtController.checkStartupKYCverified, startupController.findViaName);
@@ -147,7 +147,7 @@ router.get("/getCommercialChampion/:startupId", jwtController.authorizeAccessTok
 
 // Retrieve a single Startup with id
 // no need kyc verferification
-router.get("/:startupId", jwtController.authorizeAccessToken, jwtController.checkStartupKYCUnverified, startupController.findOne);
+router.get("/:startupId", jwtController.authorizeAccessToken, jwtController.checkStartupKYCUnverifiedretailInvVerified, startupController.findOne);
 
 // Retrieve all Startup
 // move to admin

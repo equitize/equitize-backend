@@ -34,6 +34,7 @@ const cronJobs = require("./utils/cron/cronJobs");
 if (process.env.NODE_ENV!=="test") {
   cron.schedule('*/5 * * * * *', () => {
   campaigns = cronJobs.checkCampaignGoal(); 
+  // cronJobs.testFunction();
   })
 }
 
@@ -46,7 +47,7 @@ app.use('/', require('./routes/index.route'));
 // db
 const db = require("./db/models");
 const createHttpError = require("http-errors");
-if (process.env.NODE_ENV === '') {
+if (process.env.NODE_ENV === 'prod-VPC'|| process.env.NODE_ENV === 'dev-persistent') {
   db.sequelize.sync({ alter: true, logging:false }).then((res) => {
     console.log("Checked current db state and made necessary changes to match defined models.");
   }).catch( function (error) {

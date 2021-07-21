@@ -3,7 +3,7 @@ const { nextTick } = require("process");
 const gc = require("../index");
 let bucket;
 let bucketName;
-if (process.env.NODE_ENV==="dev") {
+if (process.env.NODE_ENV==="dev" || process.env.NODE_ENV === "dev-persistent") {
   bucket = gc.bucket('equitize-cloud-storage-dev');
   bucketName = 'equitize-cloud-storage-dev';
 }
