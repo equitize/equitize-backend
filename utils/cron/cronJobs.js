@@ -28,7 +28,7 @@ module.exports = {
                 where : { SCdeployedStatus : false , campaignStatus : dbConstants.campaign.status.NONLIVE }
             }
             const campaigns = await campaignController.cronFindAll(conditions, attributes) // campaigns that are not yet live
-            if (campaigns.length = 0) { // non live campaigns exists
+            if (campaigns.length !== 0) { // non live campaigns exists
                 for (let i=0; i < campaigns.length; i++) {
                     
                     const campaignStartDateTime = moment(campaigns[i].dataValues.startDate);
@@ -37,6 +37,7 @@ module.exports = {
                     const campaignGoal = campaigns[i].dataValues.goal;
                     const currentlyRaised = campaigns[i].dataValues.currentlyRaised;
                     const startupId =  campaigns[i].dataValues.startupId;
+
                     if (currentDateTime.isBetween(campaignStartDateTime, campaignEndDateTime, 'second')) {
                         const update = {
                             campaignStatus : dbConstants.campaign.status.LIVE,
