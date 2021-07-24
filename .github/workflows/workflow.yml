@@ -31,6 +31,11 @@ jobs:
       - name: Install dependencies
         run: yarn
 
+      - name: Replacing env variables
+        uses: ikuanyshbekov/app-yaml-env-compiler@v1.0
+        env:
+          SQL_HOST: ${{ secrets.SQL_HOST }}
+
       - name: Deploy to App Engine
         id: deploy
         uses: google-github-actions/deploy-appengine@main
