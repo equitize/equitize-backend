@@ -15,9 +15,8 @@ const msgVersion = 1; // current msgVersion
 const VERSION = bytes.pack(chainId, msgVersion);
 
 // Populate the wallet with an account
-const privateKey = 
-// process.env.ZILLIQA_PRIVATE_KEY
-  '9ec14378e6b6058e21497917df8632d6afde2d0ffced3305c8e7d6411dd00ef7';
+const privateKey = process.env.ZILLIQA_PRIVATE_KEY
+  // '9ec14378e6b6058e21497917df8632d6afde2d0ffced3305c8e7d6411dd00ef7';
 
 
 zilliqa.wallet.addByPrivateKey(privateKey);
