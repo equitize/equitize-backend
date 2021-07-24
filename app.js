@@ -3,10 +3,10 @@ const multer = require("multer");
 const cors = require("cors");
 const logger = require("./utils/log/logger");
 const app = express();
-require('dotenv').config({
-  path: `${__dirname}/.env`
+// require('dotenv').config({
+//   path: `${__dirname}/.env`
   
-});
+// });
 
 var corsOptions = {
   origin: "*"
