@@ -49,8 +49,6 @@ jobs:
           AUTH0_CLIENT_SECRET_PDTN: ${{ secrets.AUTH0_CLIENT_SECRET_PDTN }}
           CLOUDSTORAGE_SECRET_PASSPHRASE: ${{ secrets.CLOUDSTORAGE_SECRET_PASSPHRASE }}
           ZILLIQA_PRIVATE_KEY: ${{ secrets.ZILLIQA_PRIVATE_KEY }}
-        run: |
-          echo ${#SQL_HOST}
         with:
           deliverables: app.yml
           project_id: ${{ secrets.GCP_PROJECT }}
