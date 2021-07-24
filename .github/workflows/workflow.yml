@@ -25,17 +25,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v2
-      - name: Decrypt cloudstroage secret file
-        run: ./.github/scripts/decrypt_cloudstorage_secret.sh
-        env:
-          CLOUDSTORAGE_SECRET_PASSPHRASE: ${{ secrets.CLOUDSTORAGE_SECRET_PASSPHRASE }}
-      # This command is just an example to show your secret being printed
-      # Ensure you remove any print statements of your secrets. GitHub does
-      # not hide secrets that use this workaround.
-      - name: Test printing your secret (Remove this step in production)
-        run: cat ./cloudStorage/keys.json
-
       - name: Checkout
         uses: actions/checkout@v2
 
@@ -59,6 +48,16 @@ jobs:
           AUTH0_CLIENT_SECRET_PDTN: ${{ secrets.AUTH0_CLIENT_SECRET_PDTN }}
           CLOUDSTORAGE_SECRET_PASSPHRASE: ${{ secrets.CLOUDSTORAGE_SECRET_PASSPHRASE }}
           ZILLIQA_PRIVATE_KEY: ${{ secrets.ZILLIQA_PRIVATE_KEY }}
+
+      - name: Decrypt cloudstroage secret file
+        run: ./.github/scripts/decrypt_cloudstorage_secret.sh
+        env:
+          CLOUDSTORAGE_SECRET_PASSPHRASE: ${{ secrets.CLOUDSTORAGE_SECRET_PASSPHRASE }}
+      # This command is just an example to show your secret being printed
+      # Ensure you remove any print statements of your secrets. GitHub does
+      # not hide secrets that use this workaround.
+      - name: Test printing your secret (Remove this step in production)
+        run: cat ./cloudStorage/keys.json
 
       - name: Deploy to App Engine
         id: deploy
