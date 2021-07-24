@@ -4,7 +4,7 @@ entrypoint: yarn prod-VPC
 
 env_variables:
   SQL_PASSWORD: ${{ secrets.SQL_PASSWORD }}
-  SQL_HOST: ${{ secrets.SQL_HOST }}
+  SQL_HOST: SQL_HOST
   SQL_USER: ${{ secrets.SQL_USER }}
   SQL_DB: ${{ secrets.SQL_DB }}
   AUTH0_DOMAIN : ${{ secrets.AUTH0_DOMAIN }}
