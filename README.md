@@ -10,6 +10,7 @@ Create a database named testdb
 
 Update PASSWORD field in ~/db/config/db.config.js
 
+
 # QuickStart
 ---
 Use `yarn install` to install all dependencies.
