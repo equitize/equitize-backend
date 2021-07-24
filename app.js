@@ -98,7 +98,9 @@ app.use((error, req, res, next) => {
 });
 
 
-
+console.log(process.env.SQL_HOST)
+console.log(process.env.SQL_PASSWORD)
+console.log(process.env)
 
 // set port, listen for requests
 const DEV_PORT = process.env.DEV_PORT || 8080;
