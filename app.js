@@ -3,11 +3,11 @@ const multer = require("multer");
 const cors = require("cors");
 const logger = require("./utils/log/logger");
 const app = express();
-// require('dotenv').config({
-//   path: `${__dirname}/.env`
-  
-// });
-
+if (process.env.NODE_ENV === 'dev' || process.env.NODE_ENV === 'dev-persistent') {
+  require('dotenv').config({
+    path: `${__dirname}/.env`
+  });
+}
 var corsOptions = {
   origin: "*"
 };
@@ -97,8 +97,6 @@ app.use((error, req, res, next) => {
   });
 });
 
-
-console.log(process.env.SQL_HOST)
 
 // set port, listen for requests
 const DEV_PORT = process.env.DEV_PORT || 8080;
