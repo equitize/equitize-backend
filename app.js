@@ -31,7 +31,7 @@ const cron = require("node-cron");
 const cronJobs = require("./utils/cron/cronJobs");
 
 
-if (process.env.NODE_ENV!=="test") {
+if (process.env.NODE_ENV !== "test") {
   cron.schedule('*/5 * * * * *', () => {
   campaigns = cronJobs.checkCampaignGoal(); 
   // cronJobs.testFunction();
@@ -109,7 +109,7 @@ else if (process.env.NODE_ENV === 'prod' || process.env.NODE_ENV === 'prod-VPC')
     console.log(`Server is running on port. ${process.env.PORT}`);
   });
 }
-else if (process.env.NODE_ENV === 'dev') {
+else if (process.env.NODE_ENV === 'dev' || process.env.NODE_ENV === 'dev-persistent') {
   app.listen(DEV_PORT, () => {
     console.log(`Server is running on port ${DEV_PORT}.`);
   });
