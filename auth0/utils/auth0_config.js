@@ -14,6 +14,6 @@ module.exports = {
         superPerms: {
             admin: "admin:all"
         },
-        adminUID: "auth0|60f56f7d842c380069e23876"
+        adminUID: "auth0|60ff98018b2d6b00692b9f7c"
     }
 }

@@ -8,7 +8,7 @@ module.exports = {
         try {
             const data = {
                 "grant_type": "client_credentials",
-                "client_id": `${process.env.AUTH0_CLIENT_ID_PDTN}`,
+                "client_id": `${process.env.AUTH0_BACKEND_CLIENTID}`,
                 "client_secret": `${process.env.AUTH0_CLIENT_SECRET_PDTN}`,
                 "audience": `https://${process.env.AUTH0_DOMAIN}/api/v2/`
             };

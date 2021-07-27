@@ -7,7 +7,7 @@ const router = require("express").Router();
 router.get("/FTtransfer", FungibleTokenController.transfer);
 router.post("/FTdeploy", FungibleTokenController.deploy);
 
-router.post("/milestoneDeploy/:startupId", 
+router.post("/milestoneDeploy/:startupId",
     milestonePartController.getStartup, 
     zilliqaController.getMilestone,
     zilliqaController.getCampaigns,

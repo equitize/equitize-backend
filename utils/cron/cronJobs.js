@@ -83,8 +83,8 @@ module.exports = {
                             "grant_type": "http://auth0.com/oauth/grant-type/password-realm",
                             "client_id": process.env.AUTH0_FRONTEND_CLIENTID,
                             "audience": process.env.AUTH0_AUDIENCE,
-                            "username": "admin@equitize.xyz",
-                            "password": "Password123!....",
+                            "username": process.env.AUTH0_ADMIN_USERNAME,
+                            "password": process.env.AUTH0_ADMIN_PWD,
                             "realm": "Username-Password-Authentication"
                         };
                         var headers = {

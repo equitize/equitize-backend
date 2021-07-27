@@ -3,11 +3,11 @@ const multer = require("multer");
 const cors = require("cors");
 const logger = require("./utils/log/logger");
 const app = express();
-require('dotenv').config({
-  path: `${__dirname}/.env`
-  
-});
-
+if (process.env.NODE_ENV === 'dev' || process.env.NODE_ENV === 'dev-persistent') {
+  require('dotenv').config({
+    path: `${__dirname}/.env`
+  });
+}
 var corsOptions = {
   origin: "*"
 };
@@ -31,7 +31,7 @@ const cron = require("node-cron");
 const cronJobs = require("./utils/cron/cronJobs");
 
 
-if (process.env.NODE_ENV!=="test") {
+if (process.env.NODE_ENV !== "test") {
   cron.schedule('*/5 * * * * *', () => {
   campaigns = cronJobs.checkCampaignGoal(); 
   // cronJobs.testFunction();
@@ -98,8 +98,6 @@ app.use((error, req, res, next) => {
 });
 
 
-
-
 // set port, listen for requests
 const DEV_PORT = process.env.DEV_PORT || 8080;
 
@@ -111,7 +109,7 @@ else if (process.env.NODE_ENV === 'prod' || process.env.NODE_ENV === 'prod-VPC')
     console.log(`Server is running on port. ${process.env.PORT}`);
   });
 }
-else if (process.env.NODE_ENV === 'dev') {
+else if (process.env.NODE_ENV === 'dev' || process.env.NODE_ENV === 'dev-persistent') {
   app.listen(DEV_PORT, () => {
     console.log(`Server is running on port ${DEV_PORT}.`);
   });

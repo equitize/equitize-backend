@@ -2,9 +2,11 @@ const jwt = require("express-jwt");
 const jwksRsa = require("jwks-rsa");
 const jwtAuthz = require("express-jwt-authz");
 const { auth0_config : { perms, superPerms } } = require('../utils/auth0_config');
-require('dotenv').config({
-    path: `${__dirname}/../../.env`
-});
+if (process.env.NODE_ENV === 'dev' || process.env.NODE_ENV === 'dev-persistent') {
+    require('dotenv').config({
+        path: `${__dirname}/../../.env`
+    });
+}
 
 module.exports = {
     authorizeAccessToken : jwt({

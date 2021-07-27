@@ -2,6 +2,7 @@ node_modules/
 .DS_Store
 .idea/
 .env
+cloudStorage/keys.json
 db/config/db.config.js
 coverage/
 
