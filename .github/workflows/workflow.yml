@@ -6,21 +6,6 @@ on:
       - master
 
 jobs:
-  # decrypt:
-    # name: Decrypt cloudStorage secret file
-    # runs-on: ubuntu-latest
-    # steps:
-    #   - uses: actions/checkout@v2
-    #   - name: Decrypt cloudstroage secret file
-    #     run: ./.github/scripts/decrypt_cloudstorage_secret.sh
-    #     env:
-    #       CLOUDSTORAGE_SECRET_PASSPHRASE: ${{ secrets.CLOUDSTORAGE_SECRET_PASSPHRASE }}
-    #   # This command is just an example to show your secret being printed
-    #   # Ensure you remove any print statements of your secrets. GitHub does
-    #   # not hide secrets that use this workaround.
-    #   - name: Test printing your secret (Remove this step in production)
-    #     run: cat ./cloudStorage/keys.json
-
   deploy:
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -31,7 +16,7 @@ jobs:
       - name: Install dependencies
         run: yarn
 
-      - name: Replacing env variables
+      - name: Replacing environment variables
         uses: ikuanyshbekov/app-yaml-env-compiler@v1.0
         env:
           SQL_HOST: ${{ secrets.SQL_HOST }}
@@ -53,11 +38,6 @@ jobs:
         run: ./.github/scripts/decrypt_cloudstorage_secret.sh
         env:
           CLOUDSTORAGE_SECRET_PASSPHRASE: ${{ secrets.CLOUDSTORAGE_SECRET_PASSPHRASE }}
-      # This command is just an example to show your secret being printed
-      # Ensure you remove any print statements of your secrets. GitHub does
-      # not hide secrets that use this workaround.
-      - name: Test printing your secret (Remove this step in production)
-        run: cat ./cloudStorage/keys.json
 
       - name: Deploy to App Engine
         id: deploy
@@ -66,7 +46,6 @@ jobs:
           deliverables: app.yaml
           project_id: ${{ secrets.GCP_PROJECT }}
           credentials: ${{ secrets.GCP_SA_KEY }}
-
 
       - name: Show Output
         run: echo ${{ steps.deploy.outputs.url }}
