@@ -81,7 +81,7 @@ module.exports = {
             const data = {
                 "connection": "Username-Password-Authentication",
                 "email": `${req.body.emailAddress}`,
-                "password": `${req.body.password}`
+                "password": `${req.body.password}`,
             };
             const headers = {
                 "Content-Type": "application/json",
