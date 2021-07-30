@@ -126,5 +126,23 @@ module.exports = {
         } catch (error) {
             return error
         }
-    }
+    },
+    getAuth0ID : function (sqlID) {
+        try {
+            const result = RetailInvestors.findByPk(sqlID,
+            { 
+                attributes: ['auth0ID'],
+            }
+            )
+            .then(data => {
+                return data
+            })
+            .catch(err => {
+                throw err    
+            });
+            return result
+        } catch (error) {
+            return error
+        }
+    },
 } 

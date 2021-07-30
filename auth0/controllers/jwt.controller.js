@@ -18,7 +18,8 @@ module.exports = {
         }),
         audience: 'BackendAPI',
         issuer: `https://${process.env.AUTH0_DOMAIN}/`,
-        algorithms: ["RS256"]
+        algorithms: ["RS256"],
+        // requestProperty: 'auth' // attach decoded token to req.auth
     }),
     checkStartupKYCUnverified : jwtAuthz([perms.startupUnverified, perms.startupVerified], { // routes should still be accessible after KYC-verification
         customScopeKey: "permissions",
@@ -26,6 +27,7 @@ module.exports = {
         failWithError: true
     }),
     checkStartupKYCUnverifiedretailInvVerified : jwtAuthz([perms.startupUnverified, perms.startupVerified, perms.retailInvestorVerified], { // routes should still be accessible after KYC-verification
+    // checkStartupKYCUnverifiedretailInvVerified : jwtAuthz([perms.startupUnverified], { // routes should still be accessible after KYC-verification
         customScopeKey: "permissions",
         // checkAllScopes: true,
         failWithError: true

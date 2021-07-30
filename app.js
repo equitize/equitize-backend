@@ -38,13 +38,16 @@ if (process.env.NODE_ENV !== "test") {
   })
 }
 
-
+const auth0Controller = require("./auth0/controllers/backend.controller")
+const jwtController = require("./auth0/controllers/jwt.controller")
+app.use("/test/:startupId", jwtController.authorizeAccessToken, jwtController.checkStartupKYCUnverified ,auth0Controller.checkID)
 
 // for public routes
 // TODO: implement view engine for admin dashboard if there is time
 app.use('/', require('./routes/index.route'));
 
-// db
+
+
 const db = require("./db/models");
 const createHttpError = require("http-errors");
 if (process.env.NODE_ENV === 'prod-VPC'|| process.env.NODE_ENV === 'dev-persistent') {
@@ -82,6 +85,9 @@ app.use((err, req, res, next) => {
   else if (err.statusCode === 403) {
     next(err)
   }
+  else if (err.statusCode === 404) {
+    next(err)
+  }
   else {
     const error = new Error("Not found");
     error.status = 404;
@@ -90,6 +96,7 @@ app.use((err, req, res, next) => {
 }); 
 // other errors
 app.use((error, req, res, next) => {
+  console.log(error)
   res.status(error.status || error.statusCode || 500).send({
     error: {
       status: error.status || error.statusCode || 500,

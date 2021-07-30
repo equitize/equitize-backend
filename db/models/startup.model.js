@@ -14,6 +14,10 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.STRING,
         allowNull: false
       },
+      auth0ID: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
       profileDescription: {
         type: Sequelize.STRING
       },
