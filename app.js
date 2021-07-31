@@ -38,15 +38,9 @@ if (process.env.NODE_ENV !== "test") {
   })
 }
 
-const auth0Controller = require("./auth0/controllers/backend.controller")
-const jwtController = require("./auth0/controllers/jwt.controller")
-app.use("/test/:startupId", jwtController.authorizeAccessToken, jwtController.checkStartupKYCUnverified ,auth0Controller.checkID)
-
 // for public routes
 // TODO: implement view engine for admin dashboard if there is time
 app.use('/', require('./routes/index.route'));
-
-
 
 const db = require("./db/models");
 const createHttpError = require("http-errors");
