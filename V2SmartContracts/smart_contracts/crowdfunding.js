@@ -1,11 +1,10 @@
 module.exports = function(xsgd_contract_address,ft_contract_address){
-  modstr = sc.replace("0x10134dd91d0d59777927edc3f136e00a4ad11a4c",xsgd_contract_address)
+  modstr = sc.replace("0x8097c141367725665442bb81b3395a5958b0af27",xsgd_contract_address)
   modstr = modstr.replace("0x24069ed518a4d131e7b2f07436bc30f007d5d343",ft_contract_address)
   return modstr
 }
 var sc =
-`
-scilla_version 0
+`scilla_version 0
 
 (***************************************************)
 (*               Associated library                *)
@@ -16,10 +15,10 @@ import BoolUtils ListUtils PairUtils
 library Crowdfunding
 
 (* Define XSGD Smart Contract Address*)
-let xsgd_contract_address = 0x10134dd91d0d59777927edc3f136e00a4ad11a4c 
+let xsgd_contract_address = 0x8097c141367725665442bb81b3395a5958b0af27 
 
 (* Define Fungible Token Smart Contract Address*)
-let ft_contract_address = 0x24069ed518a4d131e7b2f07436bc30f007d5d343 
+let ft_contract_address = 0x24069ed518a4d131e7b2f07436bc30f007d5d343
 
 let zero = Uint128 0
 
@@ -70,6 +69,24 @@ let f  =
       mk_transfer_token_msg a b
     end
 
+(* Claimback for Failed Crowdfunding*)
+let mk_failed_crowdfund_msg : ByStr20 -> Uint128 -> Message =
+  fun (to: ByStr20) =>
+  fun (amount: Uint128) =>
+  let msg =  {_tag : "IncreaseAllowance";
+           _recipient : xsgd_contract_address; 
+           _amount : Uint128 0; 
+           spender:  to; 
+           amount: amount}
+  in msg
+
+let pairFailedCF =
+  fun (h: Pair ByStr20 Uint128) =>
+    match h with
+    | Pair a b =>
+    mk_failed_crowdfund_msg a b
+    end
+
 (* Error code for Crowdfunding*)
 let accepted_code = Int32 1
 let missed_deadline_code = Int32 2
@@ -82,6 +99,7 @@ let cannot_reclaim_code = Int32 8
 let reclaimed_code = Int32 9
 let set_crowdfunding_deadline_successful_code = Int32 10
 let set_crowdfunding_sc_address_code = Int32 24
+let xsgd_bal_lt_goal_code =Int32 25
 
 (* Error code for Milestone*)
 let milestone_one_completed_code  = Int32 11
@@ -261,7 +279,7 @@ transition CrowdfundingGetFunds ()
 end
 
 (* transition ClaimBack *)
-(* transition CrowdfundingClaimBack ()
+transition CrowdfundingClaimBack ()
   d <- after_crowdfunding_deadline;
   match d with
   | False =>
@@ -270,41 +288,24 @@ end
     msgs = one_msg msg;
     send msgs
   | True =>
-    bs <- backers;
     bal <- xsgd_balance;
-    f <- funded;
-    c1 = builtin lt bal goal;
-    c2 = builtin contains bs _sender;
-    c3 = negb f;
-    c4 = andb c1 c2;
-    c5 = andb c3 c4;
-    match c5 with
+    c2 = builtin lt bal goal;
+    (* xsgd balance is less than goal*)
+    match c2 with
     | False =>
       msg  = {_tag : ""; _recipient : _sender; _amount : Uint128 0;
-              code : cannot_reclaim_code};
+              code : xsgd_bal_lt_goal_code};
       msgs = one_msg msg;
       send msgs
     | True =>
-      res = builtin get bs _sender;
-      match res with
-      | None =>
-        msg  = {_tag : ""; _recipient : _sender; _amount : Uint128 0;
-                code : cannot_reclaim_code};
-        msgs = one_msg msg;
-        send msgs
-      | Some v =>
-        bs1 = builtin remove bs _sender;
-        backers := bs1;
-        msg  = {_tag : ""; _recipient : _sender; _amount : v; 
-                code : reclaimed_code};
-        msgs = one_msg msg;
-        e = { _eventname : "ClaimedBack"; claimed_by : _sender; amount : v };
-        event e;
-        send msgs
-      end
+      bs  <- backers;
+      backer_list = builtin to_list bs;
+      convert = @list_map (Pair ByStr20 Uint128) (Message);
+      msgs = convert pairFailedCF backer_list;
+      send msgs
     end
   end  
-end *)
+end
 
 transition SetCrowdfundingDeadlineTrue()
     is_owner = builtin eq owner _sender;
@@ -503,6 +504,7 @@ transition CalculateClaimback(address: ByStr20, sender_balance: Uint128, init_su
         end
     end
 end 
+
 
 
 `

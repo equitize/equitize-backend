@@ -26,6 +26,7 @@ router.post("/CFsetMilestoneDeadlineTrue", CrowdfundingController.setMilestoneDe
 
 router.post("/CFfinishMilestoneTwo", CrowdfundingController.finishMilestoneTwo);
 router.post("/CFfinishMilestoneThree", CrowdfundingController.finishMilestoneThree);
+router.post("/CFcrowdfundingFailClaimback", CrowdfundingController.crowdfundingFailClaimback);
 
 
 

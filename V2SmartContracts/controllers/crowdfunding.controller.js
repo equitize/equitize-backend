@@ -506,4 +506,49 @@ module.exports = {
       console.log(err);
     }
   },
+  crowdfundingFailClaimback: async function(req, res, next) {
+    try {
+      privateKeys = req.body.privateKey;
+      zilliqa.wallet.addByPrivateKey(privateKeys);
+      const address = getAddressFromPrivateKey(privateKeys);
+      zilliqa.wallet.setDefault(address);
+      console.log(address);
+      const myGasPrice = units.toQa('2000', units.Units.Li); // Gas Price that will be used by all transactions
+      var {crowdfundingAddress} = require('../config/crowdfunding.json');
+      const deployedContract = zilliqa.contracts.at(crowdfundingAddress);
+  
+      // Create a new timebased message and call setHello
+      // Also notice here we have a default function parameter named toDs as mentioned above.
+      // For calling a smart contract, any transaction can be processed in the DS but not every transaction can be processed in the shards.
+      // For those transactions are involved in chain call, the value of toDs should always be true.
+      // If a transaction of contract invocation is sent to a shard and if the shard is not allowed to process it, then the transaction will be dropped.
+      console.log('Calling CrowdfundingClaimBack transition' );
+      const callTx = await deployedContract.call(
+        'CrowdfundingClaimBack',
+        [
+        ],
+        {
+          // amount, gasPrice and gasLimit must be explicitly provided
+          version: VERSION,
+          amount: new BN(0),
+          gasPrice: myGasPrice,
+          gasLimit: Long.fromNumber(8000),
+        },
+        33,
+        1000,
+        false,
+      );
+  
+      // Retrieving the transaction receipt (See note 2)
+      console.log(JSON.stringify(callTx.receipt, null, 4));
+  
+      //Get the contract state
+      console.log('Getting contract state...');
+      const state = await deployedContract.getState();
+      console.log('The state of the contract is:');
+      console.log(JSON.stringify(state, null, 4));
+    } catch (err) {
+      console.log(err);
+    }
+  }
 }
