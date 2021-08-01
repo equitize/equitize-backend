@@ -16,117 +16,133 @@ const VERSION = bytes.pack(chainId, msgVersion);
 module.exports = {
   deploy: async function (req, res, next) {
     try {
-      privateKeys = req.body.privateKey;
+      const privateKeys = req.body.privateKey ? req.body.privateKey : "";
+      if (!req.body.coinName || !req.body.coinSupply || !req.body.coinSymbol || !req.body.coinDecimals) {
+        res.status(400).send({    
+          message: "coinName, coinSupply, coinSymbol, coinDecimals can not be empty!"
+        });
+        return;
+      }
       zilliqa.wallet.addByPrivateKey(privateKeys);
       const address = getAddressFromPrivateKey(privateKeys);
       zilliqa.wallet.setDefault(address);
       console.log(address);
-        // Get Balance
-        const balance = await zilliqa.blockchain.getBalance(address);
-        // Get Minimum Gas Price from blockchain
-        const minGasPrice = await zilliqa.blockchain.getMinimumGasPrice();
-    
-        // Account balance (See note 1)
-        console.log(`Your account balance is:`);
-        console.log(balance.result);
-        console.log(`Current Minimum Gas Price: ${minGasPrice.result}`);
-        const myGasPrice = units.toQa('2000', units.Units.Li); // Gas Price that will be used by all transactions
-        console.log(`My Gas Price ${myGasPrice.toString()}`);
-        const isGasSufficient = myGasPrice.gte(new BN(minGasPrice.result)); // Checks if your gas price is less than the minimum gas price
-        console.log(`Is the gas price sufficient? ${isGasSufficient}`);
-    
-        // Deploy a contract
-        console.log(`Deploying a new contract....`);
-        var fungibleToken = require("../smart_contracts/xsgd.js");
-        const init = [
-          // this parameter is mandatory for all init arrays
-          {
-            vname: '_scilla_version',
-            type: 'Uint32',
-            value: '0',
-          },
-          {
-            vname: 'contract_owner',
-            type: 'ByStr20',
-            value: `${address}`,
-          },
-          {
-            vname: 'name',
-            type: 'String',
-            value: `${req.body.coinName}`,
-          },
-          {
-            vname: 'symbol',
-            type: 'String',
-            value: `${req.body.coinSymbol}`,
-          },
-          {
-            vname: 'decimals',
-            type: 'Uint32',
-            value: `${req.body.coinDecimals}`,
-          },
-          {
-            vname: 'init_supply',
-            type: 'Uint128',
-            value: `${req.body.coinSupply}`,
-          },
-        ];
-    
-        // Instance of class Contract
-        const contract = zilliqa.contracts.new(fungibleToken, init);
-        console.log(contract);
-    
-        // Deploy the contract.
-        // Also notice here we have a default function parameter named toDs as mentioned above.
-        // A contract can be deployed at either the shard or at the DS. Always set this value to false.
-        const [deployTx, deployedFungibleToken] = await contract.deploy(
-          {
-            version: VERSION,
-            gasPrice: myGasPrice,
-            gasLimit: Long.fromNumber(10000),
-          },
-          33,
-          1000,
-          false,
-        );
-    
-        // Introspect the state of the underlying transaction
-        console.log(`Deployment Transaction ID: ${deployTx.id}`);
-        console.log(`Deployment Transaction Receipt:`);
-        console.log(deployTx.txParams.receipt);
-    
-        // Get the deployed contract address
-        console.log('The contract address is:');
-        console.log(deployedFungibleToken.address);
-        // save address of smart contract to json file
-        const saveAddress = {
-          xsgd: deployedFungibleToken.address,
-        }
-        const jsonString = JSON.stringify(saveAddress);
-        fs.writeFile('./V2SmartContracts/config/xsgd.json', jsonString, err => {
-            if (err) {
-                console.log('Error writing file', err)
-            } else {
-                console.log('Successfully wrote file')
-            }
-        });
-        //Following line added to fix issue https://github.com/Zilliqa/Zilliqa-JavaScript-Library/issues/168
-        // const deployedContract = zilliqa.contracts.at(deployedFungibleToken.address);
-      } catch (err) {
-        console.log(err);
+      // Get Balance
+      const balance = await zilliqa.blockchain.getBalance(address);
+      // Get Minimum Gas Price from blockchain
+      const minGasPrice = await zilliqa.blockchain.getMinimumGasPrice();
+  
+      // Account balance (See note 1)
+      console.log(`Your account balance is:`);
+      console.log(balance.result);
+      console.log(`Current Minimum Gas Price: ${minGasPrice.result}`);
+      const myGasPrice = units.toQa('2000', units.Units.Li); // Gas Price that will be used by all transactions
+      console.log(`My Gas Price ${myGasPrice.toString()}`);
+      const isGasSufficient = myGasPrice.gte(new BN(minGasPrice.result)); // Checks if your gas price is less than the minimum gas price
+      console.log(`Is the gas price sufficient? ${isGasSufficient}`);
+  
+      // Deploy a contract
+      console.log(`Deploying a new contract....`);
+      var fungibleToken = require("../smart_contracts/xsgd.js");
+      const init = [
+        // this parameter is mandatory for all init arrays
+        {
+          vname: '_scilla_version',
+          type: 'Uint32',
+          value: '0',
+        },
+        {
+          vname: 'contract_owner',
+          type: 'ByStr20',
+          value: `${address}`,
+        },
+        {
+          vname: 'name',
+          type: 'String',
+          value: `${req.bodycoinName}`,
+        },
+        {
+          vname: 'symbol',
+          type: 'String',
+          value: `${req.body.coinSymbol}`,
+        },
+        {
+          vname: 'decimals',
+          type: 'Uint32',
+          value: `${req.body.coinDecimals}`,
+        },
+        {
+          vname: 'init_supply',
+          type: 'Uint128',
+          value: `${req.body.coinSupply}`,
+        },
+      ];
+  
+      // Instance of class Contract
+      const contract = zilliqa.contracts.new(fungibleToken, init);
+      console.log(contract);
+  
+      // Deploy the contract.
+      // Also notice here we have a default function parameter named toDs as mentioned above.
+      // A contract can be deployed at either the shard or at the DS. Always set this value to false.
+      const [deployTx, deployedFungibleToken] = await contract.deploy(
+        {
+          version: VERSION,
+          gasPrice: myGasPrice,
+          gasLimit: Long.fromNumber(80000),
+        },
+        33,
+        1000,
+        false,
+      );
+  
+      // Introspect the state of the underlying transaction
+      console.log(deployTx)
+      console.log(`Deployment Transaction ID: ${deployTx.id}`);
+      console.log(`Deployment Transaction Receipt:`);
+      console.log(deployTx.txParams.receipt);
+      console.log("deployedFungibleToken: ", deployedFungibleToken)
+      // Get the deployed contract address
+      console.log('The contract address is:');
+      console.log(deployedFungibleToken.address);
+      // save address of smart contract to json file
+      const saveAddress = {
+        xsgd: deployedFungibleToken.address,
       }
+      const jsonString = JSON.stringify(saveAddress);
+      fs.writeFile('./V2SmartContracts/config/xsgd.json', jsonString, err => {
+          if (err) {
+              console.log('Error writing file', err)
+          } else {
+              console.log('Successfully wrote file')
+          }
+      });
+      if (deployTx && deployedFungibleToken.address) {
+        res.status(200).send({
+          "message": "XSGD Contract succesfully deployed.",
+          "XSGD Contract Address": `${deployedFungibleToken.address}`
+        });
+      } else {
+        res.status(500).send({
+          "error": "Something went wrong with XSGD Deployment."
+        });
+      }
+      //Following line added to fix issue https://github.com/Zilliqa/Zilliqa-JavaScript-Library/issues/168
+      // const deployedContract = zilliqa.contracts.at(deployedFungibleToken.address);
+    } catch (err) {
+      console.log(err);
+      next(err)
+    }
   },
   transfer: async function(req, res, next){
-    // needs req.recipientAddress and req.sendFT
-    // if (!req.body.recipientAddress || !req.body.sendFT ) {
-    //   res.status(400).send({    
-    //     message: "recipientAddress, sendFTcan not be empty!"
-    //   });
-    //   return;
-    // }
-    
+    // needs req.recipientAddress and req.sendFT 
     try {
-      privateKeys = req.body.privateKey;
+      if (!req.body.to || !req.body.privateKey || !req.body.amount) {
+        res.status(400).send({    
+          message: "recipientAddress, privateKey and amount cannot be empty!"
+        });
+      }
+      const privateKeys = req.body.privateKey ? req.body.privateKey : "";
       zilliqa.wallet.addByPrivateKey(privateKeys);
       const address = getAddressFromPrivateKey(privateKeys);
       zilliqa.wallet.setDefault(address);
@@ -159,7 +175,7 @@ module.exports = {
           version: VERSION,
           amount: new BN(0),
           gasPrice: myGasPrice,
-          gasLimit: Long.fromNumber(10000),
+          gasLimit: Long.fromNumber(80000),
         },
         33,
         1000,
@@ -174,6 +190,15 @@ module.exports = {
       const state = await deployedContract.getState();
       console.log('The state of the contract is:');
       console.log(JSON.stringify(state, null, 4));
+      if (callTx.receipt) {
+        res.status(200).send({
+          "message": `Succesfully transferred XSGD ${req.body.amount} from ${address} to ${req.body.to}`
+        })
+      } else {
+        res.status(500).send({
+          "error": `Failed to transfer XSGD ${req.body.amount} from ${address} to ${req.body.to}`
+        })
+      }
     } catch (err) {
       console.log(err);
     }

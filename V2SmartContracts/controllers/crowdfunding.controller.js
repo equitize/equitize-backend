@@ -5,6 +5,7 @@ const {
   toBech32Address,
   getAddressFromPrivateKey,
 } = require('@zilliqa-js/crypto');
+const createHttpError = require('http-errors');
 
 
 const zilliqa = new Zilliqa('https://dev-api.zilliqa.com');
@@ -16,7 +17,13 @@ const VERSION = bytes.pack(chainId, msgVersion);
 module.exports = {
   deploy: async function(req, res, next) {
     try {
-      privateKeys = req.body.privateKey;
+      const privateKeys = req.body.privateKey ? req.body.privateKey : "";
+      if (!req.body.milestones.part1Goal || !req.body.milestones.part2Goal || !req.body.startup.dataValues["zilAddr"] || !req.body.milestones.campaignGoal) {
+        res.status(400).send({    
+          message: "milestoneOneGoal, milestoneTwoGoal, recipientAddress, campaignGoal can not be empty!"
+        });
+        return;
+      }
       zilliqa.wallet.addByPrivateKey(privateKeys);
       const address = getAddressFromPrivateKey(privateKeys);
       zilliqa.wallet.setDefault(address);
@@ -36,7 +43,7 @@ module.exports = {
       console.log(`Is the gas price sufficient? ${isGasSufficient}`);
   
       // Deploy a contract
-      console.log(`Deploying a new contract....`);
+      console.log(`Deploying a new Crowdfunding Smart Contract....`);
       
       var {xsgd} = require('../config/XSGD.json');
       var {equityToken} = require('../config/equitytoken.json');
@@ -61,17 +68,17 @@ module.exports = {
         {
           vname: 'milestone_one',
           type: 'Uint128',
-          value: `${req.body.milestone_one}`,
+          value: `${req.body.milestones.part1Goal}`,
         },
         {
           vname: 'milestone_two',
           type: 'Uint128',
-          value: `${req.body.milestone_two}`,
+          value: `${req.body.milestones.part2Goal}`,
         },
         {
           vname: 'company_address',
           type: 'ByStr20',
-          value: `${req.body.company_address}`,
+          value: `${req.body.startup.dataValues["zilAddr"]}`,
         },
       ];
   
@@ -124,6 +131,16 @@ module.exports = {
       });
       //Following line added to fix issue https://github.com/Zilliqa/Zilliqa-JavaScript-Library/issues/168
       // const deployedContract = zilliqa.contracts.at(deployedFungibleToken.address);
+      if (deployedFungibleToken.address && deployTx.txParams.receipt) {
+        req.body.SCstatus['CrowdfundingSC'] = {
+          status : true,
+          address : deployedFungibleToken.address
+        };
+        next();
+      } else {
+        throw createHttpError(500, `Something went wrong with CF SC for startupId=${req.params.startupId}`);
+      }
+       
     } catch (err) {
       console.log(err);
     }

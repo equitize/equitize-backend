@@ -34,6 +34,7 @@ const cronJobs = require("./utils/cron/cronJobs");
 if (process.env.NODE_ENV !== "test") {
   cron.schedule('*/5 * * * * *', () => {
   campaigns = cronJobs.checkCampaignGoal(); 
+  // cronJobs.checkCampaignGoalV2();
   // cronJobs.testFunction();
   })
 }
@@ -64,9 +65,11 @@ app.use('/api/db/retailInvestors', logger.retailInvLogger, require('./db/routes/
 app.use('/api/db/campaign', require('./db/routes/campaign.routes'));
 app.use('/api/db/junctionTable', require('./db/routes/junctionTable.routes'));
 app.use('/api/db/general', require('./db/routes/general.routes'));
-app.use('/api/sc/', require('./smartContracts/routes/sc.routes'));
-app.use('/api/sc2/', require('./V2SmartContracts/routes/sc.routes'));
-if (process.env.NODE_ENV !== 'prod-VPC') app.use('/api/db/misc', require('./db/routes/misc.routes')); // use for jest test setup teardown 
+
+// app.use('/api/sc2/', require('./V2SmartContracts/routes/sc.routes'));
+if (process.env.NODE_ENV !== 'prod-VPC') app.use('/api/db/misc/', require('./db/routes/misc.routes')); // use for jest test setup teardown 
+if (process.env.NODE_ENV !== 'prod-VPC') app.use('/test/api/sc2/', require('./V2SmartContracts/routes/sc.routes'));
+if (process.env.NODE_ENV !== 'prod-VPC') app.use('/api/sc/', require('./smartContracts/routes/sc.routes'));
 
 
 /** Error Handlers */

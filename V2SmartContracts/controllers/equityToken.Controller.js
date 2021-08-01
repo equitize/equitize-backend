@@ -5,6 +5,7 @@ const {
   toBech32Address,
   getAddressFromPrivateKey,
 } = require('@zilliqa-js/crypto');
+const createHttpError = require('http-errors');
 
 const zilliqa = new Zilliqa('https://dev-api.zilliqa.com');
 
@@ -15,16 +16,15 @@ const VERSION = bytes.pack(chainId, msgVersion);
 
 module.exports = {
   deploy: async function (req, res, next) {
-    
-    // if (!req.body.coinName || !req.body.coinSupply ||!req.body.coinSymbol ||!req.body.coinDecimals) {
-    //   console.log(req.body.coinName ,req.body.coinSupply,req.body.coinSymbol,req.body.coinDecimals)
-    //   res.status(400).send({    
-    //     message: "coinName, coinSupply, coinSymbol, coinDecimals can not be empty!dasdfas"
-    //   });
-    //   return;
-    // }
     try {
-      pprivateKeys = req.body.privateKey;
+      const privateKeys = req.body.privateKey ? req.body.privateKey : "";
+      if (!req.body.coinName || !req.body.coinSupply ||!req.body.coinSymbol || req.body.coinDecimals < 0  || !req.body.privateKey) {
+        res.status(400).send({    
+          message: "coinName, coinSupply, coinSymbol, coinDecimals and privateKey cannot be empty!"
+        });
+        return;
+      }
+
       zilliqa.wallet.addByPrivateKey(privateKeys);
       const address = getAddressFromPrivateKey(privateKeys);
       zilliqa.wallet.setDefault(address);
@@ -44,7 +44,7 @@ module.exports = {
       console.log(`Is the gas price sufficient? ${isGasSufficient}`);
   
       // Deploy a contract
-      console.log(`Deploying a new contract....`);
+      console.log(`Deploying a new Equity Token contract....`);
       var fungibleToken = require("../smart_contracts/equitytoken.js");
       const init = [
         // this parameter is mandatory for all init arrays
@@ -118,10 +118,23 @@ module.exports = {
               console.log('Successfully wrote file')
           }
       });
+
+      
+      if (deployedFungibleToken.address && deployTx.txParams.receipt) { 
+        req.body.SCstatus = {};
+        req.body.SCstatus['EquityTokenSC'] = {
+          status: true,
+          address: deployedFungibleToken.address
+        };
+        next();
+      } else {
+        throw createHttpError(500, `Something went wrong with ET Deployment for startpupId=${req.params.startupId}`)
+      }      
       //Following line added to fix issue https://github.com/Zilliqa/Zilliqa-JavaScript-Library/issues/168
       // const deployedContract = zilliqa.contracts.at(deployedFungibleToken.address);
     } catch (err) {
       console.log(err);
+      next(err)
     }
   },
   transfer: async function(req, res, next){
@@ -182,9 +195,20 @@ module.exports = {
       console.log('Getting contract state...');
       const state = await deployedContract.getState();
       console.log('The state of the contract is:');
-      console.log(JSON.stringify(state, null, 4));
+      console.log(JSON.parse(JSON.stringify(state, null, 4)));
+      // console.log(callTx)
+      if (callTx.receipt) {
+        res.status(200).send({
+          "message": `Succesfully transferred XSGD ${req.body.amount} from ${address} to ${req.body.to}`
+        })
+      } else {
+        res.status(500).send({
+          "error": `Failed to transfer XSGD ${req.body.amount} from ${address} to ${req.body.to}`
+        })
+      }
     } catch (err) {
       console.log(err);
+      next(err)
     }
   },
   transferBalanceToCF: async function(req, res, next){

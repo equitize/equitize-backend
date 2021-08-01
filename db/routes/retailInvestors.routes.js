@@ -42,7 +42,7 @@ router.post("/login", auth0LogController.retailInvLogin, retailInvestorsControll
 
 // Retrieve all retailInv
 // no need kyc verferification
-router.get("/", jwtController.authorizeAccessToken, jwtController.checkretailKYCUnverified, auth0Controller.checkID, retailInvestorsController.findAll);
+// router.get("/", jwtController.authorizeAccessToken, jwtController.checkretailKYCUnverified, auth0Controller.checkID, retailInvestorsController.findAll);
 
 // Retrieve a single retailInv with id
 // no need kyc verferification
@@ -58,12 +58,12 @@ router.delete("/:id", jwtController.authorizeAccessToken, jwtController.checkret
 
 // Retrieve retailInv by email
 // no need kyc verferification
-router.get("/email/:emailAddress", jwtController.authorizeAccessToken, jwtController.checkretailKYCUnverified, auth0Controller.checkID, retailInvestorsController.findViaEmail);
+router.get("/email/:emailAddress/:id", jwtController.authorizeAccessToken, jwtController.checkretailKYCUnverified, auth0Controller.checkID, retailInvestorsController.findViaEmail);
 //http://localhost:8080/api/db/retailInvestors/email/kenny@mail.xyz
 
 // Associate industries to retail investor
 // no need kyc verferification
-router.post("/industries/addIndustries/", jwtController.authorizeAccessToken, jwtController.checkretailKYCUnverified, auth0Controller.checkID, industryController.create);
+router.post("/industries/addIndustries/:id", jwtController.authorizeAccessToken, jwtController.checkretailKYCUnverified, auth0Controller.checkID, industryController.create);
 
 // Associate industries to retail investor
 // need kyc verferification
@@ -75,7 +75,7 @@ router.get("/industries/getIndustries/:id", jwtController.authorizeAccessToken, 
 
 // Pledge amount to campaign
 // need kyc verferification
-router.put("/campaign/pledge/:startupId", 
+router.put("/campaign/pledge/:startupId/:id", 
 jwtController.authorizeAccessToken, jwtController.checkretailKYCverified, auth0Controller.checkID, campaignController.getStartup, campaignController.pledgeAmount, retailInvestorsController.addCampaign);
 
 // get startup by Id

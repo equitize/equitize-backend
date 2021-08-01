@@ -105,11 +105,11 @@ router.put("/profilePhoto/:startupId", jwtController.authorizeAccessToken, jwtCo
 router.get("/profilePhoto/:startupId", jwtController.authorizeAccessToken, jwtController.checkStartupKYCUnverifiedretailInvVerified, auth0Controller.checkID, startupController.getItemIdentifier, CloudStorageController.getSignedURL);
 
 // Retrieve Startup by name
-router.get("/companyName/:companyName", jwtController.authorizeAccessToken, jwtController.checkStartupKYCverified, auth0Controller.checkID, startupController.findViaName);
+router.get("/companyName/:companyName/:startupId", jwtController.authorizeAccessToken, jwtController.checkStartupKYCverified, auth0Controller.checkID, startupController.findViaName);
 //http://localhost:8080/api/db/startup/companyName/equitize
 
 // Retrieve Startup by email
-router.get("/email/:email", jwtController.authorizeAccessToken, jwtController.checkStartupKYCverified, auth0Controller.checkID, startupController.findViaEmail);
+router.get("/email/:email/:startupId", jwtController.authorizeAccessToken, jwtController.checkStartupKYCverified, auth0Controller.checkID, startupController.findViaEmail);
 //http://localhost:8080/api/db/startup/companyName/equitize
 
 // Update Campaign Fields
@@ -123,11 +123,11 @@ router.get("/milestone/getMilestone/:startupId", jwtController.authorizeAccessTo
 
 // create milestone part
 // no need kyc verferification
-router.post("/milestone/addPart/", jwtController.authorizeAccessToken, jwtController.checkStartupKYCUnverified, auth0Controller.checkID, milestonePartController.create)
+router.post("/milestone/addPart/:startupId", jwtController.authorizeAccessToken, jwtController.checkStartupKYCUnverified, auth0Controller.checkID, milestonePartController.create)
 
 // Delete all milestones associated with startupId
 // no need kyc verferification
-router.delete("/milestone/deleteMilestone/", jwtController.authorizeAccessToken, jwtController.checkStartupKYCUnverified, auth0Controller.checkID, milestonePartController.delete);
+router.delete("/milestone/deleteMilestone/:startupId", jwtController.authorizeAccessToken, jwtController.checkStartupKYCUnverified, auth0Controller.checkID, milestonePartController.delete);
 
 // Delete milestone part associated with startupId
 // no need kyc verferification
@@ -135,7 +135,7 @@ router.delete("/milestone/deletePart/:startupId", jwtController.authorizeAccessT
 
 // Associate industries to startup
 // no need kyc verferification
-router.post("/industries/addIndustries/", jwtController.authorizeAccessToken, jwtController.checkStartupKYCUnverified, auth0Controller.checkID, industryController.create);
+router.post("/industries/addIndustries/:startupId", jwtController.authorizeAccessToken, jwtController.checkStartupKYCUnverified, auth0Controller.checkID, industryController.create);
 
 
 // Get campaign
@@ -151,6 +151,6 @@ router.get("/:startupId", jwtController.authorizeAccessToken, jwtController.chec
 
 // Retrieve all Startup
 // move to admin
-router.get("/", jwtController.authorizeAccessToken, jwtController.checkStartupKYCverified, auth0Controller.checkID, startupController.findAll);
+router.get("/", jwtController.authorizeAccessToken, jwtController.checkStartupKYCverified, startupController.findAll);
 
 module.exports = router;

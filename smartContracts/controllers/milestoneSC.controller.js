@@ -27,7 +27,7 @@ const address = getAddressFromPrivateKey(privateKey);
 
 module.exports = {
     deploy: async function (req, res, next) {
-      if (!req.body.milestones.part1Goal || !req.body.milestones.part2Goal ||!req.body.startup.dataValues["zilAddr"] ||!req.body.milestones.campaignGoal) {
+      if (!req.body.milestones.part1Goal || !req.body.milestones.part2Goal || !req.body.startup.dataValues["zilAddr"] ||!req.body.milestones.campaignGoal) {
           res.status(400).send({    
             message: "milestoneOneGoal, milestoneTwoGoal, recipientAddress, campaignGoal can not be empty!"
           });
