@@ -27,7 +27,7 @@ module.exports = {
       zilliqa.wallet.addByPrivateKey(privateKeys);
       const address = getAddressFromPrivateKey(privateKeys);
       zilliqa.wallet.setDefault(address);
-      console.log(address);
+      console.log("zilliqa wallet address: ", address);
       // Get Balance
       const balance = await zilliqa.blockchain.getBalance(address);
       // Get Minimum Gas Price from blockchain
@@ -63,7 +63,7 @@ module.exports = {
         {
           vname: 'goal',
           type: 'Uint128',
-          value: `${req.body.goal}`,
+          value: `${req.body.milestones.campaignGoal}`,
         },
         {
           vname: 'milestone_one',
@@ -122,7 +122,7 @@ module.exports = {
         crowdfundingAddress: deployedFungibleToken.address,
       }
       const jsonString = JSON.stringify(saveAddress);
-      fs.writeFile('./V2SmartContracts/config/crowdfunding.json', jsonString, err => {
+      await fs.writeFileSync('./V2SmartContracts/config/crowdfunding.json', jsonString, 'utf-8', err => {
           if (err) {
               console.log('Error writing file', err)
           } else {
@@ -143,18 +143,20 @@ module.exports = {
        
     } catch (err) {
       console.log(err);
+      next(err)
     }
   },
   setCrowdfundingSCAddress:  async function(req, res, next) {
     try {
-      privateKeys = req.body.privateKey;
+      const privateKeys = req.body.privateKey ? req.body.privateKey : "";
       zilliqa.wallet.addByPrivateKey(privateKeys);
       const address = getAddressFromPrivateKey(privateKeys);
       zilliqa.wallet.setDefault(address);
-      console.log(address);
+      console.log("zilliqa wallet address: ", address);
       // console.log(req.body.recipientAddress ,req.body.sendFT)
       const myGasPrice = units.toQa('2000', units.Units.Li); // Gas Price that will be used by all transactions
-      var {crowdfundingAddress} = require('../config/crowdfunding.json');
+      const { crowdfundingAddress } = require('../config/crowdfunding.json');
+      console.log(typeof crowdfundingAddress)
       const deployedContract = zilliqa.contracts.at(crowdfundingAddress);
 
       console.log("change deployed contract");
@@ -196,8 +198,14 @@ module.exports = {
       const state = await deployedContract.getState();
       console.log('The state of the contract is:');
       console.log(JSON.stringify(state, null, 4));
+      if (state.crowdfunding_sc_address) {
+        next();
+      } else {
+        throw createHttpError(500, `Something went wrong when setting Crowdfunding Smart Contract address for startupId=${req.params.startupId}.`);
+      }
     } catch (err) {
       console.log(err);
+      // next(err)
     }
 
   },
@@ -254,7 +262,7 @@ module.exports = {
   },
   crowdfundingGetFunds: async function(req, res, next) {
     try {
-      privateKeys = req.body.privateKey;
+      privateKeys = req.body.privateKey ? req.body.privateKey : "";
       zilliqa.wallet.addByPrivateKey(privateKeys);
       const address = getAddressFromPrivateKey(privateKeys);
       zilliqa.wallet.setDefault(address);
@@ -294,13 +302,20 @@ module.exports = {
       const state = await deployedContract.getState();
       console.log('The state of the contract is:');
       console.log(JSON.stringify(state, null, 4));
+      if (state) {
+        res.status(200).send({
+          "message": "Succesfully set returned monies to retail investors"
+        })
+      } else {
+        throw createHttpError(500, 'Something went wrong with CF.crowdfundingGetFunds')
+      }
     } catch (err) {
       console.log(err);
     }
   },
   setCrowdfundingDeadlineTrue: async function(req, res, next) {
     try {
-      privateKeys = req.body.privateKey;
+      privateKeys = req.body.privateKey ? req.body.privateKey : "";
       zilliqa.wallet.addByPrivateKey(privateKeys);
       const address = getAddressFromPrivateKey(privateKeys);
       zilliqa.wallet.setDefault(address);
@@ -339,13 +354,21 @@ module.exports = {
       const state = await deployedContract.getState();
       console.log('The state of the contract is:');
       console.log(JSON.stringify(state, null, 4));
+      if (state.after_crowdfunding_deadline.constructor === "True") {
+        res.status(200).send({
+          "message": "Succesfully set CF deadline to True"
+        })
+      } else {
+        throw createHttpError(500, 'Something went wrong setting CF deadline to True')
+      }
     } catch (err) {
       console.log(err);
+      next(err)
     }
   },
   finishMilestoneOne: async function(req, res, next) {
     try {
-      privateKeys = req.body.privateKey;
+      privateKeys = req.body.privateKey ? req.body.privateKey : "";
       zilliqa.wallet.addByPrivateKey(privateKeys);
       const address = getAddressFromPrivateKey(privateKeys);
       zilliqa.wallet.setDefault(address);
@@ -384,6 +407,9 @@ module.exports = {
       const state = await deployedContract.getState();
       console.log('The state of the contract is:');
       console.log(JSON.stringify(state, null, 4));
+      if (state) {
+        res.send(state);
+      }
     } catch (err) {
       console.log(err);
     }
@@ -480,7 +506,7 @@ module.exports = {
   },
   setMilestoneDeadlineTrue: async function(req, res, next) {
     try {
-      privateKeys = req.body.privateKey;
+      privateKeys = req.body.privateKey ? req.body.privateKey :"";
       zilliqa.wallet.addByPrivateKey(privateKeys);
       const address = getAddressFromPrivateKey(privateKeys);
       zilliqa.wallet.setDefault(address);
@@ -519,6 +545,9 @@ module.exports = {
       const state = await deployedContract.getState();
       console.log('The state of the contract is:');
       console.log(JSON.stringify(state, null, 4));
+      if (state) {
+        res.send(state)
+      }
     } catch (err) {
       console.log(err);
     }
@@ -564,8 +593,12 @@ module.exports = {
       const state = await deployedContract.getState();
       console.log('The state of the contract is:');
       console.log(JSON.stringify(state, null, 4));
+      if (state) {
+        res.status(200).send(state)
+      }
     } catch (err) {
       console.log(err);
+      next(err)
     }
   }
 }

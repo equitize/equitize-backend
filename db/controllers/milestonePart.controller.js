@@ -113,3 +113,33 @@ exports.delete = (req, res) => {
     });
   });
 }
+
+// get all milestone parts
+exports.findAll = async (req, res) => {
+  milestonePartService.findAll()
+  .then(function (data) {
+    if (data.length == 0) {
+      res.status(404).send({
+        message: "No Milestone Parts in DB"
+      }) 
+    }
+    else {
+      res.send(data);
+    }
+  })
+  .catch(function (err) {
+    res.status(500).send({
+      message:
+        err.message || "Some error occurred while retreiving Milestone Parts."
+    })
+  });
+};
+
+exports.cronFindAll = async (conditions, attributes) => {
+  try {
+    const campaigns = await milestonePartService.findAll(conditions, attributes)
+    return campaigns
+  } catch (error) {
+    return error 
+  }
+};

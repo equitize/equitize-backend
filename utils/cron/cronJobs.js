@@ -4,6 +4,8 @@ const moment = require("moment");
 const cache = require("./cache");
 const dbConstants = require("../../db/constants/constants");
 const campaignService = require("../../db/services/campaign.service");
+const milestonePartController = require("../../db/controllers/milestonePart.controller");
+const CrowdfundingController = require("../../V2SmartContracts/controllers/crowdfunding.controller");
 const auth0Controller = require("../../auth0/controllers/backend.controller");
 
 var deployCount = 1;
@@ -173,13 +175,76 @@ module.exports = {
                     if (currentDateTime.isBetween(campaignStartDateTime, campaignEndDateTime, 'second')) {
                         const update = {
                             campaignStatus : dbConstants.campaign.status.LIVE,
-                            }
+                        }
                         const updateStatus = await campaignController.cronUpdate(update, startupId)
                     } else if (currentDateTime.isAfter(campaignEndDateTime, 'seconds')) { // campaign expired
-                        // campaignGoal not reached
-                        // update campaignStatus -> failedFundraising
+                        console.log(`startupid=${startupId} campaign expired.`)
                         const updates = { campaignStatus : dbConstants.campaign.status.FAILED.FUNDRAISING }
                         await campaignService.update(updates, startupId)
+                        // get admin token
+                        var adminToken = ''
+                        const url = `https://${process.env.AUTH0_DOMAIN}/oauth/token`;
+                        var data = {
+                            "grant_type": "http://auth0.com/oauth/grant-type/password-realm",
+                            "client_id": process.env.AUTH0_FRONTEND_CLIENTID,
+                            "audience": process.env.AUTH0_AUDIENCE,
+                            "username": process.env.AUTH0_ADMIN_USERNAME,
+                            "password": process.env.AUTH0_ADMIN_PWD,
+                            "realm": "Username-Password-Authentication"
+                        };
+                        var headers = {
+                            "Content-Type": "application/json",
+                            "authorization": `Bearer ${process.env.AUTH0_MGT_TOKEN_TESTING}`
+                        };
+                        const accessToken = await axios.post(url, data, { headers : headers });
+                        
+                        if ( accessToken.status === 200) { 
+                            adminToken = accessToken.data.access_token
+                        }
+                        else if ( accessToken.status === 403 ) throw createHttpError[403]; // hide error sent to frontend
+                        else {
+                            throw createHttpError[500];
+                        }
+                        const setdeadlineURL = "http://localhost:8080/admin/sc2/CFsetCFdeadlineTrue"
+                        data = {
+                            "privateKey" : process.env.SC2_STARTUP_PRIVATE_KEY
+                        }
+                        headers = {
+                            "Content-Type": "application/json",
+                            "authorization": `Bearer ${adminToken}`
+                        }
+                        const setDeadlineStatus = await axios.post(setdeadlineURL, data, { headers : headers })
+                        if ( setDeadlineStatus.status === 200) { 
+                            console.log(`Succesfully set deadline=True for expired Campaign for startupId=${startupId}`);
+                        }
+                        else if ( setDeadlineStatus.status === 403 ) throw createHttpError[403]; // hide error sent to frontend
+                        else {
+                            throw createHttpError[500];
+                        }
+                        if (currentlyRaised >= campaignGoal) {
+                            // issue equity token to retail.
+                            const CFcrowdfundingGetFundsURL = "http://localhost:8080/admin/sc2/CFcrowdfundingGetFunds"
+                            const CFcrowdfundingGetFundsStatus = await axios.post(CFcrowdfundingGetFundsURL, data, { headers : headers })
+                            if ( CFcrowdfundingGetFundsStatus.status === 200) { 
+                                console.log(`Succesfully return funds to retail investors for campaign associated with startupId=${startupId}`);
+                            }
+                            else if ( CFcrowdfundingGetFundsStatus.status === 403 ) throw createHttpError[403]; // hide error sent to frontend
+                            else {
+                                throw createHttpError[500];
+                            }
+                        } else {
+                            const CFcrowdfundingFailClaimbackURL = "http://localhost:8080/admin/sc2/CFcrowdfundingFailClaimback"
+                            const CFcrowdfundingFailClaimbackStatus = await axios.post(CFcrowdfundingFailClaimbackURL, data, { headers : headers })
+                            if ( CFcrowdfundingFailClaimbackStatus.status === 200) { 
+                                console.log(`Succesfully return funds to retail investors for campaign associated with startupId=${startupId}`);
+                            }
+                            else if ( CFcrowdfundingFailClaimbackStatus.status === 403 ) throw createHttpError[403]; // hide error sent to frontend
+                            else {
+                                throw createHttpError[500];
+                            }
+                        }
+
+                        
                     }
 
                     if ( currentDateTime.isBetween(campaignStartDateTime, campaignEndDateTime, 'second') 
@@ -241,7 +306,8 @@ module.exports = {
                             "coinSupply":30,
                             "coinSymbol":"E",
                             "coinDecimals":0,
-                            "privateKey":"d37bf5064e4d01f38a446b1153aa1bbc73ada4e8a4c8bc71d492f08713cfea60"
+                            "amount": 30, // equity tokens (to be dynamically loaded in the future)
+                            "privateKey": process.env.SC2_STARTUP_PRIVATE_KEY
                         };
                         headers = {
                             "Content-Type": "application/json",
@@ -250,15 +316,17 @@ module.exports = {
                         try {
                             const deployStatus = await axios.post(deployV2SCurl, data, { headers : headers })
                             if (deployStatus.status === 200) {
+                                console.log("deployStatus: ", deployStatus)
                                 // Update Campaign Model Fields
                                 updates = {
-                                    campaignAddr : deployStatus.data.milestoneSCaddress,
-                                    fungibleTokenAddr : deployStatus.data.fungibleTokenSCaddress,
+                                    campaignAddr : deployStatus.data.crowdfundingSCaddress,
+                                    fungibleTokenAddr : deployStatus.data.equityTokenSCaddress,
                                     SCdeployedStatus : true,
                                     campaignStatus : dbConstants.campaign.status.SUCCESSFUL
                                 }
                                 const updateStatus = await campaignController.cronUpdate(updates, startupId)
                                 console.log('updatestatus ',updateStatus);
+
                                 campaignCache.delete(startupId);
                             }
                             else {
@@ -275,7 +343,8 @@ module.exports = {
             // console.log(campaigns)
             // return campaigns
         } catch (error) {
+            console.log(error)
             throw error
         }
-    }
+    },
 }

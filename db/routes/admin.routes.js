@@ -78,6 +78,9 @@ zilliqaController.checkSCstatus);
 // drop all auth0 users
 router.post("/auth0/dropUsers", jwtController.authorizeAccessToken, jwtController.checkAdmin, auth0Controller.delAllUsers);
 
+// get all retail investors
+router.get("/getRetailInvs", jwtController.authorizeAccessToken, jwtController.checkAdmin, retailInvestorsController.findAll);
+
 // get all retailInvLogs (Request Logs)
 router.get("/logs/retailInvLogs", jwtController.authorizeAccessToken, jwtController.checkAdmin, retailInvLogController.findAll);
 
@@ -92,11 +95,28 @@ milestonePartController.getStartup,
 zilliqaV2Controller.getMilestone,
 zilliqaV2Controller.getCampaigns,
 zilliqaV2Controller.getZilAmt,
-CrowdfundingController.deploy
+CrowdfundingController.deploy,
+CrowdfundingController.setCrowdfundingSCAddress,
+ETController.transferBalanceToCF,
+zilliqaV2Controller.checkSCstatus
 )
 
 // [TEST] v2 Blockchain XSGD Tx from XSGD SC to Retail Investor specified address
 router.post("/sc2/transferXSGD", jwtController.authorizeAccessToken, jwtController.checkAdmin, XSGDController.transfer);
 
+// set v2 cf sc deadline to true
+router.post("/sc2/CFsetCFdeadlineTrue", jwtController.authorizeAccessToken, jwtController.checkAdmin, CrowdfundingController.setCrowdfundingDeadlineTrue);
+
+// issue equity tokens to retail investors
+router.post("/sc2/CFcrowdfundingGetFunds", jwtController.authorizeAccessToken, jwtController.checkAdmin, CrowdfundingController.crowdfundingGetFunds);
+
+// v2 blockchain setMilestoneDeadlineTrue
+router.post("/sc2/CFsetMilestoneDeadlineTrue", jwtController.authorizeAccessToken, jwtController.checkAdmin, CrowdfundingController.setMilestoneDeadlineTrue);
+
+// release monies to startup
+router.post("/sc2/CFfinishMilestoneOne", jwtController.authorizeAccessToken, jwtController.checkAdmin, CrowdfundingController.finishMilestoneOne);
+
+// release xsgd to retail investor
+router.post("/sc2/CFcrowdfundingFailClaimback", jwtController.authorizeAccessToken, jwtController.checkAdmin, CrowdfundingController.crowdfundingFailClaimback);
 
 module.exports = router; 

@@ -28,7 +28,7 @@ module.exports = {
       zilliqa.wallet.addByPrivateKey(privateKeys);
       const address = getAddressFromPrivateKey(privateKeys);
       zilliqa.wallet.setDefault(address);
-      console.log(address);
+      console.log("zilliqa wallet address: ", address);
       // Get Balance
       const balance = await zilliqa.blockchain.getBalance(address);
       // Get Minimum Gas Price from blockchain
@@ -44,7 +44,7 @@ module.exports = {
       console.log(`Is the gas price sufficient? ${isGasSufficient}`);
   
       // Deploy a contract
-      console.log(`Deploying a new Equity Token contract....`);
+      console.log(`Deploying a new Equity Token Smart Contract....`);
       var fungibleToken = require("../smart_contracts/equitytoken.js");
       const init = [
         // this parameter is mandatory for all init arrays
@@ -111,7 +111,7 @@ module.exports = {
         equityToken: deployedFungibleToken.address,
       }
       const jsonString = JSON.stringify(saveAddress);
-      fs.writeFile('./V2SmartContracts/config/equitytoken.json', jsonString, err => {
+      await fs.writeFile('./V2SmartContracts/config/equitytoken.json', jsonString, err => {
           if (err) {
               console.log('Error writing file', err)
           } else {
@@ -139,14 +139,14 @@ module.exports = {
   },
   transfer: async function(req, res, next){
     // needs req.recipientAddress and req.sendFT
-    // if (!req.body.recipientAddress || !req.body.sendFT ) {
-    //   res.status(400).send({    
-    //     message: "recipientAddress, sendFTcan not be empty!"
-    //   });
-    //   return;
-    // }
+    if (!req.body.to || !req.body.amount ) {
+      res.status(400).send({    
+        message: "recipientAddress, amount not be empty!"
+      });
+      return;
+    }
     try {
-      privateKeys = req.body.privateKey;
+      privateKeys = req.body.privateKey ? req.body.privateKey : "";
       zilliqa.wallet.addByPrivateKey(privateKeys);
       const address = getAddressFromPrivateKey(privateKeys);
       zilliqa.wallet.setDefault(address);
@@ -198,9 +198,8 @@ module.exports = {
       console.log(JSON.parse(JSON.stringify(state, null, 4)));
       // console.log(callTx)
       if (callTx.receipt) {
-        res.status(200).send({
-          "message": `Succesfully transferred XSGD ${req.body.amount} from ${address} to ${req.body.to}`
-        })
+        console.log(`Succesfully transfer ${req.body.amount} to ${req.body.to}`);
+        next()
       } else {
         res.status(500).send({
           "error": `Failed to transfer XSGD ${req.body.amount} from ${address} to ${req.body.to}`
@@ -213,7 +212,7 @@ module.exports = {
   },
   transferBalanceToCF: async function(req, res, next){
     try {
-      privateKeys = req.body.privateKey;
+      privateKeys = req.body.privateKey ? req.body.privateKey : "";
       zilliqa.wallet.addByPrivateKey(privateKeys);
       const address = getAddressFromPrivateKey(privateKeys);
       zilliqa.wallet.setDefault(address);
@@ -262,6 +261,7 @@ module.exports = {
       const state = await deployedContract.getState();
       console.log('The state of the contract is:');
       console.log(JSON.stringify(state, null, 4));
+      next()
     } catch (err) {
       console.log(err);
     }

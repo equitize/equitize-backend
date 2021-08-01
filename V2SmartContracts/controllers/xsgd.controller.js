@@ -59,7 +59,7 @@ module.exports = {
         {
           vname: 'name',
           type: 'String',
-          value: `${req.bodycoinName}`,
+          value: `${req.body.coinName}`,
         },
         {
           vname: 'symbol',

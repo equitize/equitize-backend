@@ -33,8 +33,8 @@ const cronJobs = require("./utils/cron/cronJobs");
 
 if (process.env.NODE_ENV !== "test") {
   cron.schedule('*/5 * * * * *', () => {
-  campaigns = cronJobs.checkCampaignGoal(); 
-  // cronJobs.checkCampaignGoalV2();
+  // campaigns = cronJobs.checkCampaignGoal(); 
+  cronJobs.checkCampaignGoalV2();
   // cronJobs.testFunction();
   })
 }
@@ -58,6 +58,11 @@ if (process.env.NODE_ENV === 'prod-VPC'|| process.env.NODE_ENV === 'dev-persiste
     throw(error)
   });
 }
+
+app.get('/test', ()=>{
+  const { crowdfundingAddress } = require("./V2SmartContracts/config/crowdfunding.json")
+  console.log(crowdfundingAddress)
+})
 
 app.use('/admin', require('./db/routes/admin.routes'));
 app.use('/api/db/startup', require('./db/routes/startup.routes'));
