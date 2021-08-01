@@ -1,7 +1,7 @@
 const createHttpError = require("http-errors");
 const { retailInvestors, campaigns } = require("../models");
 const retailInvestorService = require("../services/retailInvestor.service");
-const retialInvestorService = require("../services/retailInvestor.service");
+const startupService = require("../services/startup.service");
 
 // Create and Save a new retailInvestor
 exports.create = (req, res, next) => {
@@ -25,9 +25,10 @@ exports.create = (req, res, next) => {
     incomeStatement: req.body.incomeStatement ? req.body.incomeStatement :"",
     incomeTaxReturn: req.body.incomeTaxReturn ? req.body.incomeTaxReturn :"", 
     zilAddr: req.body.zilAddr ? req.body.zilAddr : "",
+    auth0ID: req.body.user_id ? req.body.user_id: ""
   };
 
-  retialInvestorService.create(retailInvestors)
+  retailInvestorService.create(retailInvestors)
   .then(function (response) {
     if (process.env.NODE_ENV == 'test') {res.send(response)}
     req.body.retailInv = response;
@@ -45,7 +46,7 @@ exports.create = (req, res, next) => {
 exports.findAll = (req, res) => {
     const emailAddress = req.query.emailAddress;
     // var condition = email_address ? { email_address: { [Op.like]: `%${email_address}%` } } : null;
-    retialInvestorService.findAll(emailAddress)
+    retailInvestorService.findAll(emailAddress)
     .then(function (response) {
       res.send(response)
     })
@@ -60,7 +61,7 @@ exports.findAll = (req, res) => {
 // Find a single retailInvestor with an id
 exports.findOne = (req, res) => {
     const id = req.params.id;
-    retialInvestorService.findOne(id)
+    retailInvestorService.findOne(id)
     .then(function (response) {
       if (response == null) {
         res.status(500).send({
@@ -80,7 +81,7 @@ exports.findOne = (req, res) => {
 // Find a single retailInvestor by email
 exports.findIDByEmail = (req, res) => {
   const emailAddress = req.body.emailAddress;
-  retialInvestorService.findIDByEmail(emailAddress)
+  retailInvestorService.findIDByEmail(emailAddress)
   .then(function (response) {
     if (response == null) {
       res.status(500).send({
@@ -108,7 +109,7 @@ exports.update = (req, res) => {
   const id = req.params.id;
 
   // Tk's implementation of service layer
-  retialInvestorService.update(req.body, id)
+  retailInvestorService.update(req.body, id)
   .then(num => {
     if (num == 1) {
       res.send({
@@ -131,7 +132,7 @@ exports.update = (req, res) => {
 exports.delete = (req, res) => {
     const id = req.params.id;
     // Tk's implementation of service layer 
-    retialInvestorService.delete(id)
+    retailInvestorService.delete(id)
     .then(num => {
       if (num == 1) {
         res.send({
@@ -152,7 +153,7 @@ exports.delete = (req, res) => {
 
 // Delete all retailInvestors from the database.
 exports.deleteAll = (req, res) => {
-  retialInvestorService.deleteAll()
+  retailInvestorService.deleteAll()
   .then(nums => {
     res.send({ message: `${nums} RetailInvestors were deleted successfully!` });
   })
@@ -166,7 +167,7 @@ exports.deleteAll = (req, res) => {
 
 exports.findViaEmail= (req, res) => {
   const email = req.params.email ? req.params.email : "";
-  retialInvestorService.findViaEmail(email)
+  retailInvestorService.findViaEmail(email)
   .then(data => {
     res.send(data);
   })

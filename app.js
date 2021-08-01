@@ -33,18 +33,16 @@ const cronJobs = require("./utils/cron/cronJobs");
 
 if (process.env.NODE_ENV !== "test") {
   cron.schedule('*/5 * * * * *', () => {
-  campaigns = cronJobs.checkCampaignGoal(); 
+  // campaigns = cronJobs.checkCampaignGoal(); 
+  cronJobs.checkCampaignGoalV2();
   // cronJobs.testFunction();
   })
 }
-
-
 
 // for public routes
 // TODO: implement view engine for admin dashboard if there is time
 app.use('/', require('./routes/index.route'));
 
-// db
 const db = require("./db/models");
 const createHttpError = require("http-errors");
 if (process.env.NODE_ENV === 'prod-VPC'|| process.env.NODE_ENV === 'dev-persistent') {
@@ -61,14 +59,22 @@ if (process.env.NODE_ENV === 'prod-VPC'|| process.env.NODE_ENV === 'dev-persiste
   });
 }
 
+app.get('/test', ()=>{
+  const { crowdfundingAddress } = require("./V2SmartContracts/config/crowdfunding.json")
+  console.log(crowdfundingAddress)
+})
+
 app.use('/admin', require('./db/routes/admin.routes'));
 app.use('/api/db/startup', require('./db/routes/startup.routes'));
 app.use('/api/db/retailInvestors', logger.retailInvLogger, require('./db/routes/retailInvestors.routes'));
 app.use('/api/db/campaign', require('./db/routes/campaign.routes'));
 app.use('/api/db/junctionTable', require('./db/routes/junctionTable.routes'));
 app.use('/api/db/general', require('./db/routes/general.routes'));
-app.use('/api/sc/', require('./smartContracts/routes/sc.routes'));
-if (process.env.NODE_ENV !== 'prod-VPC') app.use('/api/db/misc', require('./db/routes/misc.routes')); // use for jest test setup teardown 
+
+// app.use('/api/sc2/', require('./V2SmartContracts/routes/sc.routes'));
+if (process.env.NODE_ENV !== 'prod-VPC') app.use('/api/db/misc/', require('./db/routes/misc.routes')); // use for jest test setup teardown 
+if (process.env.NODE_ENV !== 'prod-VPC') app.use('/test/api/sc2/', require('./V2SmartContracts/routes/sc.routes'));
+if (process.env.NODE_ENV !== 'prod-VPC') app.use('/api/sc/', require('./smartContracts/routes/sc.routes'));
 
 
 /** Error Handlers */
@@ -81,6 +87,9 @@ app.use((err, req, res, next) => {
   else if (err.statusCode === 403) {
     next(err)
   }
+  else if (err.statusCode === 404) {
+    next(err)
+  }
   else {
     const error = new Error("Not found");
     error.status = 404;
@@ -89,6 +98,7 @@ app.use((err, req, res, next) => {
 }); 
 // other errors
 app.use((error, req, res, next) => {
+  console.log(error)
   res.status(error.status || error.statusCode || 500).send({
     error: {
       status: error.status || error.statusCode || 500,

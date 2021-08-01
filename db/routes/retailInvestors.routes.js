@@ -6,7 +6,7 @@ const industryController = require("../controllers/industry.controller");
 const recommenderController = require("../controllers/recommender.controller");
 const campaignController = require("../controllers/campaign.controller");
 const jwtController = require("../../auth0/controllers/jwt.controller");
-
+const startupController = require("../controllers/startup.controller");
 
 const router = require("express").Router();
 
@@ -42,40 +42,44 @@ router.post("/login", auth0LogController.retailInvLogin, retailInvestorsControll
 
 // Retrieve all retailInv
 // no need kyc verferification
-router.get("/", jwtController.authorizeAccessToken, jwtController.checkretailKYCUnverified, retailInvestorsController.findAll);
+// router.get("/", jwtController.authorizeAccessToken, jwtController.checkretailKYCUnverified, auth0Controller.checkID, retailInvestorsController.findAll);
 
 // Retrieve a single retailInv with id
 // no need kyc verferification
-router.get("/:id", jwtController.authorizeAccessToken, jwtController.checkretailKYCUnverified, retailInvestorsController.findOne);
+router.get("/:id", jwtController.authorizeAccessToken, jwtController.checkretailKYCUnverified, auth0Controller.checkID, retailInvestorsController.findOne);
 
 // Update a retailInv with id
 // no need kyc verferification
-router.put("/:id", jwtController.authorizeAccessToken, jwtController.checkretailKYCUnverified, retailInvestorsController.update);
+router.put("/:id", jwtController.authorizeAccessToken, jwtController.checkretailKYCUnverified, auth0Controller.checkID, retailInvestorsController.update);
 
 // Delete a retailInv with id
 // no need kyc verferification
-router.delete("/:id", jwtController.authorizeAccessToken, jwtController.checkretailKYCUnverified, retailInvestorsController.delete);
+router.delete("/:id", jwtController.authorizeAccessToken, jwtController.checkretailKYCUnverified, auth0Controller.checkID, retailInvestorsController.delete);
 
 // Retrieve retailInv by email
 // no need kyc verferification
-router.get("/email/:emailAddress", jwtController.authorizeAccessToken, jwtController.checkretailKYCUnverified, retailInvestorsController.findViaEmail);
+router.get("/email/:emailAddress/:id", jwtController.authorizeAccessToken, jwtController.checkretailKYCUnverified, auth0Controller.checkID, retailInvestorsController.findViaEmail);
 //http://localhost:8080/api/db/retailInvestors/email/kenny@mail.xyz
 
 // Associate industries to retail investor
 // no need kyc verferification
-router.post("/industries/addIndustries/", jwtController.authorizeAccessToken, jwtController.checkretailKYCUnverified, industryController.create);
+router.post("/industries/addIndustries/:id", jwtController.authorizeAccessToken, jwtController.checkretailKYCUnverified, auth0Controller.checkID, industryController.create);
 
 // Associate industries to retail investor
 // need kyc verferification
-router.get("/recommender/:id", jwtController.authorizeAccessToken, jwtController.checkretailKYCverified, industryController.getRetailInvestor, recommenderController.getAndSortStartups);
+router.get("/recommender/:id", jwtController.authorizeAccessToken, jwtController.checkretailKYCverified, auth0Controller.checkID, industryController.getRetailInvestor, recommenderController.getAndSortStartups);
 
 // Get industries associated with retailinvestorId
 // no need kyc verferification
-router.get("/industries/getIndustries/:id", jwtController.authorizeAccessToken, jwtController.checkretailKYCUnverified, industryController.getRetailInvestor, industryController.getIndustries);
+router.get("/industries/getIndustries/:id", jwtController.authorizeAccessToken, jwtController.checkretailKYCUnverified, auth0Controller.checkID, industryController.getRetailInvestor, industryController.getIndustries);
 
 // Pledge amount to campaign
 // need kyc verferification
-router.put("/campaign/pledge/:startupId", 
-jwtController.authorizeAccessToken, jwtController.checkretailKYCverified, campaignController.getStartup, campaignController.pledgeAmount, retailInvestorsController.addCampaign);
+router.put("/campaign/pledge/:startupId/:id", 
+jwtController.authorizeAccessToken, jwtController.checkretailKYCverified, auth0Controller.checkID, campaignController.getStartup, campaignController.pledgeAmount, retailInvestorsController.addCampaign);
+
+// get startup by Id
+router.get("/getStartup/:startupId/:id", jwtController.authorizeAccessToken, jwtController.checkretailKYCverified, auth0Controller.checkID, startupController.findOne);
+// need startupId and retailinv id
 
 module.exports = router;

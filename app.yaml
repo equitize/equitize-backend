@@ -17,6 +17,7 @@ env_variables:
   AUTH0_CLIENT_SECRET_PDTN: $AUTH0_CLIENT_SECRET_PDTN
   CLOUDSTORAGE_SECRET_PASSPHRASE: $CLOUDSTORAGE_SECRET_PASSPHRASE
   ZILLIQA_PRIVATE_KEY: $ZILLIQA_PRIVATE_KEY
+  SC2_STARTUP_PRIVATE_KEY: $SC2_STARTUP_PRIVATE_KEY
 
 vpc_access_connector:
   name: projects/equitize-backend/locations/asia-southeast2/connectors/cloudsql-connector

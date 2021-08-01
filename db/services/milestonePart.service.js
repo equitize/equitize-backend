@@ -73,5 +73,19 @@ module.exports = {
         } catch (error) {
             return error
         }
+    },
+    findAll : function (condition, attributes) {
+        try {
+            const result = MilestoneParts.findAll(condition, attributes)
+            .then(data => {
+                return data;
+            })
+            .catch(err => {
+                throw err
+            })
+            return result;
+        } catch (error) {
+            return error
+        }
     }
 }

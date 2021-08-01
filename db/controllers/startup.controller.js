@@ -32,6 +32,7 @@ exports.create = async (req, res, next) => {
       bankInfo:req.body.bankInfo ? req.body.bankInfo :"",
       idProof:req.body.idProof ? req.body.idProof :"",
       zilAddr: req.body.zilAddr ? req.body.zilAddr : "",
+      auth0ID: req.body.user_id ? req.body.user_id: ""
     };
     
     // TK's implmentation of Service Layer
@@ -42,6 +43,7 @@ exports.create = async (req, res, next) => {
       next()
     })
     .catch(function (err) {
+      console.log('error', err)
       res.status(500).send({
         message:
           err.message || "Some error occurred while creating the Startup."

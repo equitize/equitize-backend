@@ -9,6 +9,10 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.STRING,
         allowNull: false
       },
+      auth0ID: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
       firstName: {
         type: Sequelize.STRING
       },

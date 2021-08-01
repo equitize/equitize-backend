@@ -1,6 +1,8 @@
 // this is strictly for auth0 management APIs
 const { default: axios } = require('axios');
 const createHttpError = require('http-errors');
+const startupService = require("../../db/services/startup.service");
+const retailInvService = require("../../db/services/retailInvestor.service");
 const { auth0_config : { roles, perms, adminUID } } = require('../utils/auth0_config');
 
 module.exports = {
@@ -180,6 +182,50 @@ module.exports = {
             }
         } catch (error) {
             next(error);
+        }
+    },
+    getUser : async (req, res, next) => {
+        try {
+            auth0ID = req.auth.sub ? req.auth.sub : "";
+            const url = `https://${process.env.AUTH0_DOMAIN}/api/v2/users/` + encodeURIComponent(auth0ID);
+            const headers = {
+                "authorization": `Bearer ${process.env.AUTH0_MGT_TOKEN_TESTING}`
+            };
+            const user = await axios.get(url, { headers : headers });
+            if (user.status === 200) {
+                req.user = user.data
+                next()
+            } else if (user.status === 400) {
+                throw createHttpError(500, "Something wrong happened when getting user info from authentication server.")
+            }
+        } catch (error) {
+            next(error)
+        }
+    },
+    checkID : async (req, res, next) => {
+        // middleware to check sql auth0ID against claimed ID in jwt token
+        // previous middleware is jwt.authorize
+        try {
+            const jwt_auth0ID = req.user.sub ? req.user.sub : ""; // gets from prev. middleware's jwtController.authorize
+            // const requested_sql_UID = req.params.startupId ? req.params.startupId : req.params.id ? req.params.id : ""; // grab auth0ID in sql
+            const startupId = req.params.startupId ? req.params.startupId : "";
+            const retailInvId = req.params.id ? req.params.id : "";
+            // need to dynamically handle startup and retail investor.
+            var user;
+            if (req.params.startupId && !req.params.id) user = await startupService.getAuth0ID(startupId);
+            if (req.params.id && !req.params.startupId) user = await retailInvService.getAuth0ID(retailInvId);
+            if (req.params.id && req.params.startupId) user = await retailInvService.getAuth0ID(retailInvId); // verified retailInv searching for startup
+            const sql_auth0ID = user.auth0ID ? user.auth0ID : "";
+            if (!user) throw createHttpError(404, "User not found.");
+            if (sql_auth0ID === jwt_auth0ID) {
+                req.checkID = true;                
+                next();
+            } else {
+                req.checkID = false;
+                throw createHttpError(403, "You are not authorized to access this information.")
+            }
+        } catch (error) {
+            next(error)
         }
     }
 }

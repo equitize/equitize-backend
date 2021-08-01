@@ -3,7 +3,7 @@ const milestonePartService = require("../services/milestonePart.service");
 
 exports.create = async (req, res, next) => {
   try {
-    const startupId = req.body.startupId
+    const startupId = req.params.startupId ? req.params.startupId : "";
     const milestonePart = await milestonePartService.createMilestonePart(startupId, {
         title: req.body.title,
         part: req.body.part,
@@ -93,7 +93,7 @@ exports.getStartup = (req, res, next) => {
 
 // Delete a Milestone with the specified id in the request
 exports.delete = (req, res) => {
-  const startupId = req.body.startupId ? req.body.startupId : "";
+  const startupId = req.params.startupId ? req.params.startupId : "";
   
   milestonePartService.delete(startupId)
   .then(num => {
@@ -113,3 +113,33 @@ exports.delete = (req, res) => {
     });
   });
 }
+
+// get all milestone parts
+exports.findAll = async (req, res) => {
+  milestonePartService.findAll()
+  .then(function (data) {
+    if (data.length == 0) {
+      res.status(404).send({
+        message: "No Milestone Parts in DB"
+      }) 
+    }
+    else {
+      res.send(data);
+    }
+  })
+  .catch(function (err) {
+    res.status(500).send({
+      message:
+        err.message || "Some error occurred while retreiving Milestone Parts."
+    })
+  });
+};
+
+exports.cronFindAll = async (conditions, attributes) => {
+  try {
+    const campaigns = await milestonePartService.findAll(conditions, attributes)
+    return campaigns
+  } catch (error) {
+    return error 
+  }
+};
