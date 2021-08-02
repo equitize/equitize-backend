@@ -40,8 +40,7 @@ describe('Testing [/api/db/startup]', () => {
   const companyPassword = 'testPassword!@#$123'
   const companyIndustries = [
     {"name":"Finance", "id":1},
-    {"name":"Tech", "id":2},
-    {"name":"Farming", "id":3}
+    {"name":"Environment", "id":2},
   ]
 
   const companyName_alt = uuid_string + '-alt'

@@ -38,8 +38,7 @@ describe('Testing [/api/db/retailInvestors]', () => {
   const userPassword = 'testPassword!@#$123'
   const interestedIndustries = [
     {"name":"Finance", "id":1},
-    {"name":"Tech", "id":2},
-    {"name":"Farming", "id":3}
+    {"name":"Environment", "id":2},
   ]
   const retailInvestor_name_alt = uuid_string+'-alt'
   const emailAddress_alt = `investor-${retailInvestor_name_alt}@email.com`

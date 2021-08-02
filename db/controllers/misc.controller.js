@@ -20,11 +20,13 @@ module.exports = {
                 let requestBody = {
                     companyName:data.name,
                     emailAddress:data.url,
-                    password:cnt,  // mock
-                    profileDescription:data.description
+                    password:cnt + 'testPassword!@#$123',  // mock
+                    profileDescription:data.description,
+                    auth0ID: "auth0|610855c3b14a0400698fe9de"  // mock
                 };
                 acceptedStartupCount ++
                 records.push(requestBody);
+                if (!data.surveyed_industries) {data.surveyed_industries = "Others"} 
                 industriesPlaceholder.push(data.surveyed_industries.split(","));
                 avatars.push(data.avatar);
             }
@@ -33,7 +35,6 @@ module.exports = {
             // Assign Industries
             const accountType = "startup"
             for (let id = 1; id < acceptedStartupCount+1; id++) {
-                if ( industriesPlaceholder[id-1][0] == "" ) industriesPlaceholder[id] = "Others";
                 const assignIndustryStatus = await industryService.createIndustries(id, industriesPlaceholder[id-1], accountType);
                 // upload profile photo
                 if (req.body.skip_upload_photos){continue}
