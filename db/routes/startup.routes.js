@@ -72,37 +72,20 @@ router.get("/getSignedURL/:fileType/:startupId", jwtController.authorizeAccessTo
 // no need kyc verferification
 router.put("/acraDocuments/:startupId", jwtController.authorizeAccessToken, jwtController.checkStartupKYCUnverified, auth0Controller.checkID, CloudStorageController.uploadAcraDocuments, startupController.update);
 
-// Get SignedURL for limited access on resource (capTable)
-// no need kyc verferification
-router.get("/acraDocuments/:startupId", jwtController.authorizeAccessToken, jwtController.checkStartupKYCUnverifiedretailInvVerified, auth0Controller.checkID, startupController.getItemIdentifier, CloudStorageController.getSignedURL);
-
 // Convert bankInfo to live Link via CloudStorage
 // Update Startup's bankInfo field to to link in db. 
 // no need kyc verferification
 router.put("/bankInfo/:startupId", jwtController.authorizeAccessToken, jwtController.checkStartupKYCUnverified, auth0Controller.checkID, CloudStorageController.uploadBankInfo, startupController.update);
-
-// Get SignedURL for limited access on resource (bankInfo)
-// no need kyc verferification
-router.get("/bankInfo/:startupId", jwtController.authorizeAccessToken, jwtController.checkStartupKYCUnverifiedretailInvVerified, auth0Controller.checkID, startupController.getItemIdentifier, CloudStorageController.getSignedURL);
 
 // Convert idProof to live Link via CloudStorage
 // Update Startup's idProof field to to link in db. 
 // no need kyc verferification
 router.put("/idProof/:startupId", jwtController.authorizeAccessToken, jwtController.checkStartupKYCUnverified, auth0Controller.checkID, CloudStorageController.uploadIdProof, startupController.update);
 
-// Get SignedURL for limited access on resource (idProof)
-// no need kyc verferification
-router.get("/idProof/:startupId", jwtController.authorizeAccessToken, jwtController.checkStartupKYCUnverifiedretailInvVerified, auth0Controller.checkID, startupController.getItemIdentifier, CloudStorageController.getSignedURL);
-
 // Convert profilePhoto to live Link via CloudStorage
 // Update Startup's profilePhoto field to to link in db. 
 // no need kyc verferification
 router.put("/profilePhoto/:startupId", jwtController.authorizeAccessToken, jwtController.checkStartupKYCUnverified, auth0Controller.checkID, CloudStorageController.uploadProfilePhoto, startupController.update);
-
-
-// Get SignedURL for limited access on resource (profilePhoto)
-// no need kyc verferification
-router.get("/profilePhoto/:startupId", jwtController.authorizeAccessToken, jwtController.checkStartupKYCUnverifiedretailInvVerified, auth0Controller.checkID, startupController.getItemIdentifier, CloudStorageController.getSignedURL);
 
 // Retrieve Startup by name
 router.get("/companyName/:companyName/:startupId", jwtController.authorizeAccessToken, jwtController.checkStartupKYCverified, auth0Controller.checkID, startupController.findViaName);

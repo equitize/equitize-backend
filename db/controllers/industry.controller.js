@@ -2,7 +2,7 @@ const industryService = require("../services/industry.service");
 
 exports.create = async (req, res, next) => {
     try {
-        const id = req.params.id ? req.params.id : "";
+        const id = req.params.startupId ? req.params.startupId : req.params.id ? req.params.id : "";
         const industryArr = req.body.industryArr ? req.body.industryArr : "";
         const industryNames = industryArr.map(a => a.name);
         const accountType = req.body.accountType ? req.body.accountType : null;
