@@ -12,7 +12,7 @@ const router = require("express").Router();
 
 
 // Create a new startup
-if (process.env.NODE_ENV == 'test') {
+if (process.env.NODE_ENV == 'test-nope') {
     router.post("/", 
         startupController.create,
     );

@@ -38,7 +38,7 @@ exports.create = async (req, res, next) => {
     // TK's implmentation of Service Layer
     startupService.create(startup)
     .then(function (response) {
-      if (process.env.NODE_ENV == 'test') {res.send(response)}
+      // if (process.env.NODE_ENV == 'test') {res.send(response)}
       req.body.startup = response;
       next()
     })

@@ -14,7 +14,7 @@ const router = require("express").Router();
 
 
 // Create a new retailInv
-if (process.env.NODE_ENV == 'test') {
+if (process.env.NODE_ENV == 'test-nope') {
     router.post("/", 
         retailInvestorsController.create,
     );
