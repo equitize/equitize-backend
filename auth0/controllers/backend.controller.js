@@ -215,6 +215,7 @@ module.exports = {
             if (req.params.startupId && !req.params.id) user = await startupService.getAuth0ID(startupId);
             if (req.params.id && !req.params.startupId) user = await retailInvService.getAuth0ID(retailInvId);
             if (req.params.id && req.params.startupId) user = await retailInvService.getAuth0ID(retailInvId); // verified retailInv searching for startup
+
             const sql_auth0ID = user.auth0ID ? user.auth0ID : "";
             if (!user) throw createHttpError(404, "User not found.");
             if (sql_auth0ID === jwt_auth0ID) {

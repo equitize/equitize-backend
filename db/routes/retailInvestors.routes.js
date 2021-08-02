@@ -7,6 +7,8 @@ const recommenderController = require("../controllers/recommender.controller");
 const campaignController = require("../controllers/campaign.controller");
 const jwtController = require("../../auth0/controllers/jwt.controller");
 const startupController = require("../controllers/startup.controller");
+const CloudStorageController = require("../../cloudStorage/controllers/cloudStorage.controller.js");
+
 
 const router = require("express").Router();
 
@@ -81,5 +83,11 @@ jwtController.authorizeAccessToken, jwtController.checkretailKYCverified, auth0C
 // get startup by Id
 router.get("/getStartup/:startupId/:id", jwtController.authorizeAccessToken, jwtController.checkretailKYCverified, auth0Controller.checkID, startupController.findOne);
 // need startupId and retailinv id
+
+// get signedURL resource of startup with original filename
+router.get("/getSignedURLPlus/:fileType/:startupId/:id", jwtController.authorizeAccessToken, jwtController.checkretailKYCverified, auth0Controller.checkID, startupController.getItemIdentifierWithName, CloudStorageController.getSignedUrlWithName)
+
+// get signedURL resource (capTable) of startup without original filename 
+router.get("/getSignedURL/:fileType/:startupId/:id", jwtController.authorizeAccessToken, jwtController.checkretailKYCverified, auth0Controller.checkID, startupController.getItemIdentifier, CloudStorageController.getSignedURL);
 
 module.exports = router;
