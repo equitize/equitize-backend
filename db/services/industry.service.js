@@ -16,7 +16,7 @@ module.exports = {
             for (var i = 0; i < industryNames.length; i ++) {
                 dict = {};
                 dict['name'] = industryNames[i];
-                dict['id'] = id * 12 + industriesList.indexOf(industryNames[i]);  // require unique
+                dict['id'] = 10007 + id * 12 + industriesList.indexOf(industryNames[i]);  // require unique
                 if (accountType === 'startup') { 
                     dict['startupId'] = id;
                 }

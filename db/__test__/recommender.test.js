@@ -47,6 +47,7 @@ describe('Testing Recommender System', () => {
   let retailInvestor_id
   let retailInvestor_access_token
   let startupCount = 0
+  let admin_access_token
 
 
   // initialise retailInvestor
@@ -81,12 +82,31 @@ describe('Testing Recommender System', () => {
     expect(res.statusCode).toBe(200)
   });
 
-  it('load all startups', async() => {
-    requestBody = {"skip_upload_photos": true}  // for faster loading
+
+  it('get admin token', async() => {
+    let requestBody = {
+      emailAddress:process.env.AUTH0_ADMIN_USERNAME,
+      password:process.env.AUTH0_ADMIN_PWD,
+    }
     let res = await supertest(app)
-                          .post("/api/db/misc/loadStartups")
+                          .post("/admin")
                           .send(requestBody)
-  }, 10000);
+    admin_access_token = res.body.access_token
+    expect(res.statusCode).toBe(200)
+  });
+
+  it('verify retailInvestor with admin', async() => {
+    requestBody = {
+      "email": emailAddress,
+      "removePerms": "retailInvestorUnverified",
+      "addPerms": "retailInvestorVerified"
+    }
+    res = await supertest(app)
+                          .post(`/admin/auth0/kyc/verified`)
+                          .auth(admin_access_token, { type: 'bearer' })
+                          .send(requestBody)
+    expect(res.statusCode).toBe(200)
+  });
 
   // it('get all companies', async() => {
   //   requestBody = {}
@@ -105,16 +125,18 @@ describe('Testing Recommender System', () => {
   //   expect(res.statusCode).toBe(500)
   // });
 
-  // it('get recommendations', async() => {
-  //   requestBody = {
-  //     fullInfo:null
-  //   }
-  //   res = await supertest(app)
-  //                         .get(`/api/db/retailInvestors/recommender/${retailInvestor_id}`)
-  //                         .send(requestBody)
-  //   expect(res.statusCode).toBe(200)
-  //   expect(res.body.length).toBe(startupCount)
-  // });
+  // 403 insufficient scope
+  it('get recommendations', async() => {
+    requestBody = {
+      fullInfo:null
+    }
+    res = await supertest(app)
+                          .get(`/api/db/retailInvestors/recommender/${retailInvestor_id}`)
+                          .auth(retailInvestor_access_token, { type: 'bearer' })
+                          .send(requestBody)
+    expect(res.statusCode).toBe(200)
+    expect(res.body.length).toBe(startupCount)
+  });
 
   // it('get recommendations full info', async() => {
   //   requestBody = {

@@ -141,18 +141,18 @@ describe('Testing [/api/db/junctionTable]', () => {
 
 
   // 403 insufficient scope
-  // it('make pledge', async() => {
-  //   let requestBody = {
-  //     retailInvID:retailInvestor_id,
-  //     pledgeAmount:investment_amount
-  //   }
-  //   console.log(companyId, retailInvestor_id)
-  //   let res = await supertest(app)
-  //                         .put(`/api/db/retailInvestors/campaign/pledge/${companyId}/${retailInvestor_id}`)
-  //                         .auth(retailInvestor_access_token, { type: 'bearer' })
-  //                         .send(requestBody)
-  //   expect(res.statusCode).toBe(200)
-  // });
+  it('make pledge', async() => {
+    let requestBody = {
+      retailInvID:retailInvestor_id,
+      pledgeAmount:investment_amount
+    }
+    console.log(companyId, retailInvestor_id)
+    let res = await supertest(app)
+                          .put(`/api/db/retailInvestors/campaign/pledge/${companyId}/${retailInvestor_id}`)
+                          .auth(retailInvestor_access_token, { type: 'bearer' })
+                          .send(requestBody)
+    expect(res.statusCode).toBe(200)
+  });
 
   // TODO: note that the investment is made on companyId, not campaign_id, not sure if intended
   // TODO: does not validate if the investment amount has been reached
