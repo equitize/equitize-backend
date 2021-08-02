@@ -30,17 +30,20 @@ describe('Testing [/api/db/retailInvestors]', () => {
     }
   });
 
-  const retailInvestor_name = 'kenny'
+  var uuid = require("uuid");
+  var uuid_string = uuid.v4().substring(0,8);
+  
+  const retailInvestor_name = uuid_string
   const emailAddress = `${retailInvestor_name}@email.com`
-  const userPassword = 'password'
+  const userPassword = 'testPassword!@#$123'
   const interestedIndustries = [
     {"name":"Finance", "id":1},
     {"name":"Tech", "id":2},
     {"name":"Farming", "id":3}
   ]
-  const retailInvestor_name_alt = 'francisco'
+  const retailInvestor_name_alt = uuid_string+'-alt'
   const emailAddress_alt = `investor-${retailInvestor_name_alt}@email.com`
-  const userPassword_alt = 'password'
+  const userPassword_alt = 'testPassword!@#$123'
   
   const emailAddress_new = `investor2-${retailInvestor_name_alt}@email.com`
 
@@ -48,6 +51,7 @@ describe('Testing [/api/db/retailInvestors]', () => {
   const invalid_id = 1000000007
 
   let retailInvestor_id
+  let retailInvestor_access_token
 
   it('create retailInvestor', async() => {
     let requestBody = {
@@ -62,8 +66,9 @@ describe('Testing [/api/db/retailInvestors]', () => {
     let res = await supertest(app)
                           .post("/api/db/retailInvestors")
                           .send(requestBody)
+    retailInvestor_id = res.body.retailInv.id    
+    retailInvestor_access_token = res.body.auth0.access_token
     expect(res.statusCode).toBe(200)
-    retailInvestor_id = res.body.id    
   });
 
   it('create retailInvestor but missing info', async() => {
@@ -79,7 +84,7 @@ describe('Testing [/api/db/retailInvestors]', () => {
     let res = await supertest(app)
                           .post("/api/db/retailInvestors")
                           .send(requestBody)
-    expect(res.statusCode).toBe(400)
+    expect(res.statusCode).toBe(404)
   });
 
   it('create retailInvestor but duplicate info', async() => {
@@ -95,20 +100,20 @@ describe('Testing [/api/db/retailInvestors]', () => {
     let res = await supertest(app)
                           .post("/api/db/retailInvestors")
                           .send(requestBody)
-    expect(res.statusCode).toBe(500)
+    expect(res.statusCode).toBe(404)
   });
 
   it('create retailInvestor with different info', async() => {
     let requestBody = {
       firstName:retailInvestor_name_alt,
-      lastName:retailInvestor_name,
+      lastName:retailInvestor_name_alt,
       emailAddress:emailAddress_alt,
-      password:userPassword,
+      password:userPassword_alt,
       singPass:"singPass",
       incomeStatement:"incomeStatement",
       incomeTaxReturn:"incomeTaxReturn"
-
     }
+    console.log(requestBody)
     let res = await supertest(app)
                           .post("/api/db/retailInvestors")
                           .send(requestBody)
@@ -119,6 +124,7 @@ describe('Testing [/api/db/retailInvestors]', () => {
     requestBody = {}
     res = await supertest(app)
                           .get(`/api/db/retailInvestors/${retailInvestor_id}`)
+                          .auth(retailInvestor_access_token, { type: 'bearer' })
                           .send(requestBody)
     expect(res.body.id).toBe(retailInvestor_id)
     expect(res.statusCode).toBe(200)
@@ -128,35 +134,37 @@ describe('Testing [/api/db/retailInvestors]', () => {
     requestBody = {}
     res = await supertest(app)
                           .get(`/api/db/retailInvestors/${invalid_id}`)
+                          .auth(retailInvestor_access_token, { type: 'bearer' })
                           .send(requestBody)
-    expect(res.statusCode).toBe(500)
+    expect(res.statusCode).toBe(404)
   });
 
-  it('get all retailInvestors', async() => {
-    requestBody = {}
-    res = await supertest(app)
-                          .get("/api/db/retailInvestors")
-                          .send(requestBody)
-    expect(res.body.length).toBe(2)
-    expect(res.statusCode).toBe(200)
-  });
+  // it('get all retailInvestors', async() => {
+  //   requestBody = {}
+  //   res = await supertest(app)
+  //                         .get("/api/db/retailInvestors")
+  //                         .auth(admin_access_token, { type: 'bearer' })
+  //                         .send(requestBody)
+  //   expect(res.body.length).toBe(2)
+  //   expect(res.statusCode).toBe(200)
+  // });
 
-  it('get by retailInvestor email', async() => {
-    requestBody = {}
-    res = await supertest(app)
-                          .get(`/api/db/retailInvestors/email/${emailAddress}`)
-                          .send(requestBody)
-    // expect(res.body.length).toBe(1)
-    expect(res.statusCode).toBe(200)
-  });
+  // it('get by retailInvestor email', async() => {
+  //   requestBody = {}
+  //   res = await supertest(app)
+  //                         .get(`/api/db/retailInvestors/email/${emailAddress}`)
+  //                         .send(requestBody)
+  //   // expect(res.body.length).toBe(1)
+  //   expect(res.statusCode).toBe(200)
+  // });
 
-  it('get by retailInvestor email but invalid', async() => {
-    requestBody = {}
-    res = await supertest(app)
-                          .get(`/api/db/retailInvestors/email/${invalid_string}`)
-                          .send(requestBody)
-    // expect(res.statusCode).toBe(500)
-  });
+  // it('get by retailInvestor email but invalid', async() => {
+  //   requestBody = {}
+  //   res = await supertest(app)
+  //                         .get(`/api/db/retailInvestors/email/${invalid_string}`)
+  //                         .send(requestBody)
+  //   // expect(res.statusCode).toBe(500)
+  // });
 
   it('update retailInvestor details', async() => {
     requestBody = {
@@ -164,6 +172,7 @@ describe('Testing [/api/db/retailInvestors]', () => {
     }
     res = await supertest(app)
                           .put(`/api/db/retailInvestors/${retailInvestor_id}`)
+                          .auth(retailInvestor_access_token, { type: 'bearer' })
                           .send(requestBody)
     expect(res.statusCode).toBe(200)
   });
@@ -174,6 +183,7 @@ describe('Testing [/api/db/retailInvestors]', () => {
     }
     res = await supertest(app)
                           .put(`/api/db/retailInvestors/${retailInvestor_id}`)
+                          .auth(retailInvestor_access_token, { type: 'bearer' })
                           .send(requestBody)
     expect(res.statusCode).toBe(500)
   });
@@ -184,18 +194,19 @@ describe('Testing [/api/db/retailInvestors]', () => {
     }
     res = await supertest(app)
                           .put(`/api/db/retailInvestors/${invalid_id}`)
+                          .auth(retailInvestor_access_token, { type: 'bearer' })
                           .send(requestBody)
-    expect(res.statusCode).toBe(500)
+    expect(res.statusCode).toBe(404)
   });
 
   it('update interested industries', async() => {
     requestBody = {
       industryArr:interestedIndustries,
-      id:retailInvestor_id,
       accountType:"retailInvestor"
     }
     res = await supertest(app)
-                          .post(`/api/db/retailInvestors/industries/addIndustries/`)
+                          .post(`/api/db/retailInvestors/industries/addIndustries/${retailInvestor_id}`)
+                          .auth(retailInvestor_access_token, { type: 'bearer' })
                           .send(requestBody)
     expect(res.statusCode).toBe(200)
   });
@@ -205,6 +216,7 @@ describe('Testing [/api/db/retailInvestors]', () => {
     }
     res = await supertest(app)
                           .get(`/api/db/retailInvestors/industries/getIndustries/${retailInvestor_id}`)
+                          .auth(retailInvestor_access_token, { type: 'bearer' })
                           .send(requestBody)
     expect(res.body.length).toBe(Object.keys(interestedIndustries).length)
     expect(res.statusCode).toBe(200)
@@ -214,14 +226,16 @@ describe('Testing [/api/db/retailInvestors]', () => {
     requestBody = {}
     res = await supertest(app)
                           .delete(`/api/db/retailInvestors/${invalid_id}`)
+                          .auth(retailInvestor_access_token, { type: 'bearer' })
                           .send(requestBody)
-    expect(res.statusCode).toBe(500)
+    expect(res.statusCode).toBe(404)
   });
 
   it('delete retailInvestor by id', async() => {
     requestBody = {}
     res = await supertest(app)
                           .delete(`/api/db/retailInvestors/${retailInvestor_id}`)
+                          .auth(retailInvestor_access_token, { type: 'bearer' })
                           .send(requestBody)
     expect(res.statusCode).toBe(200)
   });
@@ -230,17 +244,18 @@ describe('Testing [/api/db/retailInvestors]', () => {
     requestBody = {}
     res = await supertest(app)
                           .delete(`/api/db/retailInvestors/${retailInvestor_id}`)
+                          .auth(retailInvestor_access_token, { type: 'bearer' })
                           .send(requestBody)
-    expect(res.statusCode).toBe(500)
+    expect(res.statusCode).toBe(404)
   });
 
-  it('delete all retailInvestors', async() => {
-    requestBody = {}
-    res = await supertest(app)
-                          .delete(`/api/db/retailInvestors/`)
-                          .send(requestBody)
-    expect(res.statusCode).toBe(200)
-  });
+  // it('delete all retailInvestors', async() => {
+  //   requestBody = {}
+  //   res = await supertest(app)
+  //                         .delete(`/api/db/retailInvestors/`)
+  //                         .send(requestBody)
+  //   expect(res.statusCode).toBe(200)
+  // });
 
   afterAll(async () => {
     await thisDb.sequelize.drop();

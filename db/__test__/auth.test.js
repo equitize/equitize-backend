@@ -5,18 +5,19 @@ const fs = require('mz/fs');
 
 require('mysql2/node_modules/iconv-lite').encodingExists('cesu8');
 
+var uuid = require("uuid");
 
-const companyName = 'equitize'
+const companyName = uuid.v4().substring(0,8);
 const company_emailAddress = `company-${companyName}@email.com`
-const companyPassword = 'Passaasword123!'
+const companyPassword = 'testPassword!@#$123'
 
-const investor_name = 'kenny'
+const investor_name = uuid.v4().substring(0,8);
 const investor_emailAddress = `${investor_name}@email.com`
-const investor_password = 'Passaasword123!'
+const investor_password = 'testPassword!@#$123'
 
 let companyId
 let retailInvestor_id
-
+let admin_access_token
 
 // import supertest from "supertest"
 it('Testing to see if Jest works', () => {
@@ -44,14 +45,6 @@ describe('Testing [/api/db/startup]', () => {
     }
   });
 
-  it('drop auth0', async() => {
-    let requestBody = {}
-    let res = await supertest(app)
-                          .post("/admin/auth0/dropUsers")
-                          .send(requestBody)
-    expect(res.statusCode).toBe(200)
-  });
-
   it('create company', async() => {
     let requestBody = {
       companyName:companyName,
@@ -60,10 +53,10 @@ describe('Testing [/api/db/startup]', () => {
       profileDescription:companyName
     }
     let res = await supertest(app)
-                          .post("/api/db/startup/testOAuth")
+                          .post("/api/db/startup")
                           .send(requestBody)
     expect(res.statusCode).toBe(200)
-    companyId = res.body.id    
+    // companyId = res.body.startup.id    
   });
 
   it('login company', async() => {
@@ -88,10 +81,10 @@ describe('Testing [/api/db/startup]', () => {
       incomeTaxReturn:"incomeTaxReturn"
     }
     let res = await supertest(app)
-                          .post("/api/db/retailInvestors/testOAuth")
+                          .post("/api/db/retailInvestors/")
                           .send(requestBody)
     expect(res.statusCode).toBe(200)
-    retailInvestor_id = res.body.id    
+    // retailInvestor_id = res.body.id    
   });
 
   it('login retailInvestor', async() => {
@@ -104,6 +97,27 @@ describe('Testing [/api/db/startup]', () => {
                           .send(requestBody)
     expect(res.statusCode).toBe(200)
   })
+
+  // it('get admin token', async() => {
+  //   let requestBody = {
+  //     emailAddress:process.env.AUTH0_ADMIN_USERNAME,
+  //     password:process.env.AUTH0_ADMIN_PWD,
+  //   }
+  //   let res = await supertest(app)
+  //                         .post("/admin")
+  //                         .send(requestBody)
+  //   admin_access_token = res.body.access_token
+  //   expect(res.statusCode).toBe(200)
+  // });
+
+  // it('drop auth0', async() => {
+  //   let requestBody = {}
+  //   let res = await supertest(app)
+  //                         .post("/admin/auth0/dropUsers")
+  //                         .auth(admin_access_token, { type: 'bearer' })
+  //                         .send(requestBody)
+  //   expect(res.statusCode).toBe(200)
+  // });
 
   afterAll(async () => {
     await thisDb.sequelize.drop();

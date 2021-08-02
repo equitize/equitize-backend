@@ -29,14 +29,15 @@ describe('Testing [/api/db/campaign]', () => {
       break
     }
   });
+  var uuid = require("uuid");
 
-  const companyName = 'equitize'
+  const companyName = uuid.v4().substring(0,8);
   const company_emailAddress = `company-${companyName}@email.com`
-  const companyPassword = 'password'
+  const companyPassword = 'testPassword!@#$123'
 
-  const investor_name = 'kenny'
+  const investor_name = uuid.v4().substring(0,8);
   const investor_emailAddress = `${investor_name}@email.com`
-  const investor_password = 'password'
+  const investor_password = 'testPassword!@#$123'
 
   const goal = 123456
   const goal_new = 987654
@@ -47,6 +48,9 @@ describe('Testing [/api/db/campaign]', () => {
   let companyId
   let retailInvestor_id
   let campaign_id
+  let retailInvestor_access_token
+  let company_access_token
+  let admin_access_token
 
   it('create company', async() => {
     let requestBody = {
@@ -58,8 +62,9 @@ describe('Testing [/api/db/campaign]', () => {
     let res = await supertest(app)
                           .post("/api/db/startup")
                           .send(requestBody)
+    companyId = res.body.startup.id    
+    company_access_token = res.body.auth0.access_token
     expect(res.statusCode).toBe(200)
-    companyId = res.body.id    
   });
 
   it('create retailInvestor', async() => {
@@ -75,8 +80,9 @@ describe('Testing [/api/db/campaign]', () => {
     let res = await supertest(app)
                           .post("/api/db/retailInvestors")
                           .send(requestBody)
+    retailInvestor_id = res.body.retailInv.id
+    retailInvestor_access_token = res.body.auth0.access_token
     expect(res.statusCode).toBe(200)
-    retailInvestor_id = res.body.id    
   });
 
   it('create campaign by update', async() => {
@@ -85,22 +91,11 @@ describe('Testing [/api/db/campaign]', () => {
     }
     res = await supertest(app)
                           .put(`/api/db/startup/campaign/update/${companyId}`)
+                          .auth(company_access_token, { type: 'bearer' })
                           .send(requestBody)
     expect(res.statusCode).toBe(200)
   });
   // maybe should test creating campaign without valid companyId 
-
-  it('create campaign but missing info', async() => {
-    let requestBody = {
-      // startupId:companyId, // info missed out
-      // goal:goal,
-      endDate:endDate 
-    }
-    let res = await supertest(app)
-                          .post("/api/db/campaign")
-                          .send(requestBody)
-    expect(res.statusCode).toBe(400)
-  });
 
   // currently allowing startup to create multiple campaign at the same time
   // not doing this because we assume one startup can only have one campaign
@@ -121,6 +116,7 @@ describe('Testing [/api/db/campaign]', () => {
     requestBody = {}
     res = await supertest(app)
                           .get(`/api/db/campaign/${companyId}`)
+                          .auth(company_access_token, { type: 'bearer' })
                           .send(requestBody)
     expect(res.body.id).toBe(companyId)
     expect(res.statusCode).toBe(200)
@@ -130,45 +126,48 @@ describe('Testing [/api/db/campaign]', () => {
     requestBody = {}
     res = await supertest(app)
                           .get(`/api/db/campaign/${invalid_id}`)
+                          .auth(company_access_token, { type: 'bearer' })
                           .send(requestBody)
     expect(res.statusCode).toBe(500)
   });
 
-  it('get all campaigns', async() => {
-    requestBody = {}
-    res = await supertest(app)
-                          .get("/api/db/campaign")
-                          .send(requestBody)
-    expect(res.body.length).toBe(1)
-    expect(res.statusCode).toBe(200)
-  });
+  // it('get all campaigns', async() => {
+  //   requestBody = {}
+  //   res = await supertest(app)
+  //                         .get("/api/db/campaign")
+  //                         .send(requestBody)
+  //   expect(res.body.length).toBe(1)
+  //   expect(res.statusCode).toBe(200)
+  // });
 
-  it('get by company id', async() => {
+  it('get campaign by company id', async() => {
     requestBody = {}
     res = await supertest(app)
                           .get(`/api/db/campaign/campaign/${companyId}`)
+                          .auth(company_access_token, { type: 'bearer' })
                           .send(requestBody)
     expect(res.body.length).toBe(1)  // including duplicate
     expect(res.statusCode).toBe(200)
   });
 
-  it('get by company id but invalid', async() => {
+  it('get campaign by company id but invalid', async() => {
     requestBody = {}
     res = await supertest(app)
                           .get(`/api/db/campaign/campaign/${invalid_id}`)
+                          .auth(company_access_token, { type: 'bearer' })
                           .send(requestBody)
     expect(res.statusCode).toBe(500)
   });
 
-  // it('update campaign details', async() => {
-  //   requestBody = {
-  //     tokensMinted:0.30,
-  //   }
-  //   res = await supertest(app)
-  //                         .put(`/api/db/startup/campaign/update/${companyId}`)
-  //                         .send(requestBody)
-  //   expect(res.statusCode).toBe(200)
-  // });
+  // // it('update campaign details', async() => {
+  // //   requestBody = {
+  // //     tokensMinted:0.30,
+  // //   }
+  // //   res = await supertest(app)
+  // //                         .put(`/api/db/startup/campaign/update/${companyId}`)
+  // //                         .send(requestBody)
+  // //   expect(res.statusCode).toBe(200)
+  // // });
 
   it('update campaign details but invalid id', async() => {
     requestBody = {
@@ -176,6 +175,7 @@ describe('Testing [/api/db/campaign]', () => {
     }
     res = await supertest(app)
                           .put(`/api/db/startup/campaign/update/${invalid_id}`)
+                          .auth(company_access_token, { type: 'bearer' })
                           .send(requestBody)
     expect(res.statusCode).toBe(404)
   });
@@ -184,34 +184,36 @@ describe('Testing [/api/db/campaign]', () => {
     requestBody = {}
     res = await supertest(app)
                           .delete(`/api/db/campaign/${invalid_id}`)
+                          .auth(company_access_token, { type: 'bearer' })
                           .send(requestBody)
     expect(res.statusCode).toBe(500)
   });
 
-  // not implemented maybe
+  // // not implemented maybe
   // it('delete campaign by id', async() => {
   //   requestBody = {}
   //   res = await supertest(app)
   //                         .delete(`/api/db/campaign/${campaign_id}`)
+  //                         .auth(company_access_token, { type: 'bearer' })
   //                         .send(requestBody)
   //   expect(res.statusCode).toBe(200)
   // });
 
-  // it('delete campaign by id but already deleted', async() => {
+  // // it('delete campaign by id but already deleted', async() => {
+  // //   requestBody = {}
+  // //   res = await supertest(app)
+  // //                         .delete(`/api/db/campaign/${campaign_id}`)
+  // //                         .send(requestBody)
+  // //   expect(res.statusCode).toBe(500)
+  // // });
+
+  // it('delete all campaigns', async() => {
   //   requestBody = {}
   //   res = await supertest(app)
-  //                         .delete(`/api/db/campaign/${campaign_id}`)
+  //                         .delete(`/api/db/campaign/`)
   //                         .send(requestBody)
-  //   expect(res.statusCode).toBe(500)
+  //   expect(res.statusCode).toBe(200)
   // });
-
-  it('delete all campaigns', async() => {
-    requestBody = {}
-    res = await supertest(app)
-                          .delete(`/api/db/campaign/`)
-                          .send(requestBody)
-    expect(res.statusCode).toBe(200)
-  });
 
   afterAll(async () => {
     await thisDb.sequelize.drop();
