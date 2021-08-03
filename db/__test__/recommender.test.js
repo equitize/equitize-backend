@@ -46,7 +46,7 @@ describe('Testing Recommender System', () => {
 
   let retailInvestor_id
   let retailInvestor_access_token
-  let startupCount = 0
+  let startupCount = 111
   let admin_access_token
 
 
@@ -82,6 +82,12 @@ describe('Testing Recommender System', () => {
     expect(res.statusCode).toBe(200)
   });
 
+  it('load all startups', async() => {
+    requestBody = {"skip_upload_photos": true}  // for faster loading
+    let res = await supertest(app)
+                          .post("/api/db/misc/loadStartups")
+                          .send(requestBody)
+  }, 10000);
 
   it('get admin token', async() => {
     let requestBody = {
@@ -148,6 +154,7 @@ describe('Testing Recommender System', () => {
                           .send(requestBody)
     expect(res.statusCode).toBe(200)
     expect(res.body.length).toBe(startupCount)
+    console.log(res.body.slice(0, 3))
   });
 
   it('get recommendations full info', async() => {
