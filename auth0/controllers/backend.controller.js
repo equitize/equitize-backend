@@ -126,7 +126,7 @@ module.exports = {
                     // await sleep(60000) 
                     promise = promise.then(function () {
                         return new Promise(function (resolve) {
-                          setTimeout(resolve, 10000);
+                          setTimeout(resolve, 60000);
                         });
                     });
                 }
