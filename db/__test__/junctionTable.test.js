@@ -139,8 +139,18 @@ describe('Testing [/api/db/junctionTable]', () => {
     expect(res.statusCode).toBe(200)
   });
 
+  it('login retailInvestor', async() => {
+    let requestBody = {
+      emailAddress:investor_emailAddress,
+      password:investor_password
+    }
+    let res = await supertest(app)
+                          .post("/api/db/retailInvestors/login")
+                          .send(requestBody)
+    expect(res.statusCode).toBe(200)
+    retailInvestor_access_token = res.body.auth0.access_token
+  })
 
-  // 403 insufficient scope
   it('make pledge', async() => {
     let requestBody = {
       retailInvID:retailInvestor_id,
@@ -156,31 +166,31 @@ describe('Testing [/api/db/junctionTable]', () => {
 
   // TODO: note that the investment is made on companyId, not campaign_id, not sure if intended
   // TODO: does not validate if the investment amount has been reached
-  it('create junctionTable', async() => {
-    let requestBody = {
-      retailInvestorId:retailInvestor_id,
-      companyId:companyId,
-      amount:investment_amount
-    }
-    let res = await supertest(app)
-                          .post("/api/db/junctionTable")
-                          .auth(retailInvestor_access_token, { type: 'bearer' })
-                          .send(requestBody)
-    expect(res.statusCode).toBe(200)
-    junctionTable_id = res.body.id    
-  });
+  // it('create junctionTable', async() => {
+  //   let requestBody = {
+  //     retailInvestorId:retailInvestor_id,
+  //     companyId:companyId,
+  //     amount:investment_amount
+  //   }
+  //   let res = await supertest(app)
+  //                         .post("/api/db/junctionTable")
+  //                         .auth(retailInvestor_access_token, { type: 'bearer' })
+  //                         .send(requestBody)
+  //   expect(res.statusCode).toBe(200)
+  //   junctionTable_id = res.body.id    
+  // });
 
-  // negative cases of above
+  // // negative cases of above
 
-  it('get a junctionTable by id', async() => {
-    requestBody = {}
-    res = await supertest(app)
-                          .get(`/api/db/junctionTable/${junctionTable_id}`)
-                          .auth(retailInvestor_access_token, { type: 'bearer' })
-                          .send(requestBody)
-    expect(res.body.id).toBe(companyId)
-    expect(res.statusCode).toBe(200)
-  });
+  // it('get a junctionTable by id', async() => {
+  //   requestBody = {}
+  //   res = await supertest(app)
+  //                         .get(`/api/db/junctionTable/${junctionTable_id}`)
+  //                         .auth(retailInvestor_access_token, { type: 'bearer' })
+  //                         .send(requestBody)
+  //   expect(res.body.id).toBe(companyId)
+  //   expect(res.statusCode).toBe(200)
+  // });
 
   // it('get all junctionTables', async() => {
   //   requestBody = {}

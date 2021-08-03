@@ -108,6 +108,18 @@ describe('Testing Recommender System', () => {
     expect(res.statusCode).toBe(200)
   });
 
+  it('login retailInvestor', async() => {
+    let requestBody = {
+      emailAddress:emailAddress,
+      password:userPassword
+    }
+    let res = await supertest(app)
+                          .post("/api/db/retailInvestors/login")
+                          .send(requestBody)
+    expect(res.statusCode).toBe(200)
+    retailInvestor_access_token = res.body.auth0.access_token
+  })
+
   // it('get all companies', async() => {
   //   requestBody = {}
   //   let res = await supertest(app)
@@ -138,16 +150,17 @@ describe('Testing Recommender System', () => {
     expect(res.body.length).toBe(startupCount)
   });
 
-  // it('get recommendations full info', async() => {
-  //   requestBody = {
-  //     fullInfo:true
-  //   }
-  //   res = await supertest(app)
-  //                         .get(`/api/db/retailInvestors/recommender/${retailInvestor_id}`)
-  //                         .send(requestBody)
-  //   expect(res.statusCode).toBe(200)
-  //   expect(res.body.length).toBe(startupCount)
-  // });
+  it('get recommendations full info', async() => {
+    requestBody = {
+      fullInfo:true
+    }
+    res = await supertest(app)
+                          .get(`/api/db/retailInvestors/recommender/${retailInvestor_id}`)
+                          .auth(retailInvestor_access_token, { type: 'bearer' })
+                          .send(requestBody)
+    expect(res.statusCode).toBe(200)
+    expect(res.body.length).toBe(startupCount)
+  });
 
   afterAll(async () => {
     await thisDb.sequelize.drop();
