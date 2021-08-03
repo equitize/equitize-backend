@@ -96,10 +96,12 @@ module.exports = {
             next(error)
         }
     },
+    
+    
     delAllUsers : async (req, res, next) => {
         try {
-            const sleep = (waitTimeInMs) => new Promise(resolve => setTimeout(resolve, waitTimeInMs));
-
+            // const sleep = (waitTimeInMs) => { return new Promise(resolve => setTimeout(resolve, waitTimeInMs)) }
+            var promise = Promise.resolve();
             var options = {
                 method: 'GET',
                 url: `https://${process.env.AUTH0_DOMAIN}/api/v2/users`,
@@ -120,8 +122,14 @@ module.exports = {
                     },
                 }
                 const response = await axios.request(options) // .data returns ''
-                if (response["headers"]["x-ratelimit-remaining"] === '0') { 
-                    await sleep(1000) }
+                if (response["headers"]["x-ratelimit-remaining"] === '1') { 
+                    // await sleep(60000) 
+                    promise = promise.then(function () {
+                        return new Promise(function (resolve) {
+                          setTimeout(resolve, 60000);
+                        });
+                    });
+                }
             });
             res.status(200).send({'message': 'succesfully removed all auth0 users'})
             

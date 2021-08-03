@@ -31,12 +31,17 @@ const cron = require("node-cron");
 const cronJobs = require("./utils/cron/cronJobs");
 
 
-if (process.env.NODE_ENV !== "test") {
+if (process.env.NODE_ENV === "dev" || process.env.NODE_ENV === "dev-persistent") {
   cron.schedule('*/5 * * * * *', () => {
   // campaigns = cronJobs.checkCampaignGoal(); 
   cronJobs.checkCampaignGoalV2();
   // cronJobs.testFunction();
   })
+} else if (process.env.NODE_ENV === "prod-VPC") {
+  // disable blockchain on cloud because we are mainly testing locally. 
+  // cron.schedule('*/5 * * * * *', () => {
+  //   cronJobs.checkCampaignGoalV2();
+  //   })
 }
 
 // for public routes
@@ -59,16 +64,9 @@ if (process.env.NODE_ENV === 'prod-VPC'|| process.env.NODE_ENV === 'dev-persiste
   });
 }
 
-app.get('/test', ()=>{
-  const { crowdfundingAddress } = require("./V2SmartContracts/config/crowdfunding.json")
-  console.log(crowdfundingAddress)
-})
-
 app.use('/admin', require('./db/routes/admin.routes'));
 app.use('/api/db/startup', require('./db/routes/startup.routes'));
 app.use('/api/db/retailInvestors', logger.retailInvLogger, require('./db/routes/retailInvestors.routes'));
-app.use('/api/db/campaign', require('./db/routes/campaign.routes'));
-app.use('/api/db/junctionTable', require('./db/routes/junctionTable.routes'));
 app.use('/api/db/general', require('./db/routes/general.routes'));
 
 // app.use('/api/sc2/', require('./V2SmartContracts/routes/sc.routes'));
