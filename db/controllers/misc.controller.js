@@ -21,7 +21,8 @@ module.exports = {
                     companyName:data.name,
                     emailAddress:data.url,
                     password:cnt,  // mock
-                    profileDescription:data.description
+                    profileDescription:data.description,
+                    auth0ID:data.auth0ID
                 };
                 acceptedStartupCount ++
                 records.push(requestBody);
