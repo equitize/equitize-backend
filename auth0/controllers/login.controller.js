@@ -19,7 +19,7 @@ module.exports = {
                 "authorization": `Bearer ${process.env.AUTH0_MGT_TOKEN_TESTING}`
             };
             const accessToken = await axios.post(url, data, { headers : headers });
-            console.log(accessToken)
+            // console.log(accessToken)
             if ( accessToken.status === 200) res.send({ 
                 startup : req.body.startup,
                 auth0 : accessToken.data

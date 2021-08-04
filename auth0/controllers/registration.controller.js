@@ -93,7 +93,7 @@ module.exports = {
                 next();
             })
             .catch(function (error) {
-                console.log(error)
+                // console.log(error)
                 next(createHttpError[500])
             });
         } catch (error) {
