@@ -1,6 +1,7 @@
 const app = require("../../app")
 const supertest = require('supertest')
 const db  = require("../models/index")
+const fs = require('mz/fs');
 
 require('mysql2/node_modules/iconv-lite').encodingExists('cesu8');
 
@@ -10,12 +11,120 @@ it('Testing to see if Jest works', () => {
     expect(1).toBe(1)
 })
 
+describe('Load a dummy startup', () => {
+
+  var uuid = require("uuid");
+  var uuid_string = uuid.v4().substring(0,8);
+  
+  const companyName = uuid_string
+  const emailAddress = `company-${companyName}@email.com`
+  const companyPassword = 'testPassword!@#$123'
+  const companyIndustries = [
+    // {"name":"Finance", "id":1},
+    // {"name":"Environment", "id":2},
+  ]
+
+  const sample_pdf_path = `${__dirname}/sample_files/sample.pdf`
+  const signed_url_prefix = "https://storage.googleapis.com/equitize-"
+
+  const upload_test_permutations = [  // endpoint/description, filepath
+    ["profilePhoto", sample_pdf_path]
+  ]
+
+  let company_id
+  let company_access_token
+  let admin_access_token
+
+
+  it('create company', async() => {
+    let requestBody = {
+      companyName:companyName,
+      emailAddress:emailAddress,
+      password:companyPassword,
+      profileDescription:companyName
+    }
+    let res = await supertest(app)
+                          .post("/api/db/startup")
+                          .send(requestBody)
+    company_id = res.body.startup.id
+    company_access_token = res.body.auth0.access_token
+    expect(res.statusCode).toBe(200)
+  });
+
+  it('update company industries', async() => {
+    requestBody = {
+      industryArr:companyIndustries,
+      accountType:"startup"
+    }
+    res = await supertest(app)
+                          .post(`/api/db/startup/industries/addIndustries/${company_id}`)
+                          .auth(company_access_token, { type: 'bearer' })
+                          .send(requestBody)
+    expect(res.statusCode).toBe(200)
+  });
+
+  // upload tests for other files
+  for (let [_, [endpoint, filepath]] of Object.entries(upload_test_permutations)){
+    it(`upload ${endpoint}`, async() => {
+      exists = await fs.exists(filepath)
+      if (!exists) {
+        console.log(`${filepath} not found`);
+        throw new Error(`${filepath} not found`); 
+      }
+      res = await supertest(app)
+                        .put(`/api/db/startup/${endpoint}/${company_id}`)
+                        .auth(company_access_token, { type: 'bearer' })
+                        .attach('file', filepath)
+      expect(res.statusCode).toBe(200)
+    });
+  
+    it(`get uploaded ${endpoint}`, async() => {
+      requestBody = {
+        fileType:endpoint,
+      }
+      res = await supertest(app)
+                        .get(`/api/db/startup/getSignedURL/${endpoint}/${company_id}`)
+                        .auth(company_access_token, { type: 'bearer' })
+                        .send(requestBody)
+      expect(res.body.signedURL).toMatch(new RegExp(`^${signed_url_prefix}?`));
+      expect(res.statusCode).toBe(200)
+    });
+  }
+  
+  it('get admin token', async() => {
+    let requestBody = {
+      emailAddress:process.env.AUTH0_ADMIN_USERNAME,
+      password:process.env.AUTH0_ADMIN_PWD,
+    }
+    let res = await supertest(app)
+                          .post("/admin")
+                          .send(requestBody)
+    admin_access_token = res.body.access_token
+    expect(res.statusCode).toBe(200)
+  });
+  
+  it('verify startup with admin', async() => {
+    requestBody = {
+      "email": emailAddress,
+      "removePerms": "startupUnverified",
+      "addPerms": "startupVerified"
+    }
+    res = await supertest(app)
+                          .post(`/admin/auth0/kyc/verified`)
+                          .auth(admin_access_token, { type: 'bearer' })
+                          .send(requestBody)
+    expect(res.statusCode).toBe(200)
+  });
+})
+
+
+
 // this is an eg. of one test suite. 
 describe('Testing Recommender System', () => {
   let thisDb = db
     
   beforeAll(async () => {
-    for (attemptCount in [...Array(10).keys()]){
+    for (let attemptCount in [...Array(10).keys()]){
       try {
         // https://stackoverflow.com/a/21006886/5894029
         // await thisDb.sequelize.query('SET FOREIGN_KEY_CHECKS = 0')
@@ -46,9 +155,15 @@ describe('Testing Recommender System', () => {
 
   let retailInvestor_id
   let retailInvestor_access_token
-  let startupCount = 111
+  let startupCount = 112  // include dummy startup
   let admin_access_token
 
+  it('load all startups', async() => {
+    requestBody = {"skip_upload_photos": true}  // for faster loading
+    let res = await supertest(app)
+                          .post("/api/db/misc/loadStartups")
+                          .send(requestBody)
+  }, 10000);
 
   // initialise retailInvestor
   it('create retailInvestor', async() => {
@@ -81,13 +196,6 @@ describe('Testing Recommender System', () => {
                           .send(requestBody)
     expect(res.statusCode).toBe(200)
   });
-
-  it('load all startups', async() => {
-    requestBody = {"skip_upload_photos": true}  // for faster loading
-    let res = await supertest(app)
-                          .post("/api/db/misc/loadStartups")
-                          .send(requestBody)
-  }, 10000);
 
   it('get admin token', async() => {
     let requestBody = {
@@ -135,15 +243,6 @@ describe('Testing Recommender System', () => {
   //   startupCount = res.body.length
   // });
 
-  // it('get recommendations but invalid id', async() => {
-  //   requestBody = {}
-  //   res = await supertest(app)
-  //                         .get(`/api/db/retailInvestors/recommender/${invalid_id}`)
-  //                         .send(requestBody)
-  //   expect(res.statusCode).toBe(500)
-  // });
-
-  // 403 insufficient scope
   it('get recommendations', async() => {
     requestBody = {
       fullInfo:null
@@ -154,7 +253,10 @@ describe('Testing Recommender System', () => {
                           .send(requestBody)
     expect(res.statusCode).toBe(200)
     expect(res.body.length).toBe(startupCount)
-    console.log(res.body.slice(0, 3))
+    console.log(res.body.slice(0, 1))
+    for (let idx in res.body.slice(0, 4)){
+      console.log(res.body[idx].industries)
+    }
   });
 
   it('get recommendations full info', async() => {
@@ -167,6 +269,10 @@ describe('Testing Recommender System', () => {
                           .send(requestBody)
     expect(res.statusCode).toBe(200)
     expect(res.body.length).toBe(startupCount)
+    console.log(res.body.slice(0, 1))
+    for (let idx in res.body.slice(0, 4)){
+      console.log(res.body[idx].industries)
+    }
   });
 
   afterAll(async () => {
