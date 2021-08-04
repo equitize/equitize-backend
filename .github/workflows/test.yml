@@ -47,12 +47,12 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: yarn install
     - run: yarn test sample
-    # - run: yarn test startup
-    #   if: always()
-    # - run: yarn test retailInvestors
-    #   if: always()
     - run: yarn test campaign
       if: always()
+    - run: yarn test startup
+      if: always()
+    # - run: yarn test retailInvestors
+    #   if: always()
     # - run: yarn test junctionTable
     #   if: always()
     # - run: yarn test recommender
