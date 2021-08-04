@@ -98,7 +98,7 @@ app.use((err, req, res, next) => {
 }); 
 // other errors
 app.use((error, req, res, next) => {
-  console.log(error)
+  // console.log(error)
   res.status(error.status || error.statusCode || 500).send({
     error: {
       status: error.status || error.statusCode || 500,

@@ -110,14 +110,14 @@ describe('Testing [/api/db/startup]', () => {
     expect(res.statusCode).toBe(200)
   });
 
-  it('drop auth0', async() => {
-    let requestBody = {}
-    let res = await supertest(app)
-                          .post("/admin/auth0/dropUsers")
-                          .auth(admin_access_token, { type: 'bearer' })
-                          .send(requestBody)
-    expect(res.statusCode).toBe(200)
-  });
+  // it('drop auth0', async() => {
+  //   let requestBody = {}
+  //   let res = await supertest(app)
+  //                         .post("/admin/auth0/dropUsers")
+  //                         .auth(admin_access_token, { type: 'bearer' })
+  //                         .send(requestBody)
+  //   expect(res.statusCode).toBe(200)
+  // });
 
   afterAll(async () => {
     await thisDb.sequelize.drop();

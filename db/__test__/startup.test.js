@@ -282,6 +282,7 @@ describe('Testing [/api/db/startup]', () => {
 
   // upload and get tests for video and pitch decks
   for (let [_, [endpoint, bodyType, bodyName, filepath]] of Object.entries(upload_test_permutations_special)){
+    if (process.env.GITHUB_ACTIONS) {continue}  // skip if running on Actions
     it(`upload ${endpoint}`, async() => {
       exists = await fs.exists(filepath)
       if (!exists) {
@@ -311,6 +312,7 @@ describe('Testing [/api/db/startup]', () => {
 
   // upload tests for other files
   for (let [_, [endpoint, filepath]] of Object.entries(upload_test_permutations)){
+    if (process.env.GITHUB_ACTIONS) {continue}  // skip if running on Actions
     it(`upload ${endpoint}`, async() => {
       exists = await fs.exists(filepath)
       if (!exists) {
