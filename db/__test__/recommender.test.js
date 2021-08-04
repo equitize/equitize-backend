@@ -62,34 +62,6 @@ describe('Load a dummy startup', () => {
                           .send(requestBody)
     expect(res.statusCode).toBe(200)
   });
-
-  // upload tests for other files
-  for (let [_, [endpoint, filepath]] of Object.entries(upload_test_permutations)){
-    it(`upload ${endpoint}`, async() => {
-      exists = await fs.exists(filepath)
-      if (!exists) {
-        console.log(`${filepath} not found`);
-        throw new Error(`${filepath} not found`); 
-      }
-      res = await supertest(app)
-                        .put(`/api/db/startup/${endpoint}/${company_id}`)
-                        .auth(company_access_token, { type: 'bearer' })
-                        .attach('file', filepath)
-      expect(res.statusCode).toBe(200)
-    });
-  
-    it(`get uploaded ${endpoint}`, async() => {
-      requestBody = {
-        fileType:endpoint,
-      }
-      res = await supertest(app)
-                        .get(`/api/db/startup/getSignedURL/${endpoint}/${company_id}`)
-                        .auth(company_access_token, { type: 'bearer' })
-                        .send(requestBody)
-      expect(res.body.signedURL).toMatch(new RegExp(`^${signed_url_prefix}?`));
-      expect(res.statusCode).toBe(200)
-    });
-  }
   
   it('get admin token', async() => {
     let requestBody = {
