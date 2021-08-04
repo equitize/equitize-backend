@@ -18,9 +18,9 @@ jobs:
       DB_PASSWORD: root  # apparently I could not change this password
       # if process.env.GITHUB_ACTIONS is 'true', the password at db.config.js will change to 'root'
       # SQL_HOST: ${{ secrets.SQL_HOST }}
-      # SQL_PASSWORD: ${{ secrets.SQL_PASSWORD }}
-      # SQL_USER: ${{ secrets.SQL_USER }}
-      # SQL_DB: ${{ secrets.SQL_DB }}
+      SQL_PASSWORD: root
+      SQL_USER: root
+      SQL_DB: testdb
       AUTH0_DOMAIN : ${{ secrets.AUTH0_DOMAIN }}
       AUTH0_AUDIENCE : ${{ secrets.AUTH0_AUDIENCE }}
       AUTH0_FRONTEND_CLIENTID: ${{ secrets.AUTH0_FRONTEND_CLIENTID }}
