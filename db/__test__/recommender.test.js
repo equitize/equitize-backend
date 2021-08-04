@@ -24,13 +24,6 @@ describe('Load a dummy startup', () => {
     // {"name":"Environment", "id":2},
   ]
 
-  const sample_pdf_path = `${__dirname}/sample_files/sample.pdf`
-  const signed_url_prefix = "https://storage.googleapis.com/equitize-"
-
-  const upload_test_permutations = [  // endpoint/description, filepath
-    ["profilePhoto", sample_pdf_path]
-  ]
-
   let company_id
   let company_access_token
   let admin_access_token
