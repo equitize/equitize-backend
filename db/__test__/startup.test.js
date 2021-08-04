@@ -284,6 +284,7 @@ describe('Testing [/api/db/startup]', () => {
   for (let [_, [endpoint, bodyType, bodyName, filepath]] of Object.entries(upload_test_permutations_special)){
     it(`upload ${endpoint}`, async() => {
       exists = await fs.exists(filepath)
+      console.log(`${filepath} exist?`);
       if (!exists) {
         console.log(`${filepath} not found`);
         throw new Error(`${filepath} not found`); 
