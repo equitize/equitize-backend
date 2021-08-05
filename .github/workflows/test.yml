@@ -44,9 +44,7 @@ jobs:
           SC2_STARTUP_PRIVATE_KEY: ${{ secrets.SC2_STARTUP_PRIVATE_KEY }}
 
     - name: Print Secrets
-      run: |
-          echo $SQL_HOST
-          echo $AUTH0_DOMAIN
+      run: echo "$SQL_HOST"
 
     - name: Set up MySQL
       run: |
@@ -58,6 +56,25 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
+
+    - name: Get Repo Secrets
+      run: echo Getting Repo Secrets
+      env:
+        SQL_HOST: ${{ secrets.SQL_HOST }}
+        SQL_PASSWORD: ${{ secrets.SQL_PASSWORD }}
+        SQL_USER: ${{ secrets.SQL_USER }}
+        SQL_DB: ${{ secrets.SQL_DB }}
+        AUTH0_DOMAIN: ${{ secrets.AUTH0_DOMAIN }}
+        AUTH0_AUDIENCE: ${{ secrets.AUTH0_AUDIENCE }}
+        AUTH0_FRONTEND_CLIENTID: ${{ secrets.AUTH0_FRONTEND_CLIENTID }}
+        AUTH0_ADMIN_USERNAME: ${{ secrets.AUTH0_ADMIN_USERNAME }}
+        AUTH0_ADMIN_PWD: ${{ secrets.AUTH0_ADMIN_PWD }}
+        AUTH0_MGT_TOKEN_TESTING: ${{ secrets.AUTH0_MGT_TOKEN_TESTING }}
+        AUTH0_BACKEND_CLIENTID: ${{ secrets.AUTH0_BACKEND_CLIENTID }}
+        AUTH0_CLIENT_SECRET_PDTN: ${{ secrets.AUTH0_CLIENT_SECRET_PDTN }}
+        CLOUDSTORAGE_SECRET_PASSPHRASE: ${{ secrets.CLOUDSTORAGE_SECRET_PASSPHRASE }}
+        ZILLIQA_PRIVATE_KEY: ${{ secrets.ZILLIQA_PRIVATE_KEY }}
+        SC2_STARTUP_PRIVATE_KEY: ${{ secrets.SC2_STARTUP_PRIVATE_KEY }}
 
     - name: Print Secrets
       run: echo "$AUTH0_DOMAIN"
