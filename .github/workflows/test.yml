@@ -51,4 +51,4 @@ jobs:
           SC2_STARTUP_PRIVATE_KEY: ${{ secrets.SC2_STARTUP_PRIVATE_KEY }}
 
     - name: Print Secrets
-      run: echo $SQL_HOST
+      run: echo ${{ env.SQL_HOST }}
