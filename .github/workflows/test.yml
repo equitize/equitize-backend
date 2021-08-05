@@ -18,18 +18,11 @@ jobs:
         DB_PASSWORD: root
 
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout
+      uses: actions/checkout@v2
 
-    - name: Set up MySQL
-      run: |
-        echo $GITHUB_ACTIONS
-        sudo /etc/init.d/mysql start
-        mysql -e 'CREATE DATABASE ${{ env.DB_DATABASE }};' -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - run: yarn install
+    - name: Install Dependencies
+      run: yarn install
 
     - name: Get Repo Secrets
       run: echo Getting Repo Secrets
@@ -51,4 +44,15 @@ jobs:
           SC2_STARTUP_PRIVATE_KEY: ${{ secrets.SC2_STARTUP_PRIVATE_KEY }}
 
     - name: Print Secrets
-      run: echo ${{ env.SQL_HOST }}
+      run: echo "SQL_HOST"
+
+    - name: Set up MySQL
+      run: |
+        echo $GITHUB_ACTIONS
+        sudo /etc/init.d/mysql start
+        mysql -e 'CREATE DATABASE ${{ env.DB_DATABASE }};' -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
+    
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
