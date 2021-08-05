@@ -56,3 +56,19 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
+
+    - run: yarn test sample
+    - run: yarn test campaign
+      if: always()
+    - run: yarn test auth
+      if: always()
+    - run: yarn test startup
+      if: always()
+    - run: yarn test retailInvestors
+      if: always()
+    - run: yarn test junctionTable
+      if: always()
+    - run: yarn test recommender
+      if: always()
+    - run: yarn test
+      if: always()
