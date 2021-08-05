@@ -45,8 +45,8 @@ jobs:
 
     - name: Print Secrets
       run: |
-          echo "$SQL_HOST"
-          echo "$AUTH0_DOMAIN"
+          echo $SQL_HOST
+          echo $AUTH0_DOMAIN
 
     - name: Set up MySQL
       run: |
