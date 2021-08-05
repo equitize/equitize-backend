@@ -19,7 +19,20 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-      name: Get Repo Secrets
+
+    - name: Set up MySQL
+      run: |
+        echo $GITHUB_ACTIONS
+        sudo /etc/init.d/mysql start
+        mysql -e 'CREATE DATABASE ${{ env.DB_DATABASE }};' -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: yarn install
+
+    - name: Get Repo Secrets
+      run: echo Getting Repo Secrets
       env:
           SQL_HOST: ${{ secrets.SQL_HOST }}
           SQL_PASSWORD: ${{ secrets.SQL_PASSWORD }}
@@ -37,16 +50,6 @@ jobs:
           ZILLIQA_PRIVATE_KEY: ${{ secrets.ZILLIQA_PRIVATE_KEY }}
           SC2_STARTUP_PRIVATE_KEY: ${{ secrets.SC2_STARTUP_PRIVATE_KEY }}
 
-    - name: Set up MySQL
-      run: |
-        echo $GITHUB_ACTIONS
-        sudo /etc/init.d/mysql start
-        mysql -e 'CREATE DATABASE ${{ env.DB_DATABASE }};' -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - run: yarn install
     - run: yarn test sample
     - run: yarn test campaign
       if: always()
