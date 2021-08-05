@@ -12,14 +12,15 @@ jobs:
   test-host:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    env:
+        DB_DATABASE: testdb
+        DB_USER: root
+        DB_PASSWORD: root
 
     steps:
     - uses: actions/checkout@v2
       name: Get Repo Secrets
       env:
-          DB_DATABASE: testdb
-          DB_USER: root
-          DB_PASSWORD: root
           SQL_HOST: ${{ secrets.SQL_HOST }}
           SQL_PASSWORD: ${{ secrets.SQL_PASSWORD }}
           SQL_USER: ${{ secrets.SQL_USER }}
