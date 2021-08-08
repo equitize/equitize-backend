@@ -103,6 +103,7 @@ describe('Testing [/api/db/startup]', () => {
       emailAddress:process.env.AUTH0_ADMIN_USERNAME,
       password:process.env.AUTH0_ADMIN_PWD,
     }
+    console.log(requestBody)
     let res = await supertest(app)
                           .post("/admin")
                           .send(requestBody)
