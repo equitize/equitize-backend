@@ -138,33 +138,6 @@ describe('Testing [/api/db/retailInvestors]', () => {
     expect(res.statusCode).toBe(404)
   });
 
-  // it('get all retailInvestors', async() => {
-  //   requestBody = {}
-  //   res = await supertest(app)
-  //                         .get("/api/db/retailInvestors")
-  //                         .auth(admin_access_token, { type: 'bearer' })
-  //                         .send(requestBody)
-  //   expect(res.body.length).toBe(2)
-  //   expect(res.statusCode).toBe(200)
-  // });
-
-  // it('get by retailInvestor email', async() => {
-  //   requestBody = {}
-  //   res = await supertest(app)
-  //                         .get(`/api/db/retailInvestors/email/${emailAddress}`)
-  //                         .send(requestBody)
-  //   // expect(res.body.length).toBe(1)
-  //   expect(res.statusCode).toBe(200)
-  // });
-
-  // it('get by retailInvestor email but invalid', async() => {
-  //   requestBody = {}
-  //   res = await supertest(app)
-  //                         .get(`/api/db/retailInvestors/email/${invalid_string}`)
-  //                         .send(requestBody)
-  //   // expect(res.statusCode).toBe(500)
-  // });
-
   it('update retailInvestor details', async() => {
     requestBody = {
       emailAddress:emailAddress_new,
@@ -247,14 +220,6 @@ describe('Testing [/api/db/retailInvestors]', () => {
                           .send(requestBody)
     expect(res.statusCode).toBe(404)
   });
-
-  // it('delete all retailInvestors', async() => {
-  //   requestBody = {}
-  //   res = await supertest(app)
-  //                         .delete(`/api/db/retailInvestors/`)
-  //                         .send(requestBody)
-  //   expect(res.statusCode).toBe(200)
-  // });
 
   afterAll(async () => {
     await thisDb.sequelize.drop();

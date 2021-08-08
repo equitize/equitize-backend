@@ -158,51 +158,6 @@ describe('Testing [/api/db/startup]', () => {
     expect(res.statusCode).toBe(404)
   });
 
-  // it('get all companies', async() => {
-  //   requestBody = {}
-  //   res = await supertest(app)
-  //                         .get("/api/db/startup")
-  //                         .auth(admin_access_token, { type: 'bearer' })
-  //                         .send(requestBody)
-  //   expect(res.body.length).toBe(2)
-  //   expect(res.statusCode).toBe(200)
-  // });
-
-  // it('get by company name', async() => {
-  //   requestBody = {}
-  //   res = await supertest(app)
-  //                         .get(`/api/db/startup/companyName/${companyName}`)
-  //                         .auth(admin_access_token, { type: 'bearer' })
-  //                         .send(requestBody)
-  //   expect(res.body.length).toBe(1)
-  //   expect(res.statusCode).toBe(200)
-  // });
-
-  // it('get by company name but invalid', async() => {
-  //   requestBody = {}
-  //   res = await supertest(app)
-  //                         .get(`/api/db/startup/companyName/${invalid_string}`)
-  //                         .send(requestBody)
-  //   // expect(res.statusCode).toBe(500)
-  // });
-
-  // it('get by company email', async() => {
-  //   requestBody = {}
-  //   res = await supertest(app)
-  //                         .get(`/api/db/startup/email/${emailAddress}`)
-  //                         .send(requestBody)
-  //   // expect(res.body.length).toBe(1)
-  //   expect(res.statusCode).toBe(200)
-  // });
-
-  // it('get by company email but invalid', async() => {
-  //   requestBody = {}
-  //   res = await supertest(app)
-  //                         .get(`/api/db/startup/email/${invalid_string}`)
-  //                         .send(requestBody)
-  //   // expect(res.statusCode).toBe(500)
-  // });
-
   it('update company industries', async() => {
     requestBody = {
       industryArr:companyIndustries,
@@ -215,49 +170,6 @@ describe('Testing [/api/db/startup]', () => {
     expect(res.statusCode).toBe(200)
   });
 
-  // silenced
-  // it('update company details', async() => {
-  //   requestBody = {
-  //     companyName:companyName_new,
-  //   }
-  //   res = await supertest(app)
-  //                         .put(`/api/db/startup/${company_id}`)
-  //                         .send(requestBody)
-  //   expect(res.statusCode).toBe(200)
-  // });
-
-  // it('update company details but company name is duplicate', async() => {
-  //   requestBody = {
-  //     companyName:companyName_alt,
-  //   }
-  //   res = await supertest(app)
-  //                         .put(`/api/db/startup/${company_id}`)
-  //                         .send(requestBody)
-  //   expect(res.statusCode).toBe(500)
-  // });
-
-  // it('update company details but invalid id', async() => {
-  //   requestBody = {
-  //     companyName:companyName,
-  //   }
-  //   res = await supertest(app)
-  //                         .put(`/api/db/startup/${invalid_id}`)
-  //                         .send(requestBody)
-  //   expect(res.statusCode).toBe(500)
-  // });
-
-  // not implemented
-  // it('create campaign', async() => {
-  //   requestBody = {
-  //     startupId:company_id,
-  //   }
-  //   res = await supertest(app)
-  //                         .post(`/api/db/admin/createCampaign`)
-  //                         .send(requestBody)
-  //   expect(res.statusCode).toBe(200)
-  //   campaign_id = res.body.id    
-  // });
-
   it('create by update campaign', async() => {
     requestBody = {
       tokensMinted:0.20,
@@ -268,17 +180,6 @@ describe('Testing [/api/db/startup]', () => {
                           .send(requestBody)
     expect(res.statusCode).toBe(200)
   });
-
-  // it('create by update campaign', async() => {
-  //   requestBody = {
-  //     tokensMinted:0.69,
-  //   }
-  //   res = await supertest(app)
-  //                         .put(`/api/db/startup/campaign/update/${company_id_alt}`)
-  //                         .auth(company_access_token, { type: 'bearer' })
-  //                         .send(requestBody)
-  //   expect(res.statusCode).toBe(200)
-  // });
 
   // upload and get tests for video and pitch decks
   for (let [_, [endpoint, bodyType, bodyName, filepath]] of Object.entries(upload_test_permutations_special)){
@@ -370,16 +271,6 @@ describe('Testing [/api/db/startup]', () => {
     expect(res.statusCode).toBe(200)
   });
 
-  // could not find endpoint for this
-  // it('get campaign', async() => {
-  //   requestBody = {}
-  //   res = await supertest(app)
-  //                         .get(`/api/db/startup/getCampaign/${company_id}`)
-  //                         .send(requestBody)
-  //   expect(res.body.length).toBe(1)
-  //   expect(res.statusCode).toBe(200)
-  // });
-
   it('get milestones', async() => {
     requestBody = {}
     res = await supertest(app)
@@ -451,16 +342,6 @@ describe('Testing [/api/db/startup]', () => {
     expect(res.statusCode).toBe(200)
   });  
 
-  // it('get commercial champion', async() => {
-  //   requestBody = {}
-  //   res = await supertest(app)
-  //                         .get(`/api/db/startup/getCommercialChampion/${company_id}`)
-  //                         .auth(company_access_token, { type: 'bearer' })
-  //                         .send(requestBody)
-  //   // expect(res.body.length).toBe(1)
-  //   expect(res.statusCode).toBe(200)
-  // });
-
   it('delete milestone all', async() => {
     requestBody = {}
     res = await supertest(app)
@@ -496,15 +377,6 @@ describe('Testing [/api/db/startup]', () => {
                           .send(requestBody)
     expect(res.statusCode).toBe(404)
   });
-
-  // silenced
-  // it('delete all companies', async() => {
-  //   requestBody = {}
-  //   res = await supertest(app)
-  //                         .delete(`/api/db/admin/`)
-  //                         .send(requestBody)
-  //   expect(res.statusCode).toBe(200)
-  // });
 
   afterAll(async () => {
     await thisDb.sequelize.drop();

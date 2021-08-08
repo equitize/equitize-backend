@@ -199,15 +199,6 @@ describe('Testing Recommender System', () => {
     retailInvestor_access_token = res.body.auth0.access_token
   })
 
-  // it('get all companies', async() => {
-  //   requestBody = {}
-  //   let res = await supertest(app)
-  //                         .get("/api/db/startup")
-  //                         .send(requestBody)
-  //   expect(res.statusCode).toBe(200)
-  //   startupCount = res.body.length
-  // });
-
   it('get recommendations', async() => {
     requestBody = {
       fullInfo:null
