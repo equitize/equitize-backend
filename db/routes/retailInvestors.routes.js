@@ -14,29 +14,14 @@ const router = require("express").Router();
 
 
 // Create a new retailInv
-if (process.env.NODE_ENV == 'test-nope') {
-    router.post("/", 
-        retailInvestorsController.create,
-    );
-    router.post("/testOAuth", 
-        auth0Controller.getMgtToken, 
-        auth0RegController.createAccount, 
-        auth0RegController.retailInvestors,
-        auth0Controller.addPerms,
-        retailInvestorsController.create,
-        auth0LogController.createRetailInvLogin
-    );
-} else {
-    router.post("/", 
-        auth0Controller.getMgtToken, 
-        auth0RegController.createAccount, 
-        auth0RegController.retailInvestors,
-        auth0Controller.addPerms,
-        retailInvestorsController.create,
-        auth0LogController.createRetailInvLogin,
-    );
-
-}
+router.post("/", 
+    auth0Controller.getMgtToken, 
+    auth0RegController.createAccount, 
+    auth0RegController.retailInvestors,
+    auth0Controller.addPerms,
+    retailInvestorsController.create,
+    auth0LogController.createRetailInvLogin,
+);
 
 // Login
 // no need kyc verferification
