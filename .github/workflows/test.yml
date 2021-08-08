@@ -6,6 +6,7 @@ on:
     branches:
       - master
 
+
 # Main reference: https://ovirium.com/blog/how-to-make-mysql-work-in-your-github-actions/
 
 jobs:
