@@ -26,6 +26,7 @@ module.exports = {
                 };
                 acceptedStartupCount ++
                 records.push(requestBody);
+                if (!data.surveyed_industries) {data.surveyed_industries = "Others"} 
                 industriesPlaceholder.push(data.surveyed_industries.split(","));
                 avatars.push(data.avatar);
             }
@@ -34,7 +35,6 @@ module.exports = {
             // Assign Industries
             const accountType = "startup"
             for (let id = 1; id < acceptedStartupCount+1; id++) {
-                if ( industriesPlaceholder[id-1][0] == "" ) industriesPlaceholder[id] = "Others";
                 const assignIndustryStatus = await industryService.createIndustries(id, industriesPlaceholder[id-1], accountType);
                 // upload profile photo
                 if (req.body.skip_upload_photos){continue}

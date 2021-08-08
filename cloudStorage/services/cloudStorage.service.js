@@ -65,6 +65,7 @@ module.exports = {
       })
       .end(buffer)
     } catch (err) {
+      console.log(err)
       return err      
     }});
   },

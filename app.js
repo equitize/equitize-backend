@@ -71,8 +71,10 @@ app.use('/api/db/general', require('./db/routes/general.routes'));
 
 // app.use('/api/sc2/', require('./V2SmartContracts/routes/sc.routes'));
 if (process.env.NODE_ENV !== 'prod-VPC') app.use('/api/db/misc/', require('./db/routes/misc.routes')); // use for jest test setup teardown 
-if (process.env.NODE_ENV !== 'prod-VPC') app.use('/test/api/sc2/', require('./V2SmartContracts/routes/sc.routes'));
-if (process.env.NODE_ENV !== 'prod-VPC') app.use('/api/sc/', require('./smartContracts/routes/sc.routes'));
+if (process.env.NODE_ENV !== 'test'){
+  if (process.env.NODE_ENV !== 'prod-VPC') app.use('/test/api/sc2/', require('./V2SmartContracts/routes/sc.routes'));
+  if (process.env.NODE_ENV !== 'prod-VPC') app.use('/api/sc/', require('./smartContracts/routes/sc.routes'));  
+}
 
 
 /** Error Handlers */
@@ -96,7 +98,7 @@ app.use((err, req, res, next) => {
 }); 
 // other errors
 app.use((error, req, res, next) => {
-  console.log(error)
+  // console.log(error)
   res.status(error.status || error.statusCode || 500).send({
     error: {
       status: error.status || error.statusCode || 500,

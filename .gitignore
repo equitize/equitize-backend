@@ -11,3 +11,5 @@ package-lock.json
 yarn-error.log
 
 utils/log/logs
+
+cloudStorage/keys.json

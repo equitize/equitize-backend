@@ -30,7 +30,7 @@ exports.create = (req, res, next) => {
 
   retailInvestorService.create(retailInvestors)
   .then(function (response) {
-    if (process.env.NODE_ENV == 'test') {res.send(response)}
+    // if (process.env.NODE_ENV == 'test') {res.send(response)}
     req.body.retailInv = response;
     next();
   })

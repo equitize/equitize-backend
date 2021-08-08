@@ -2,6 +2,13 @@ const db = require("../models");
 const Industries = db.industries;
 const Op = db.Sequelize.Op;
 
+
+const industriesList = [
+    "Finance", "Agriculture", "Environment", "Telecommunications",
+    "Transport", "Education", "Healthcare and Medical", 
+    "Entertainment", "Food and Beverages", "Others"
+]
+
 module.exports = {
     createIndustries : function (id, industryNames, accountType) {
         try {
@@ -11,12 +18,15 @@ module.exports = {
                 dict['name'] = industryNames[i];
                 if (accountType === 'startup') { 
                     dict['startupId'] = id;
+                    dict['id'] = 10007 + id * 12 + industriesList.indexOf(industryNames[i]);  // require unique
                 }
                 else if (accountType === 'retailInvestor') {
                     dict['retailInvestorId'] = id;
+                    dict['id'] = id * 12 + industriesList.indexOf(industryNames[i]);  // require unique
                 }
                 placeholder.push(dict)
-            }   
+            }
+            console.log(placeholder)
             // console.log(placeholder)
             return Industries.bulkCreate(placeholder)
             .then((industries) => {

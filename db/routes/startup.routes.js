@@ -12,28 +12,14 @@ const router = require("express").Router();
 
 
 // Create a new startup
-if (process.env.NODE_ENV == 'test') {
-    router.post("/", 
-        startupController.create,
-    );
-    router.post("/testOAuth", 
-        auth0Controller.getMgtToken,
-        auth0RegController.createAccount,
-        auth0RegController.startup,
-        auth0Controller.addPerms,
-        startupController.create,
-        auth0LoginController.createStartupLogin
-    );
-} else {
-    router.post("/", 
-        auth0Controller.getMgtToken,
-        auth0RegController.createAccount,
-        auth0RegController.startup,
-        auth0Controller.addPerms,
-        startupController.create,
-        auth0LoginController.createStartupLogin
-    );  
-}
+router.post("/", 
+    auth0Controller.getMgtToken,
+    auth0RegController.createAccount,
+    auth0RegController.startup,
+    auth0Controller.addPerms,
+    startupController.create,
+    auth0LoginController.createStartupLogin
+);  
 
 // Login 
 router.post("/login", auth0LoginController.startupLogin, startupController.findOneByEmail);
